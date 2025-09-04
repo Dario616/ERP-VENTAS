@@ -60,51 +60,9 @@ $item_urls = [
     $url_base . 'secciones/ventas/main.php',
     $url_base . 'secciones/ventas/index.php'
 ];
+$additional_css = [$url_base . 'secciones/ventas/utils/styles.css'];
+include $path_base . "components/head.php";
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalles del Presupuesto</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="icon" type="ico" href="<?php echo $url_base; ?>utils/icono.ico">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="<?php echo $url_base; ?>secciones/ventas/utils/styles.css" rel="stylesheet" />
-    <style>
-        .credito-info {
-            background: linear-gradient(135deg, #28a745, #20c997);
-            color: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-        }
-
-        .credito-info h6 {
-            margin-bottom: 15px;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
-        .credito-info .badge {
-            background: rgba(255, 255, 255, 0.25);
-            color: white;
-            font-size: 0.9em;
-            padding: 6px 12px;
-            border-radius: 20px;
-        }
-
-        .credito-tipo-display {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #fff3cd;
-        }
-    </style>
-</head>
-
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
     <div class="container-fluid my-4">

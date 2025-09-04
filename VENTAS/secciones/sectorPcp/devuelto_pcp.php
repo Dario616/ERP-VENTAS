@@ -56,59 +56,9 @@ $breadcrumb_items = ['Gestion PCP', 'Devoluciones a PCP'];
 $item_urls = [
     $url_base . 'secciones/sectorPcp/main.php',
 ];
+$additional_css = [$url_base . 'secciones/sectorPcp/utils/styles.css'];
+include $path_base . "components/head.php";
 ?>
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($datosVista['titulo']); ?></title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="icon" type="ico" href="<?php echo $url_base; ?>utils/icono.ico">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Estilos personalizados -->
-    <link href="<?php echo $url_base; ?>secciones/sectorPcp/utils/styles.css" rel="stylesheet">
-    <style>
-        .row-produccion {
-            border-left: 4px solid #dc3545;
-        }
-
-        .row-expedicion {
-            border-left: 4px solid #198754;
-        }
-
-        [class^="row-"] {
-            border-left: 4px solid #0dcaf0;
-        }
-
-        .row-produccion:hover {
-            background-color: rgba(220, 53, 69, 0.05) !important;
-        }
-
-        .row-expedicion:hover {
-            background-color: rgba(25, 135, 84, 0.05) !important;
-        }
-
-        [class^="row-"]:hover {
-            background-color: rgba(13, 202, 240, 0.05) !important;
-        }
-
-        .stats-card {
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .stats-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-    </style>
-</head>
 
 <body>
     <?php include $path_base . "components/navbar.php"; ?>

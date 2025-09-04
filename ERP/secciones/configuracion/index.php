@@ -2,6 +2,8 @@
 include "../../config/conexionBD.php";
 include "../../auth/verificar_sesion.php";
 requerirLogin();
+$breadcrumb_items = ['CONFIGURACION'];
+$item_urls = [];
 ?>
 
 <!DOCTYPE html>
@@ -33,32 +35,7 @@ requerirLogin();
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="<?php echo $url_base; ?>index.php">
-                <img src="<?php echo $url_base; ?>utils/logoa.png" alt="America TNT" height="30">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $url_base; ?>index.php">
-                            <i class="fas fa-home me-1"></i>Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="<?php echo $url_base; ?>secciones/configuracion/index.php">
-                            <i class="fas fa-cogs me-1"></i>Configuración
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    <?php include $path_base . "components/navbar.php"; ?>
     <!-- Hero Section -->
     <div class="hero-section">
         <div class="container-fluid">

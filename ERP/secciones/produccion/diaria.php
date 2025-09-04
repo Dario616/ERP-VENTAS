@@ -3,17 +3,13 @@ include "../../auth/verificar_sesion.php";
 include "../../config/conexionBD.php";
 requerirRol(['1', '2']);
 requerirLogin();
-
-// Variables para filtros (sin paginación)
 $filtro_cliente = isset($_GET['cliente']) ? trim($_GET['cliente']) : '';
 $filtro_tipo = isset($_GET['tipo']) ? trim($_GET['tipo']) : '';
 $filtro_estado = isset($_GET['estado']) ? trim($_GET['estado']) : 'en stock';
 
-// Obtener usuario actual
 $usuario_actual = obtenerUsuarioActual();
-$es_angel = $usuario_actual['rol'] == '1'; // Rol 1 es como "Angel"
+$es_admi = $usuario_actual['rol'] == '1';
 
-// Función para calcular peso teórico
 function calcularPesoTeorico($gramatura, $metragem, $largura, $bobinas_pacote)
 {
     if (!$gramatura || !$metragem || !$largura || !$bobinas_pacote) {
@@ -22,14 +18,12 @@ function calcularPesoTeorico($gramatura, $metragem, $largura, $bobinas_pacote)
     return ($gramatura * $metragem * $largura / 1000.0) * $bobinas_pacote;
 }
 
-// Función para clasificar según diferencia de peso
 function clasificarPeso($peso_real, $peso_teorico)
 {
     if ($peso_teorico == 0) return ['categoria' => 'Sin datos', 'clase' => 'sin-datos'];
 
     $diferencia_porcentual = (($peso_real - $peso_teorico) / $peso_teorico) * 100;
 
-    // Rangos basados en el código Java original
     if ($peso_real <= $peso_teorico && $peso_real > ($peso_teorico * 0.979)) {
         return ['categoria' => 'DENTRO DE LA MEDIA 2%', 'clase' => 'dentro-media'];
     } elseif ($peso_real > $peso_teorico && $peso_real <= ($peso_teorico * 1.005)) {
@@ -47,7 +41,6 @@ function clasificarPeso($peso_real, $peso_teorico)
     return ['categoria' => 'Fuera de rango', 'clase' => 'fuera-rango'];
 }
 
-// Construir consulta SQL
 try {
     $fecha_actual = date('Y-m-d');
     $sql_base = "SELECT id, peso_bruto, peso_liquido, fecha_hora_producida, estado, 
@@ -59,12 +52,11 @@ try {
 
     $params = [];
 
-    // Lógica de filtros por usuario (similar al código Java)
-    if ($es_angel) {
-        // Usuario "Angel" (rol 1): ve todos los registros en stock
-        $sql_base .= " AND estado = 'en stock'";
+    if ($es_admi) {
+        $sql_base .= " AND DATE(fecha_hora_producida) = :fecha_actual 
+                       AND estado = 'en stock'";
+        $params[':fecha_actual'] = $fecha_actual;
     } else {
-        // Otros usuarios (rol 2): solo sus registros del día actual
         $sql_base .= " AND DATE(fecha_hora_producida) = :fecha_actual 
                        AND estado = 'en stock' 
                        AND usuario = :usuario_actual";
@@ -72,7 +64,6 @@ try {
         $params[':usuario_actual'] = $usuario_actual['usuario'];
     }
 
-    // Filtros adicionales
     if (!empty($filtro_cliente)) {
         $sql_base .= " AND LOWER(cliente) LIKE LOWER(:cliente)";
         $params[':cliente'] = '%' . $filtro_cliente . '%';
@@ -97,7 +88,6 @@ try {
     $stmt->execute();
     $stock_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Calcular totales
     $total_items = count($stock_items);
     $peso_total = array_sum(array_column($stock_items, 'peso_liquido'));
 } catch (PDOException $e) {
@@ -106,7 +96,8 @@ try {
     $total_items = 0;
     $peso_total = 0;
 }
-
+$breadcrumb_items = ['Produccion Diaria'];
+$item_urls = [];
 ?>
 
 <!DOCTYPE html>
@@ -124,37 +115,9 @@ try {
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="<?php echo $url_base; ?>index.php">
-                <img src="<?php echo $url_base; ?>utils/logoa.png" alt="America TNT" height="30">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $url_base; ?>index.php">
-                            <i class="fas fa-home me-1"></i>Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="<?php echo $url_base; ?>secciones/produccion/stock_dia.php">
-                            <i class="fas fa-boxes me-1"></i>Produccion del Día
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Contenido Principal -->
+    <?php include $path_base . "components/navbar.php"; ?>
     <div class="main-container">
         <div class="container-fluid">
-
-            <!-- Información de selección FLOTANTE -->
             <div id="seleccion-info" class="seleccion-info" style="display: none;">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
@@ -166,8 +129,6 @@ try {
                     </button>
                 </div>
             </div>
-
-            <!-- Lista de items -->
             <?php if (isset($error)): ?>
                 <div class="alert alert-danger alert-custom">
                     <i class="fas fa-exclamation-triangle me-2"></i><?php echo htmlspecialchars($error); ?>
@@ -277,7 +238,6 @@ try {
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
@@ -311,21 +271,21 @@ try {
             if (cantidadSeleccionados > 0) {
                 infoSeleccion.style.display = 'block';
                 mainContainer.classList.add('with-floating-summary');
-                
+
                 // Actualizar los valores
                 document.getElementById('contador-seleccion').textContent = cantidadSeleccionados;
                 document.getElementById('peso-total-seleccion').textContent = pesoSeleccionado.toFixed(2);
-                
+
                 // Efecto de entrada suave
                 setTimeout(() => {
                     infoSeleccion.style.opacity = '1';
                 }, 10);
-                
+
             } else {
                 // Efecto de salida suave
                 infoSeleccion.style.opacity = '0';
                 mainContainer.classList.remove('with-floating-summary');
-                
+
                 setTimeout(() => {
                     infoSeleccion.style.display = 'none';
                 }, 300);
@@ -341,7 +301,7 @@ try {
             itemsSeleccionados.clear();
             pesoSeleccionado = 0;
             actualizarEstadisticas();
-            
+
             // Mostrar notificación de limpieza
             mostrarNotificacion('Selección limpiada', 'info');
         }
@@ -403,7 +363,7 @@ try {
                 mostrarNotificacion('Actualizando página...', 'info');
                 setTimeout(() => location.reload(), 500);
             }
-            
+
             // Ctrl+A para seleccionar todos los items visibles
             if (e.ctrlKey && e.key === 'a') {
                 e.preventDefault();
@@ -415,7 +375,7 @@ try {
                     mostrarNotificacion(`${cards.length} items adicionales seleccionados`, 'success');
                 }
             }
-            
+
             // Ctrl+D para deseleccionar todos
             if (e.ctrlKey && e.key === 'd') {
                 e.preventDefault();
@@ -467,7 +427,7 @@ try {
             console.log('   • F5: Actualizar página');
             console.log('   • Ctrl+A: Seleccionar todos');
             console.log('   • Ctrl+D: Deseleccionar todos');
-            console.log(`👤 Usuario: <?php echo $usuario_actual['nombre']; ?> (${<?php echo $es_angel ? "'Supervisor'" : "'Operario'"; ?>})`);
+            console.log(`👤 Usuario: <?php echo $usuario_actual['nombre']; ?> (${<?php echo $es_admi ? "'Supervisor'" : "'Operario'"; ?>})`);
             console.log(`📊 Items mostrados: <?php echo $total_items; ?> total`);
         });
     </script>

@@ -43,33 +43,15 @@ $configuracionJS = $controller->obtenerConfiguracionJS();
 extract($datosVista);
 
 $fechaInicio = $_GET['fecha_inicio'] ?? date('Y-m-01');
-$fechaFin = $_GET['fecha_fin'] ?? date('Y-m-d');          // Hoy (sin cambios)
+$fechaFin = $_GET['fecha_fin'] ?? date('Y-m-d'); 
 
 // Log de actividad
 $controller->logActividad('Acceso a relatorio de ventas');
 $breadcrumb_items = ['Relatorio de Venta'];
 $item_urls = [];
+$additional_css = [$url_base . 'secciones/relatorio/utils/styles.css'];
+include $path_base . "components/head.php";
 ?>
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($titulo); ?></title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="icon" type="ico" href="<?php echo $url_base; ?>utils/icono.ico">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
-    <link href="<?php echo $url_base; ?>secciones/relatorio/utils/styles.css" rel="stylesheet" />
-</head>
-
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
     <div class="container-fluid my-4">

@@ -31,72 +31,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $datosVista = $controller->obtenerDatosVista();
 $usuario_actual = $datosVista['usuario_actual'] ?? 'Usuario';
 $configuracionJS = $controller->obtenerConfiguracionJS();
+$breadcrumb_items = ['Configuracion', 'Unidad de Medida', 'Nueva Unidad'];
+$item_urls = [
+    $url_base . 'secciones/configuracion/index.php',
+    $url_base . 'secciones/configuracion/um_index.php',
+];
+$additional_css = [$url_base . 'secciones/configuracion/utils/styles.css'];
+include $path_base . "components/head.php";
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrar Unidad de Medida</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="icon" type="ico" href="<?php echo $url_base; ?>utils/icono.ico">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="<?php echo $url_base; ?>secciones/configuracion/utils/styles.css">
-</head>
-
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="<?php echo $url_base; ?>index.php">
-                <img src="<?php echo $url_base; ?>utils/logoa.png" alt="America TNT" height="20">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $url_base; ?>index.php">
-                            <i class="fas fa-home me-1"></i>Inicio
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $url_base; ?>secciones/configuracion/index.php">
-                            <i class="fas fa-cog me-1"></i>Configuración
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $url_base; ?>secciones/configuracion/um_index.php">
-                            <i class="fas fa-tags me-1"></i>Unidad de Medida
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">
-                            <i class="fas fa-tags me-1"></i>Nueva Unidad
-                        </a>
-                    </li>
-                </ul>
-                <div class="navbar-nav">
-                    <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle me-1"></i><?php echo htmlspecialchars($usuario_actual); ?>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="<?php echo $url_base; ?>perfil.php"><i class="fas fa-id-card me-2"></i>Mi Perfil</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="<?php echo $url_base; ?>cerrar_sesion.php"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
 
+    <?php include $path_base . "components/navbar.php"; ?>
     <div class="container-fluid my-5">
         <div class="card">
             <div class="card-header">
@@ -131,5 +77,3 @@ $configuracionJS = $controller->obtenerConfiguracionJS();
     </script>
     <script src="js/config.js"></script>
 </body>
-
-</html>

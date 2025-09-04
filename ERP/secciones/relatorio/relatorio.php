@@ -24,6 +24,10 @@ if (!isset($url_base) || empty($url_base)) {
     $path = dirname(dirname($script)); // Subir dos niveles desde /secciones/produccion/
     $url_base = $protocol . '://' . $host . $path . '/';
 }
+$breadcrumb_items = ['REPORTES', 'REPORE GENERAL'];
+$item_urls = [
+    $url_base . 'secciones/relatorio/main.php',
+];
 ?>
 
 <!DOCTYPE html>
@@ -98,36 +102,7 @@ if (!isset($url_base) || empty($url_base)) {
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="<?php echo $url_base; ?>index.php">
-                <img src="<?php echo $url_base; ?>utils/logoa.png" alt="America TNT" height="30">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $url_base; ?>index.php">
-                            <i class="fas fa-home me-1"></i>Dashboard
-                        </a>
-                    </li>
-                    <a class="nav-link" href="<?php echo $url_base; ?>secciones/relatorio/main.php">
-                        <i class="fas fa-file-alt"></i>
-                        Reportes
-                    </a>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">
-                            <i class="fas fa-chart-line me-1"></i>Reporte General
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    <?php include $path_base . "components/navbar.php"; ?>
     <!-- Hero Section -->
     <div class="hero-section">
         <div class="container-fluid">

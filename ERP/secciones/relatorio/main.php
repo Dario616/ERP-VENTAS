@@ -2,6 +2,8 @@
 include "../../config/conexionBD.php";
 include "../../auth/verificar_sesion.php";
 requerirLogin();
+$breadcrumb_items = ['REPORTES'];
+$item_urls = [];
 ?>
 
 <!DOCTYPE html>
@@ -11,24 +13,14 @@ requerirLogin();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMERICA TNT - REPORTES</title>
-
-    <!-- Favicon principal -->
     <link rel="icon" type="image/png" sizes="32x32" href="<?php echo $url_base; ?>assets/favicon-32.png">
-    <!-- Opcional: favicon de alto resolución para pantallas retina -->
     <link rel="icon" type="image/png" sizes="192x192" href="<?php echo $url_base; ?>assets/favicon-192.png">
-    <!-- Opcional: favicon para Apple Touch Icon -->
     <link rel="apple-touch-icon" sizes="180x180" href="<?php echo $url_base; ?>assets/apple-touch-icon.png">
-    <!-- Opcional: favicon clásico .ico (fallback para navegadores antiguos) -->
     <link rel="icon" href="<?php echo $url_base; ?>utils/icon.ico" type="image/x-icon">
-
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Estilos del Dashboard -->
     <link rel="stylesheet" href="<?php echo $url_base; ?>secciones/relatorio/utils/main.css">
     <style>
         .btn-danger-custom {
@@ -45,33 +37,7 @@ requerirLogin();
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="<?php echo $url_base; ?>index.php">
-                <img src="<?php echo $url_base; ?>utils/logoa.png" alt="America TNT" height="30">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $url_base; ?>index.php">
-                            <i class="fas fa-home me-1"></i>Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="<?php echo $url_base; ?>secciones/configuracion/index.php">
-                            <i class="fas fa-file-alt"></i>
-                            Reportes
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    <?php include $path_base . "components/navbar.php"; ?>
     <!-- Hero Section -->
     <div class="hero-section">
         <div class="container-fluid">

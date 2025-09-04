@@ -1,36 +1,22 @@
 <?php
 
-/**
- * MaterialConsumptionManager - Sistema de descuento automático CORREGIDO
- * 
- * CAMBIOS PRINCIPALES:
- * - ✅ Corregido manejo de materias primas extra (UNIDAD vs KILOS)
- * - ✅ Agregada reversión de descuentos al eliminar registros
- * - ✅ Mejorado logging y debug
- * - ✅ Validación mejorada de disponibilidad
- */
-
 class MaterialConsumptionManager
 {
     private static $conexion;
     private static $activo = true;
     private static $initialized = false;
 
-    /**
-     * Inicializar el sistema (sin interfaz)
-     */
+    // Inicializar el sistema
     public static function initialize($conexion, $activo = true)
     {
         self::$conexion = $conexion;
         self::$activo = $activo;
         self::$initialized = true;
 
-        error_log("🔧 MaterialConsumptionManager inicializado - Estado: " . (self::$activo ? "ACTIVO" : "INACTIVO"));
+        error_log("MaterialConsumptionManager inicializado - Estado: " . (self::$activo ? "ACTIVO" : "INACTIVO"));
     }
 
-    /**
-     * Procesar descuento de materias primas (llamar después de registro exitoso)
-     */
+    // Procesar descuento de materias primas después de registro exitoso
     public static function procesarDescuento($numeroOrden, $datosRegistro)
     {
         if (!self::$activo || !self::$initialized) {
@@ -41,12 +27,12 @@ class MaterialConsumptionManager
             $pesoLiquido = self::calcularPesoLiquido($datosRegistro);
             $cantidad = self::calcularCantidadItems($datosRegistro);
 
-            error_log("🔧 DESCUENTO - Orden: $numeroOrden | Peso Líquido: $pesoLiquido kg | Cantidad Items: $cantidad");
+            error_log("DESCUENTO - Orden: $numeroOrden | Peso Líquido: $pesoLiquido kg | Cantidad Items: $cantidad");
 
             $resultado = self::procesarDescuentoMateriasPrimas($numeroOrden, $pesoLiquido, $cantidad, $datosRegistro);
 
             if ($resultado['success'] && !empty($resultado['descuentos_realizados'])) {
-                error_log("✅ Descuentos aplicados en orden $numeroOrden:");
+                error_log("Descuentos aplicados en orden $numeroOrden:");
                 foreach ($resultado['descuentos_realizados'] as $descuento) {
                     $unidad = $descuento['tipo_descuento'] === 'peso' ? 'kg' : 'unid';
                     error_log("   • {$descuento['nombre_materia_prima']}: -{$descuento['cantidad_descontada']} $unidad");
@@ -55,14 +41,12 @@ class MaterialConsumptionManager
 
             return $resultado;
         } catch (Exception $e) {
-            error_log("💥 Error en procesarDescuento: " . $e->getMessage());
+            error_log("Error en procesarDescuento: " . $e->getMessage());
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /**
-     * 🆕 NUEVO: Revertir descuentos al eliminar un registro
-     */
+    // Revertir descuentos al eliminar un registro
     public static function revertirDescuento($numeroOrden, $datosRegistro)
     {
         if (!self::$activo || !self::$initialized) {
@@ -73,12 +57,12 @@ class MaterialConsumptionManager
             $pesoLiquido = self::calcularPesoLiquido($datosRegistro);
             $cantidad = self::calcularCantidadItems($datosRegistro);
 
-            error_log("🔄 REVERSIÓN - Orden: $numeroOrden | Peso Líquido: $pesoLiquido kg | Cantidad Items: $cantidad");
+            error_log("REVERSIÓN - Orden: $numeroOrden | Peso Líquido: $pesoLiquido kg | Cantidad Items: $cantidad");
 
             $resultado = self::procesarReversionMateriasPrimas($numeroOrden, $pesoLiquido, $cantidad, $datosRegistro);
 
             if ($resultado['success'] && !empty($resultado['reversiones_realizadas'])) {
-                error_log("🔄 Reversiones aplicadas en orden $numeroOrden:");
+                error_log("Reversiones aplicadas en orden $numeroOrden:");
                 foreach ($resultado['reversiones_realizadas'] as $reversion) {
                     $unidad = $reversion['tipo_descuento'] === 'peso' ? 'kg' : 'unid';
                     error_log("   • {$reversion['nombre_materia_prima']}: +{$reversion['cantidad_revertida']} $unidad");
@@ -87,14 +71,12 @@ class MaterialConsumptionManager
 
             return $resultado;
         } catch (Exception $e) {
-            error_log("💥 Error en revertirDescuento: " . $e->getMessage());
+            error_log("Error en revertirDescuento: " . $e->getMessage());
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /**
-     * Validar disponibilidad ANTES del registro (opcional - para bloquear si no hay stock)
-     */
+    // Validar disponibilidad antes del registro
     public static function validarDisponibilidad($numeroOrden, $datosRegistro)
     {
         if (!self::$activo || !self::$initialized) {
@@ -105,7 +87,7 @@ class MaterialConsumptionManager
             $pesoLiquido = self::calcularPesoLiquido($datosRegistro);
             $cantidad = self::calcularCantidadItems($datosRegistro);
 
-            error_log("🔍 VALIDACIÓN - Orden: $numeroOrden | Peso Líquido: $pesoLiquido kg | Cantidad Items: $cantidad");
+            error_log("VALIDACIÓN - Orden: $numeroOrden | Peso Líquido: $pesoLiquido kg | Cantidad Items: $cantidad");
 
             // Obtener recetas
             $recetas = self::obtenerRecetasOrden($numeroOrden);
@@ -118,7 +100,7 @@ class MaterialConsumptionManager
             foreach ($recetas as $receta) {
                 $cantidadNecesaria = self::calcularCantidadNecesaria($receta, $pesoLiquido, $cantidad);
 
-                error_log("🔍 Validando: {$receta['nombre_materia_prima']} | Es Extra: " . ($receta['es_materia_extra'] ? 'SÍ' : 'NO') .
+                error_log("Validando: {$receta['nombre_materia_prima']} | Es Extra: " . ($receta['es_materia_extra'] ? 'SÍ' : 'NO') .
                     " | Unidad Extra: {$receta['unidad_medida_extra']} | Cantidad Necesaria: $cantidadNecesaria");
 
                 if ($receta['es_materia_extra']) {
@@ -131,7 +113,7 @@ class MaterialConsumptionManager
                                 'unidad' => 'kg',
                                 'tipo' => 'extra_peso'
                             ];
-                            error_log("❌ FALTANTE PESO EXTRA: {$receta['nombre_materia_prima']} - Necesario: $cantidadNecesaria kg, Disponible: {$receta['stock_peso']} kg");
+                            error_log("FALTANTE PESO EXTRA: {$receta['nombre_materia_prima']} - Necesario: $cantidadNecesaria kg, Disponible: {$receta['stock_peso']} kg");
                         }
                     } else if (strtoupper($receta['unidad_medida_extra']) === 'UNIDAD' || strtoupper($receta['unidad_medida_extra']) === 'UNIDADES') {
                         if ($receta['stock_cantidad'] < $cantidadNecesaria) {
@@ -142,7 +124,7 @@ class MaterialConsumptionManager
                                 'unidad' => 'unid',
                                 'tipo' => 'extra_cantidad'
                             ];
-                            error_log("❌ FALTANTE CANTIDAD EXTRA: {$receta['nombre_materia_prima']} - Necesario: $cantidadNecesaria unid, Disponible: {$receta['stock_cantidad']} unid");
+                            error_log("FALTANTE CANTIDAD EXTRA: {$receta['nombre_materia_prima']} - Necesario: $cantidadNecesaria unid, Disponible: {$receta['stock_cantidad']} unid");
                         }
                     }
                 } else {
@@ -155,7 +137,7 @@ class MaterialConsumptionManager
                             'unidad' => 'kg',
                             'tipo' => 'normal'
                         ];
-                        error_log("❌ FALTANTE PESO NORMAL: {$receta['nombre_materia_prima']} - Necesario: $cantidadNecesaria kg, Disponible: {$receta['stock_peso']} kg");
+                        error_log("FALTANTE PESO NORMAL: {$receta['nombre_materia_prima']} - Necesario: $cantidadNecesaria kg, Disponible: {$receta['stock_peso']} kg");
                     }
                 }
             }
@@ -163,7 +145,7 @@ class MaterialConsumptionManager
             $puedeContinar = empty($faltantes);
 
             if (!$puedeContinar) {
-                error_log("⚠️ Stock insuficiente en orden $numeroOrden:");
+                error_log("Stock insuficiente en orden $numeroOrden:");
                 foreach ($faltantes as $faltante) {
                     error_log("   • {$faltante['materia_prima']}: Necesario {$faltante['necesario']} {$faltante['unidad']}, Disponible {$faltante['disponible']} {$faltante['unidad']} (Tipo: {$faltante['tipo']})");
                 }
@@ -176,14 +158,12 @@ class MaterialConsumptionManager
                 'materias_faltantes' => $faltantes
             ];
         } catch (Exception $e) {
-            error_log("💥 Error en validarDisponibilidad: " . $e->getMessage());
+            error_log("Error en validarDisponibilidad: " . $e->getMessage());
             return ['success' => false, 'puede_continuar' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /**
-     * Procesar descuento de materias primas
-     */
+    // Procesar descuento de materias primas
     private static function procesarDescuentoMateriasPrimas($idOrdenProduccion, $pesoLiquido, $cantidad, $datosRegistro)
     {
         if (!self::$activo) {
@@ -208,10 +188,10 @@ class MaterialConsumptionManager
 
                     if ($cantidadADescontar <= 0) continue;
 
-                    error_log("🔧 PROCESANDO: {$receta['nombre_materia_prima']} | Es Extra: " . ($receta['es_materia_extra'] ? 'SÍ' : 'NO') .
+                    error_log("PROCESANDO: {$receta['nombre_materia_prima']} | Es Extra: " . ($receta['es_materia_extra'] ? 'SÍ' : 'NO') .
                         " | Unidad Extra: {$receta['unidad_medida_extra']} | A Descontar: $cantidadADescontar");
 
-                    // Determinar qué campo actualizar y construir SQL
+                    // Determinar qué campo actualizar
                     $sql = null;
                     $tipoDescuento = null;
 
@@ -233,7 +213,7 @@ class MaterialConsumptionManager
                             $tipoDescuento = 'cantidad';
                             error_log("   → Descuento CANTIDAD EXTRA: $cantidadADescontar unidades");
                         } else {
-                            error_log("   ❌ Unidad extra no reconocida: '$unidadExtra'");
+                            error_log("   Unidad extra no reconocida: '$unidadExtra'");
                             $errores[] = "Unidad extra no reconocida para {$receta['nombre_materia_prima']}: '$unidadExtra'";
                             continue;
                         }
@@ -253,7 +233,7 @@ class MaterialConsumptionManager
                         $stmt->bindParam(':id_materia_prima', $receta['id_materia_prima'], PDO::PARAM_INT);
 
                         if ($stmt->execute() && $stmt->rowCount() > 0) {
-                            // Registrar movimiento (sin fallar si hay error)
+                            // Registrar movimiento
                             self::registrarMovimiento(
                                 $receta['id_materia_prima'],
                                 $cantidadADescontar,
@@ -271,16 +251,15 @@ class MaterialConsumptionManager
                                 'unidad_medida_extra' => $receta['unidad_medida_extra']
                             ];
 
-                            error_log("   ✅ Descuento aplicado exitosamente");
+                            error_log("   Descuento aplicado exitosamente");
                         } else {
-                            error_log("   ❌ No se pudo aplicar el descuento (registro no encontrado o sin cambios)");
+                            error_log("   No se pudo aplicar el descuento (registro no encontrado o sin cambios)");
                             $errores[] = "No se pudo descontar {$receta['nombre_materia_prima']} (registro no encontrado)";
                         }
                     }
                 } catch (Exception $e) {
-                    error_log("   ❌ Error procesando {$receta['nombre_materia_prima']}: " . $e->getMessage());
+                    error_log("   Error procesando {$receta['nombre_materia_prima']}: " . $e->getMessage());
                     $errores[] = "Error en {$receta['nombre_materia_prima']}: " . $e->getMessage();
-                    // Continuar con la siguiente receta, no cancelar toda la transacción
                 }
             }
 
@@ -299,14 +278,12 @@ class MaterialConsumptionManager
             ];
         } catch (Exception $e) {
             self::$conexion->rollBack();
-            error_log("💥 Error en procesarDescuentoMateriasPrimas: " . $e->getMessage());
+            error_log("Error en procesarDescuentoMateriasPrimas: " . $e->getMessage());
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /**
-     * 🆕 NUEVO: Procesar reversión de descuentos de materias primas
-     */
+    // Procesar reversión de descuentos de materias primas
     private static function procesarReversionMateriasPrimas($idOrdenProduccion, $pesoLiquido, $cantidad, $datosRegistro)
     {
         if (!self::$activo) {
@@ -331,10 +308,10 @@ class MaterialConsumptionManager
 
                     if ($cantidadARevertir <= 0) continue;
 
-                    error_log("🔄 REVIRTIENDO: {$receta['nombre_materia_prima']} | Es Extra: " . ($receta['es_materia_extra'] ? 'SÍ' : 'NO') .
+                    error_log("REVIRTIENDO: {$receta['nombre_materia_prima']} | Es Extra: " . ($receta['es_materia_extra'] ? 'SÍ' : 'NO') .
                         " | Unidad Extra: {$receta['unidad_medida_extra']} | A Revertir: $cantidadARevertir");
 
-                    // Determinar qué campo actualizar y construir SQL (SUMAR en lugar de restar)
+                    // Determinar qué campo actualizar (SUMAR en lugar de restar)
                     $sql = null;
                     $tipoDescuento = null;
 
@@ -356,7 +333,7 @@ class MaterialConsumptionManager
                             $tipoDescuento = 'cantidad';
                             error_log("   → Reversión CANTIDAD EXTRA: +$cantidadARevertir unidades");
                         } else {
-                            error_log("   ❌ Unidad extra no reconocida: '$unidadExtra'");
+                            error_log("   Unidad extra no reconocida: '$unidadExtra'");
                             $errores[] = "Unidad extra no reconocida para {$receta['nombre_materia_prima']}: '$unidadExtra'";
                             continue;
                         }
@@ -376,7 +353,7 @@ class MaterialConsumptionManager
                         $stmt->bindParam(':id_materia_prima', $receta['id_materia_prima'], PDO::PARAM_INT);
 
                         if ($stmt->execute() && $stmt->rowCount() > 0) {
-                            // Registrar movimiento de reversión (sin fallar si hay error)
+                            // Registrar movimiento de reversión
                             self::registrarMovimiento(
                                 $receta['id_materia_prima'],
                                 $cantidadARevertir,
@@ -394,16 +371,15 @@ class MaterialConsumptionManager
                                 'unidad_medida_extra' => $receta['unidad_medida_extra']
                             ];
 
-                            error_log("   ✅ Reversión aplicada exitosamente");
+                            error_log("   Reversión aplicada exitosamente");
                         } else {
-                            error_log("   ❌ No se pudo aplicar la reversión (registro no encontrado o sin cambios)");
+                            error_log("   No se pudo aplicar la reversión (registro no encontrado o sin cambios)");
                             $errores[] = "No se pudo revertir {$receta['nombre_materia_prima']} (registro no encontrado)";
                         }
                     }
                 } catch (Exception $e) {
-                    error_log("   ❌ Error procesando reversión {$receta['nombre_materia_prima']}: " . $e->getMessage());
+                    error_log("   Error procesando reversión {$receta['nombre_materia_prima']}: " . $e->getMessage());
                     $errores[] = "Error en reversión {$receta['nombre_materia_prima']}: " . $e->getMessage();
-                    // Continuar con la siguiente receta, no cancelar toda la transacción
                 }
             }
 
@@ -422,14 +398,12 @@ class MaterialConsumptionManager
             ];
         } catch (Exception $e) {
             self::$conexion->rollBack();
-            error_log("💥 Error en procesarReversionMateriasPrimas: " . $e->getMessage());
+            error_log("Error en procesarReversionMateriasPrimas: " . $e->getMessage());
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /**
-     * Obtener recetas de una orden
-     */
+    // Obtener recetas de una orden
     private static function obtenerRecetasOrden($idOrdenProduccion)
     {
         $sql = "SELECT 
@@ -456,7 +430,7 @@ class MaterialConsumptionManager
         $recetas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Debug: mostrar recetas obtenidas
-        error_log("🔍 Recetas obtenidas para orden $idOrdenProduccion:");
+        error_log("Recetas obtenidas para orden $idOrdenProduccion:");
         foreach ($recetas as $receta) {
             error_log("   • {$receta['nombre_materia_prima']} | Extra: " . ($receta['es_materia_extra'] ? 'SÍ' : 'NO') .
                 " | Unidad: {$receta['unidad_medida_extra']} | Stock Peso: {$receta['stock_peso']} | Stock Cantidad: {$receta['stock_cantidad']}");
@@ -465,9 +439,7 @@ class MaterialConsumptionManager
         return $recetas;
     }
 
-    /**
-     * Calcular cantidad necesaria de una materia prima
-     */
+    // Calcular cantidad necesaria de una materia prima
     private static function calcularCantidadNecesaria($receta, $pesoLiquido, $cantidad)
     {
         if ($receta['es_materia_extra']) {
@@ -476,29 +448,27 @@ class MaterialConsumptionManager
             if ($unidadExtra === 'KILOS' || $unidadExtra === 'KILOGRAMOS') {
                 // Para materias extra en kilos: cantidad_por_kilo * peso_liquido
                 $resultado = $receta['cantidad_por_kilo'] * $pesoLiquido;
-                error_log("   📊 Cálculo EXTRA KILOS: {$receta['cantidad_por_kilo']} * $pesoLiquido = $resultado kg");
+                error_log("   Cálculo EXTRA KILOS: {$receta['cantidad_por_kilo']} * $pesoLiquido = $resultado kg");
                 return $resultado;
             } else if ($unidadExtra === 'UNIDAD' || $unidadExtra === 'UNIDADES') {
                 // Para materias extra en unidades: cantidad_por_kilo * cantidad_items
                 $resultado = $receta['cantidad_por_kilo'] * $cantidad;
-                error_log("   📊 Cálculo EXTRA UNIDADES: {$receta['cantidad_por_kilo']} * $cantidad = $resultado unid");
+                error_log("   Cálculo EXTRA UNIDADES: {$receta['cantidad_por_kilo']} * $cantidad = $resultado unid");
                 return $resultado;
             }
         } else {
             // Materia prima normal: porcentaje del peso líquido
             $porcentajeDecimal = $receta['cantidad_por_kilo'] / 100.0;
             $resultado = $porcentajeDecimal * $pesoLiquido;
-            error_log("   📊 Cálculo NORMAL: {$receta['cantidad_por_kilo']}% * $pesoLiquido = $resultado kg");
+            error_log("   Cálculo NORMAL: {$receta['cantidad_por_kilo']}% * $pesoLiquido = $resultado kg");
             return $resultado;
         }
 
-        error_log("   ❌ No se pudo calcular cantidad para {$receta['nombre_materia_prima']}");
+        error_log("   No se pudo calcular cantidad para {$receta['nombre_materia_prima']}");
         return 0;
     }
 
-    /**
-     * Calcular peso líquido
-     */
+    // Calcular peso líquido
     private static function calcularPesoLiquido($datos)
     {
         $pesoBruto = floatval($datos['peso_bruto'] ?? 0);
@@ -512,9 +482,7 @@ class MaterialConsumptionManager
         return $pesoBruto - $tara;
     }
 
-    /**
-     * Calcular cantidad de items
-     */
+    // Calcular cantidad de items
     private static function calcularCantidadItems($datos)
     {
         return isset($datos['bobinas_pacote']) && $datos['bobinas_pacote'] > 1
@@ -522,13 +490,10 @@ class MaterialConsumptionManager
             : 1;
     }
 
-    /**
-     * Registrar movimiento de materia prima
-     */
+    // Registrar movimiento de materia prima
     private static function registrarMovimiento($idMateriaPrima, $cantidad, $tipo, $receta, $tipoMovimiento = 'DESCUENTO_PRODUCCION', $datosRegistro = null)
     {
         try {
-            // Crear/actualizar tabla con manejo de errores
             self::crearOActualizarTablaMovimientos();
 
             // Verificar si la columna datos_adicionales existe
@@ -539,7 +504,6 @@ class MaterialConsumptionManager
                         (id_materia_prima, tipo_movimiento, cantidad_afectada, tipo_descuento, usuario, observaciones, datos_adicionales)
                         VALUES (:id_materia_prima, :tipo_movimiento, :cantidad, :tipo, :usuario, :observaciones, :datos_adicionales)";
             } else {
-                // Fallback sin datos_adicionales si la columna no existe
                 $sql = "INSERT INTO public.sist_prod_movimientos_materia_prima 
                         (id_materia_prima, tipo_movimiento, cantidad_afectada, tipo_descuento, usuario, observaciones)
                         VALUES (:id_materia_prima, :tipo_movimiento, :cantidad, :tipo, :usuario, :observaciones)";
@@ -576,15 +540,13 @@ class MaterialConsumptionManager
             }
 
             $stmt->execute();
-            error_log("📝 Movimiento registrado: $tipoMovimiento - $idMateriaPrima - $cantidad $tipo");
+            error_log("Movimiento registrado: $tipoMovimiento - $idMateriaPrima - $cantidad $tipo");
         } catch (Exception $e) {
-            error_log("⚠️ Error registrando movimiento: " . $e->getMessage());
+            error_log("Error registrando movimiento: " . $e->getMessage());
         }
     }
 
-    /**
-     * Crear o actualizar tabla de movimientos
-     */
+    // Crear o actualizar tabla de movimientos
     private static function crearOActualizarTablaMovimientos()
     {
         try {
@@ -610,9 +572,9 @@ class MaterialConsumptionManager
                     datos_adicionales JSONB
                 )";
                 self::$conexion->exec($sqlCreate);
-                error_log("📋 Tabla sist_prod_movimientos_materia_prima creada");
+                error_log("Tabla sist_prod_movimientos_materia_prima creada");
             } else {
-                // Tabla existe, verificar si tiene la columna datos_adicionales
+                // Verificar si tiene la columna datos_adicionales
                 $sqlCheckColumn = "SELECT COUNT(*) FROM information_schema.columns 
                                   WHERE table_schema = 'public' 
                                   AND table_name = 'sist_prod_movimientos_materia_prima' 
@@ -626,20 +588,18 @@ class MaterialConsumptionManager
                         $sqlAddColumn = "ALTER TABLE public.sist_prod_movimientos_materia_prima 
                                         ADD COLUMN datos_adicionales JSONB";
                         self::$conexion->exec($sqlAddColumn);
-                        error_log("📋 Columna datos_adicionales agregada a la tabla");
+                        error_log("Columna datos_adicionales agregada a la tabla");
                     } catch (Exception $e) {
-                        error_log("⚠️ No se pudo agregar columna datos_adicionales: " . $e->getMessage());
+                        error_log("No se pudo agregar columna datos_adicionales: " . $e->getMessage());
                     }
                 }
             }
         } catch (Exception $e) {
-            error_log("⚠️ Error en crearOActualizarTablaMovimientos: " . $e->getMessage());
+            error_log("Error en crearOActualizarTablaMovimientos: " . $e->getMessage());
         }
     }
 
-    /**
-     * Verificar si la columna datos_adicionales existe
-     */
+    // Verificar si la columna datos_adicionales existe
     private static function verificarColumnaExiste()
     {
         try {
@@ -651,35 +611,29 @@ class MaterialConsumptionManager
             $stmt->execute();
             return $stmt->fetchColumn() > 0;
         } catch (Exception $e) {
-            error_log("⚠️ Error verificando columna: " . $e->getMessage());
+            error_log("Error verificando columna: " . $e->getMessage());
             return false;
         }
     }
 
-    /**
-     * Activar/Desactivar el sistema programáticamente
-     */
+    // Activar/Desactivar el sistema
     public static function setActivo($activo)
     {
         $estadoAnterior = self::$activo;
         self::$activo = $activo;
 
         if ($estadoAnterior !== $activo) {
-            error_log("🔧 MaterialConsumptionManager " . ($activo ? "ACTIVADO" : "DESACTIVADO") . " programáticamente");
+            error_log("MaterialConsumptionManager " . ($activo ? "ACTIVADO" : "DESACTIVADO") . " programáticamente");
         }
     }
 
-    /**
-     * Obtener estado del sistema
-     */
+    // Obtener estado del sistema
     public static function isActivo()
     {
         return self::$activo;
     }
 
-    /**
-     * Obtener stock de materias primas para una orden (método auxiliar)
-     */
+    // Obtener stock de materias primas para una orden
     public static function obtenerStockOrden($idOrdenProduccion)
     {
         try {
@@ -712,9 +666,7 @@ class MaterialConsumptionManager
         }
     }
 
-    /**
-     * Ver historial de movimientos de una materia prima
-     */
+    // Ver historial de movimientos de una materia prima
     public static function obtenerHistorialMovimientos($idMateriaPrima = null, $limite = 50)
     {
         try {
@@ -748,9 +700,7 @@ class MaterialConsumptionManager
         }
     }
 
-    /**
-     * 🆕 NUEVO: Obtener debug información de una orden
-     */
+    // Obtener información debug de una orden
     public static function debugOrden($numeroOrden)
     {
         if (!self::$activo || !self::$initialized) {

@@ -730,3 +730,215 @@ html {
   scroll-margin-top: 100px;
   /* Espacio desde la parte superior */
 }
+.currency-input-decimal {
+  text-align: right;
+}
+
+.producto-precio {
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.producto-precio:focus {
+  border-color: #4a6cf7;
+  box-shadow: 0 0 0 0.2rem rgba(74, 108, 247, 0.25);
+}
+
+.moneda-simbolo {
+  font-weight: 600;
+  color: #495057;
+  background-color: #e9ecef;
+}
+
+.iva-switch {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 2px;
+  max-width: 250px;
+  margin-bottom: 2px;
+}
+
+.iva-switch .form-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.iva-switch .form-check-input {
+  width: 3rem;
+  height: 1.5rem;
+  border-radius: 1rem;
+  background-color: rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.iva-switch .form-check-input:checked {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.iva-switch .form-check-label {
+  color: white;
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+#productos-container {
+  max-height: 700px;
+  overflow-y: auto;
+  padding-bottom: 20px;
+}
+
+.mensaje-duplicado-shake {
+  animation: shake 0.6s ease-in-out;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+.producto-existente-highlight {
+  animation: highlight 2s ease-in-out;
+  border: 2px solid #ffc107 !important;
+  border-radius: 8px;
+}
+
+@keyframes highlight {
+  0% {
+    background-color: transparent;
+  }
+
+  50% {
+    background-color: rgba(255, 193, 7, 0.1);
+  }
+
+  100% {
+    background-color: transparent;
+  }
+}
+
+.credito-info {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 15px;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.credito-info h6 {
+  margin-bottom: 15px;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.credito-info .badge {
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+  font-size: 0.9em;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.credito-tipo-display {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff3cd;
+}
+
+.iva-explanation {
+  font-size: 0.9rem;
+  background-color: #fff3cd;
+  border-color: #ffeaa7;
+  color: #856404;
+}
+
+.bobinas-container {
+  background: linear-gradient(135deg, #17a2b8, #20c997);
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 10px;
+  max-width: 50%;
+  box-shadow: 0 3px 10px rgba(23, 162, 184, 0.2);
+}
+
+.bobinas-info {
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.bobinas-calc {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+}
+
+.bobinas-result {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.bobinas-formula {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.bobinas-icon {
+  font-size: 1.5rem;
+  margin-right: 8px;
+}
+
+@media (max-width: 768px) {
+  .bobinas-info {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+.credito-info {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.credito-info h6 {
+  margin-bottom: 15px;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.credito-info .badge {
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+  font-size: 0.9em;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.credito-tipo-display {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff3cd;
+}

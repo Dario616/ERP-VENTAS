@@ -2,7 +2,7 @@
 include "../../auth/verificar_sesion.php";
 include "../../config/conexionBD.php";
 include "repository/productionRepository.php";
-requerirRol(['1', '2','3']);
+requerirRol(['1', '2', '3']);
 requerirLogin();
 
 // Crear instancia del repositorio
@@ -114,6 +114,8 @@ function obtenerHistorialOrden($conexion, $numeroOrden, $limite = 3)
         return [];
     }
 }
+$breadcrumb_items = ['Pendientes'];
+$item_urls = [];
 ?>
 
 <!DOCTYPE html>
@@ -131,32 +133,7 @@ function obtenerHistorialOrden($conexion, $numeroOrden, $limite = 3)
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="<?php echo $url_base; ?>index.php">
-                <img src="<?php echo $url_base; ?>utils/logoa.png" alt="America TNT" height="30">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $url_base; ?>index.php">
-                            <i class="fas fa-home me-1"></i>Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="<?php echo $url_base; ?>secciones/produccion/pendientes.php">
-                            <i class="fas fa-clock me-1"></i>Pendientes
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    <?php include $path_base . "components/navbar.php"; ?>
     <!-- Contenido Principal -->
     <div class="main-container">
         <div class="container-fluid">

@@ -1,21 +1,12 @@
 <?php
 include "auth/verificar_sesion.php";
 include "config/database/conexionBD.php";
-$page_title = 'Inicio';
 $show_breadcrumb = false;
+include $path_base . "components/head.php";
 ?>
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Ventas</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="icon" type="ico" href="<?php echo $url_base; ?>utils/icono.ico">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="<?php echo $url_base; ?>style.css">
-</head>
+
 <body>
     <?php include "components/navbar.php"; ?>
     <div class="container-fluid my-3">
@@ -41,7 +32,7 @@ $show_breadcrumb = false;
                     </div>
                     <div class="card-body">
                         <div class="row mt-4">
-                            <?php if (tieneRol(['1', '2'])): 
+                            <?php if (tieneRol(['1', '2'])):
                             ?>
                                 <div class="col-md-3 mb-3">
                                     <div class="card h-100 border-0 shadow-sm">
@@ -77,7 +68,7 @@ $show_breadcrumb = false;
                                 </div>
                             <?php endif; ?>
 
-                            <?php if (tieneRol(['1', '4'])): 
+                            <?php if (tieneRol(['1', '4'])):
                             ?>
                                 <div class="col-md-3 mb-3">
                                     <div class="card h-100 border-0 shadow-sm">
@@ -94,7 +85,7 @@ $show_breadcrumb = false;
                                     </div>
                                 </div>
                             <?php endif; ?>
-                            <?php if (tieneRol(['1', '4'])): 
+                            <?php if (tieneRol(['1', '4'])):
                             ?>
                                 <div class="col-md-3 mb-3">
                                     <div class="card h-100 border-0 shadow-sm">
@@ -179,4 +170,5 @@ $show_breadcrumb = false;
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo $url_base; ?>config/notificacion/sistema-notificaciones.js"></script>
 </body>
+
 </html>

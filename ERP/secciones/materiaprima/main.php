@@ -2,6 +2,8 @@
 include "../../config/conexionBD.php";
 include "../../auth/verificar_sesion.php";
 requerirLogin();
+$breadcrumb_items = ['MATERIALES'];
+$item_urls = [];
 ?>
 
 <!DOCTYPE html>
@@ -33,34 +35,7 @@ requerirLogin();
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="<?php echo $url_base; ?>index.php">
-                <img src="<?php echo $url_base; ?>utils/logoa.png" alt="America TNT" height="30">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $url_base; ?>index.php">
-                            <i class="fas fa-home me-1"></i>Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="<?php echo $url_base; ?>secciones/materiaprima/main.php">
-                            <i class="fas fa-boxes"></i>
-                            Materiales
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
+    <?php include $path_base . "components/navbar.php"; ?>
     <div class="hero-section">
         <div class="container-fluid">
             <div class="row align-items-center">
@@ -104,10 +79,14 @@ requerirLogin();
                                     <i class="fas fa-boxes"></i>
                                     <span>Configurar Materiales</span>
                                 </a>
+                                <a href="<?php echo $url_base; ?>secciones/materiaprima/produccion_mp.php" class="quick-action-btn btn-alert">
+                                    <i class="fas fa-boxes"></i>
+                                    <span>Materiales Para Produccion</span>
+                                </a>
                                 <?php
                                 if (tieneRol(['1'])) {
                                 ?>
-                                    <a href="<?php echo $url_base; ?>secciones/materiaprima/recetas.php" class="quick-action-btn btn-info">
+                                    <a href="<?php echo $url_base; ?>secciones/materiaprima/recetas.php" class="quick-action-btn btn-morado">
                                         <i class="fas fa-clipboard-list"></i>
                                         <span>Recetas Productos</span>
                                     </a>
@@ -124,7 +103,7 @@ requerirLogin();
                                 <?php
                                 }
                                 ?>
-                                <a href="<?php echo $url_base; ?>secciones/materiaprima/orden-produccion-material.php" class="quick-action-btn btn-second">
+                                <a href="<?php echo $url_base; ?>secciones/materiaprima/orden-produccion-material.php" class="quick-action-btn btn-celeste">
                                     <i class="fas fa-tools"></i>
                                     <span>Orden de Produccion<br> Para Materiales</span>
                                 </a>

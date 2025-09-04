@@ -10,25 +10,18 @@ include "MaterialConsumptionManager.php";
 requerirRol(['1', '2', '3']);
 requerirLogin();
 
-// ✅ MISMO USO: El controller ahora usa ProductionService internamente
 $productionController = new ProductionController($conexion);
-MaterialConsumptionManager::initialize($conexion, true); // true = activado
-
-// Manejar toda la petición en el controller
+MaterialConsumptionManager::initialize($conexion, true);
 $datosVista = $productionController->manejarPeticion();
-
-// Extraer datos para usar en la vista
 extract($datosVista);
-
-// Obtener datos adicionales necesarios para la vista
 $valorBusqueda = $productionController->obtenerValorBusqueda();
-
-// Determinar si es producto simplificado (solo peso)
 $esProductoSimplificado = false;
 if ($ordenEncontrada && !empty($productosOrden)) {
     $tipoProducto = $productosOrden[0]['tipo'];
     $esProductoSimplificado = ($tipoProducto === 'TOALLITAS' || $tipoProducto === 'PAÑOS');
 }
+$breadcrumb_items = ['IMPRIMIR'];
+$item_urls = [];
 ?>
 
 <!DOCTYPE html>
@@ -38,44 +31,15 @@ if ($ordenEncontrada && !empty($productosOrden)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>America TNT - Imprimir</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="icon" href="<?php echo $url_base; ?>utils/icon.ico" type="image/x-icon">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Estilos personalizados -->
     <link rel="stylesheet" href="<?php echo $url_base; ?>secciones/produccion/utils/ordenproduccion.css">
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="<?php echo $url_base; ?>index.php">
-                <img src="<?php echo $url_base; ?>utils/logoa.png" alt="America TNT" height="30">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $url_base; ?>index.php">
-                            <i class="fas fa-home me-1"></i>Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="<?php echo $url_base; ?>secciones/produccion/ordenproduccion.php">
-                            <i class="fas fa-plus me-1"></i>Imprimir
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    <?php include $path_base . "components/navbar.php"; ?>
     <!-- Contenido Principal -->
     <div class="main-container">
         <div class="container-fluid">
@@ -933,13 +897,13 @@ if ($ordenEncontrada && !empty($productosOrden)) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Scripts en orden de dependencia -->
-    <script src="js/config.js"></script>
-    <script src="js/weight-validator.js"></script>
-    <script src="js/form-handler.js"></script>
-    <script src="js/print-service.js"></script>
-    <script src="js/batch-reprint.js"></script>
-    <script src="js/ui-manager.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/produccion/config.js"></script>
+    <script src="js/produccion/weight-validator.js"></script>
+    <script src="js/produccion/form-handler.js"></script>
+    <script src="js/produccion/print-service.js"></script>
+    <script src="js/produccion/batch-reprint.js"></script>
+    <script src="js/produccion/ui-manager.js"></script>
+    <script src="js/produccion/main.js"></script>
 
     <!-- Script principal de inicialización -->
     <script>

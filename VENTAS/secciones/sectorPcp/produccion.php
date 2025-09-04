@@ -124,65 +124,9 @@ $breadcrumb_items = ['Sector Produccion', 'Productos para Produccion'];
 $item_urls = [
     $url_base . 'secciones/produccion/main.php',
 ];
+$additional_css = [$url_base . 'secciones/sectorPcp/utils/styles.css'];
+include $path_base . "components/head.php";
 ?>
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Producción</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="icon" type="ico" href="<?php echo $url_base; ?>utils/icono.ico">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Estilos personalizados -->
-    <link href="<?php echo $url_base; ?>secciones/sectorPcp/utils/styles.css" rel="stylesheet">
-
-    <style>
-        .badge-tipo {
-            font-size: 0.75em;
-            margin: 0 2px;
-        }
-
-        .stats-card {
-            transition: transform 0.2s;
-        }
-
-        .stats-card:hover {
-            transform: translateY(-2px);
-        }
-
-        .btn-pdf-tnt {
-            background: linear-gradient(45deg, #0d6efd, #6610f2);
-            border: none;
-            color: white;
-        }
-
-        .btn-pdf-spunlace {
-            background: linear-gradient(45deg, #6f42c1, #e83e8c);
-            border: none;
-            color: white;
-        }
-
-        .btn-pdf-toallitas {
-            background: linear-gradient(45deg, #198754, #20c997);
-            border: none;
-            color: white;
-        }
-
-        /* ⭐ NUEVO: Estilo para PDF de Paños ⭐ */
-        .btn-pdf-paños {
-            background: linear-gradient(45deg, #fd7e14, #ffc107);
-            border: none;
-            color: white;
-        }
-    </style>
-</head>
-
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
     <div class="container-fluid my-4">
@@ -207,7 +151,6 @@ $item_urls = [
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 <?php endif; ?>
-                <!-- Filtros -->
                 <div class="card mb-4">
                     <div class="card-header bg-light">
                         <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Filtros</h5>

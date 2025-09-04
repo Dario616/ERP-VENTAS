@@ -18,6 +18,10 @@ if (isset($_POST['ajax']) && $_POST['ajax'] === 'true') {
 // Manejar toda la petición en el controller
 $datosVista = $ordenController->manejarPeticion();
 extract($datosVista);
+$breadcrumb_items = ['MATERIALES', 'ORDENES DE PRODUCCIÓN'];
+$item_urls = [
+    $url_base . 'secciones/materiaprima/main.php',
+];
 ?>
 
 <!DOCTYPE html>
@@ -35,37 +39,7 @@ extract($datosVista);
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="<?php echo $url_base; ?>index.php">
-                <img src="<?php echo $url_base; ?>utils/logoa.png" alt="America TNT" height="30">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $url_base; ?>index.php">
-                            <i class="fas fa-home me-1"></i>Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $url_base; ?>secciones/materiaprima/main.php">
-                            <i class="fas fa-boxes me-1"></i>Materiales
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">
-                            <i class="fas fa-clipboard-list me-1"></i>Órdenes de Producción
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    <?php include $path_base . "components/navbar.php"; ?>
     <!-- Contenido Principal -->
     <div class="main-container">
         <div class="container-fluid">

@@ -59,6 +59,9 @@ try {
 }
 
 $configuracion = $controller->obtenerConfiguracion();
+
+$breadcrumb_items = ['DESPACHADOS'];
+$item_urls = [];
 ?>
 
 <!DOCTYPE html>
@@ -76,28 +79,7 @@ $configuracion = $controller->obtenerConfiguracion();
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
-        <div class="container-fluid">
-            <span class="navbar-brand">
-                <img src="<?php echo $url_base; ?>utils/logoa.png" alt="America TNT" height="30">
-            </span>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $url_base; ?>index.php">
-                            <i class="fas fa-home me-1"></i>Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">
-                            <i class="fas fa-check-circle me-1"></i>Despachadas
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    <?php include $path_base . "components/navbar.php"; ?>
     <div class="container-fluid">
         <div class="row mb-4">
             <div class="col-12">

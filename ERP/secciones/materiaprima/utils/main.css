@@ -461,3 +461,15 @@ html {
     grid-template-columns: 1fr;
   }
 }
+
+.btn-alert {
+  background: linear-gradient(135deg, #c76e00 0%, #ff7300dd 100%);
+}
+
+.btn-morado {
+  background: linear-gradient(135deg, #480087 0%, #a855f7 100%);
+}
+
+.btn-celeste {
+  background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+}

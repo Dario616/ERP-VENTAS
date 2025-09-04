@@ -8,6 +8,8 @@ if (file_exists("controller/despachoController.php")) {
 } else {
     die("Error: No se pudo cargar el controlador de despacho.");
 }
+$breadcrumb_items = ['DESPACHOS'];
+$item_urls = [];
 ?>
 
 <!DOCTYPE html>
@@ -25,28 +27,7 @@ if (file_exists("controller/despachoController.php")) {
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success mb-4">
-        <div class="container-fluid">
-            <span class="navbar-brand">
-                <img src="<?php echo $url_base; ?>utils/logoa.png" alt="America TNT" height="30">
-            </span>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $url_base; ?>index.php">
-                            <i class="fas fa-home me-1"></i>Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">
-                            <i class="fas fa-robot me-1"></i>Despacho
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    <?php include $path_base . "components/navbar.php"; ?>
     <div class="container-fluid">
         <?php if (!$estadoSistema['sistema_operativo']): ?>
             <div class="row mb-4">

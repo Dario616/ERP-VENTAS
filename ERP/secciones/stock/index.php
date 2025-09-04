@@ -1,13 +1,13 @@
 <?php
 include "../../config/conexionBD.php";
 include "../../auth/verificar_sesion.php";
-
-// Verificar que existe el directorio y archivo del controller
 if (file_exists("controllers/stockController.php")) {
     include "controllers/stockController.php";
 } else {
     die("Error: No se pudo cargar el controlador de stock.");
 }
+$breadcrumb_items = ['STOCK AGREGADO'];
+$item_urls = [];
 ?>
 
 <!DOCTYPE html>
@@ -32,32 +32,7 @@ if (file_exists("controllers/stockController.php")) {
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="<?php echo $url_base; ?>index.php">
-                <img src="<?php echo $url_base; ?>utils/logoa.png" alt="America TNT" height="30">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $url_base; ?>index.php">
-                            <i class="fas fa-home me-1"></i>Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="<?php echo $url_base; ?>secciones/stock/index.php">
-                            <i class="fas fa-warehouse me-1"></i>Stock Agregado
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    <?php include $path_base . "components/navbar.php"; ?>
     <!-- Main Content -->
     <div class="main-container">
         <div class="container-fluid">
@@ -251,13 +226,13 @@ if (file_exists("controllers/stockController.php")) {
                                     </table>
                                 </div>
 
-                                    <div class="card-footer bg-light">
-                                        <nav aria-label="Page navigation">
-                                            <ul class="pagination justify-content-center mb-0">
-                                                <!-- La paginación se actualiza vía JavaScript -->
-                                            </ul>
-                                        </nav>
-                                    </div>
+                                <div class="card-footer bg-light">
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination justify-content-center mb-0">
+                                            <!-- La paginación se actualiza vía JavaScript -->
+                                        </ul>
+                                    </nav>
+                                </div>
 
                             <?php else: ?>
                                 <div class="text-center py-5">

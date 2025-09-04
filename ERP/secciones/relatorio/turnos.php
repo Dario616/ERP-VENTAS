@@ -44,6 +44,10 @@ $filtros_aplicados = $datosVista['filtros_aplicados'] ?? [];
 $tipos_producto = $datosVista['tipos_producto'] ?? [];
 $operadores = $datosVista['operadores'] ?? [];
 $estados = $datosVista['estados'] ?? [];
+$breadcrumb_items = ['REPORTES', 'TURNOS'];
+$item_urls = [
+    $url_base . 'secciones/relatorio/main.php',
+];
 ?>
 
 <!DOCTYPE html>
@@ -494,37 +498,7 @@ $estados = $datosVista['estados'] ?? [];
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="<?php echo $url_base; ?>index.php">
-                <img src="<?php echo $url_base; ?>utils/logoa.png" alt="America TNT" height="30">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $url_base; ?>index.php">
-                            <i class="fas fa-home me-1"></i>Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $url_base; ?>secciones/relatorio/main.php">
-                            <i class="fas fa-file-alt me-1"></i>Reportes
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">
-                            <i class="fas fa-clock me-1"></i>Consulta Turnos
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    <?php include $path_base . "components/navbar.php"; ?>
     <!-- Page Header -->
     <div class="page-header">
         <div class="container-fluid">
