@@ -1,0 +1,380 @@
+/**
+ * CSS LIMPIO - Solo para Dashboard en Tiempo Real
+ * Eliminado todo CSS no utilizado
+ */
+
+/* ===== VARIABLES CSS ===== */
+:root {
+  --america-navy: #1e3a5f;
+  --america-navy-dark: #152c47;
+  --america-navy-light: #2d4d73;
+  --america-red: #dc2626;
+  --america-orange: #ea580c;
+  --america-gray: #64748b;
+  --america-blue-light: #3b82f6;
+  --america-success: #059669;
+  --america-warning: #d97706;
+  --america-danger: #dc2626;
+  --america-info: #3b82f6;
+
+  --gradient-primary: linear-gradient(
+    135deg,
+    var(--america-navy-dark) 0%,
+    var(--america-navy) 50%,
+    var(--america-navy-light) 100%
+  );
+  --gradient-accent: linear-gradient(
+    90deg,
+    var(--america-red) 0%,
+    var(--america-orange) 100%
+  );
+}
+
+/* ===== BASE ===== */
+* {
+  box-sizing: border-box;
+}
+
+.live-dashboard {
+  background: var(--gradient-primary);
+  color: white;
+  min-height: 100vh;
+  font-family: "Inter", sans-serif;
+  margin: 0;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+  background: linear-gradient(
+    135deg,
+    var(--america-navy-dark) 0%,
+    var(--america-navy) 100%
+  );
+  box-shadow: 0 8px 16px rgba(30, 58, 95, 0.15);
+  border-bottom: 3px solid var(--america-red);
+  padding: 0.8rem 0;
+}
+
+.navbar-brand {
+  font-weight: 800;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: white !important;
+}
+
+.navbar-brand i {
+  color: var(--america-red);
+  margin-right: 0.5rem;
+  font-size: 1.8rem;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  padding: 0.8rem 1.2rem !important;
+  border-radius: 12px;
+  margin: 0 0.2rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+  background-color: rgba(220, 38, 38, 0.2);
+  color: white !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(30, 58, 95, 0.12);
+}
+
+/* ===== INDICADORES DE ESTADO ===== */
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 0.5rem;
+  animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0.3;
+  }
+}
+
+.status-online {
+  background: var(--america-success);
+  box-shadow: 0 0 10px rgba(5, 150, 105, 0.5);
+}
+
+.status-warning {
+  background: var(--america-warning);
+  box-shadow: 0 0 10px rgba(217, 119, 6, 0.5);
+}
+
+.status-offline {
+  background: var(--america-danger);
+  box-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
+}
+
+/* ===== RELOJ ===== */
+.time-display {
+  font-family: "Orbitron", monospace;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--america-red);
+  text-align: center;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 20px rgba(220, 38, 38, 0.3);
+}
+
+/* ===== MÉTRICAS EN VIVO ===== */
+.live-metric {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.live-metric:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border-color: var(--america-red);
+}
+
+.live-metric::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-accent);
+}
+
+.live-number {
+  font-size: 2.8rem;
+  font-weight: 900;
+  font-family: "Orbitron", monospace;
+  color: var(--america-red);
+  text-shadow: 0 0 20px rgba(220, 38, 38, 0.5);
+  margin-bottom: 0.3rem;
+  animation: pulse-glow 3s infinite;
+  transition: all 0.3s ease;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    text-shadow: 0 0 20px rgba(220, 38, 38, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 30px rgba(220, 38, 38, 0.8);
+  }
+}
+
+.live-label {
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.9;
+}
+
+.live-trend {
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  display: inline-block;
+}
+
+/* ===== TARJETAS DE VIDRIO ===== */
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.glass-card:hover {
+  border-color: rgba(220, 38, 38, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.glass-card h5 {
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid var(--america-red);
+  padding-bottom: 0.5rem;
+}
+
+.glass-card h5 i {
+  color: var(--america-red);
+  margin-right: 0.5rem;
+}
+
+/* ===== INDICADOR DE ACTUALIZACIÓN ===== */
+.refresh-indicator {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  background: rgba(220, 38, 38, 0.9);
+  color: white;
+  padding: 0.8rem;
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.refresh-indicator.updating {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== ALERTA DE ERROR ===== */
+.error-alert {
+  background: rgba(220, 38, 38, 0.2);
+  border: 1px solid rgba(220, 38, 38, 0.5);
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 1rem 0;
+  color: #fca5a5;
+}
+
+/* ===== BOTONES ===== */
+.btn-outline-light:hover {
+  background-color: var(--america-red);
+  border-color: var(--america-red);
+  color: white;
+}
+
+.btn-sm {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+/* ===== CONTAINER PRINCIPAL ===== */
+.container-fluid.mt-4 {
+  margin-top: 2rem !important;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.row.mb-4 {
+  margin-bottom: 2rem !important;
+}
+
+.col-lg-3.col-md-6.mb-3 {
+  margin-bottom: 1rem !important;
+}
+
+/* ===== GRÁFICOS ===== */
+canvas {
+  max-height: 300px;
+}
+
+/* ===== VARIACIONES DE MÉTRICAS ===== */
+.live-metric.metric-items .live-number {
+  color: var(--america-blue-light);
+  text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+}
+
+.live-metric.metric-weight .live-number {
+  color: var(--america-success);
+  text-shadow: 0 0 20px rgba(5, 150, 105, 0.5);
+}
+
+.live-metric.metric-orders .live-number {
+  color: var(--america-orange);
+  text-shadow: 0 0 20px rgba(234, 88, 12, 0.5);
+}
+
+.live-metric.metric-rate .live-number {
+  color: var(--america-red);
+  text-shadow: 0 0 20px rgba(220, 38, 38, 0.5);
+}
+
+/* ===== ANIMACIONES ADICIONALES ===== */
+@keyframes america-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(220, 38, 38, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(220, 38, 38, 0.6);
+  }
+}
+
+.live-metric:hover .live-number {
+  animation: america-glow 2s infinite;
+}
+
+.loading-pulse {
+  animation: loading-pulse 1.5s infinite;
+}
+
+@keyframes loading-pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .live-number {
+    font-size: 2.5rem;
+  }
+
+  .time-display {
+    font-size: 1.8rem;
+  }
+
+  .glass-card {
+    padding: 1.2rem;
+  }
+
+  .live-metric {
+    padding: 1.2rem;
+  }
+}

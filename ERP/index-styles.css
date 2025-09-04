@@ -1,0 +1,1421 @@
+/**
+ * Estilos COMPACTOS para Dashboard Principal - Sistema de Producción America TNT
+ * Versión optimizada con elementos más pequeños
+ */
+
+/* Variables CSS - Colores Corporativos America TNT */
+:root {
+  /* 🏢 Colores principales America TNT */
+  --america-navy: #325b91;
+  --america-navy-dark: #152c47;
+  --america-navy-light: #2d4d73;
+  --america-red: #dc2626;
+  --america-orange: #ea580c;
+  --america-gray: #64748b;
+  --america-blue-light: #3b82f6;
+
+  /* 🎨 Paleta extendida */
+  --america-success: #059669;
+  --america-warning: #d97706;
+  --america-danger: #dc2626;
+  --america-info: --america-blue-light;
+
+  /* 🖼️ Backgrounds */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #e2e8f0;
+  --bg-card: #ffffff;
+  --bg-hero: linear-gradient(
+    135deg,
+    var(--america-navy-dark) 0%,
+    var(--america-navy) 50%,
+    var(--america-navy-light) 100%
+  );
+
+  /* 📝 Texto */
+  --text-primary: #1e293b;
+  --text-secondary: var(--america-gray);
+  --text-muted: #94a3b8;
+  --text-white: #ffffff;
+
+  /* 🌫️ Sombras industriales */
+  --shadow-sm: 0 1px 2px rgba(30, 58, 95, 0.1);
+  --shadow-md: 0 2px 4px rgba(30, 58, 95, 0.12);
+  --shadow-lg: 0 4px 8px rgba(30, 58, 95, 0.15);
+  --shadow-xl: 0 6px 12px rgba(30, 58, 95, 0.18);
+  --shadow-hero: 0 10px 20px rgba(30, 58, 95, 0.2);
+
+  /* 🔄 Bordes y radios */
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+}
+
+/* Reset y configuración base */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", "Roboto", "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #cbd5e0 100%);
+  color: var(--text-primary);
+  line-height: 1.5;
+  margin: 0;
+  min-height: 100vh;
+  font-weight: 500;
+  font-size: 14px; /* Reducido de 16px */
+}
+
+/* 🧭 Navbar - Más compacto */
+.navbar {
+  background: linear-gradient(
+    135deg,
+    var(--america-navy-dark) 0%,
+    var(--america-navy) 100%
+  );
+  box-shadow: var(--shadow-lg);
+  border-bottom: 2px solid var(--america-red); /* Reducido de 3px */
+  padding: 0.5rem 0; /* Reducido de 1rem */
+  backdrop-filter: blur(10px);
+}
+
+.navbar-brand {
+  font-weight: 700; /* Reducido de 800 */
+  font-size: 1.2rem; /* Reducido de 1.5rem */
+  text-transform: uppercase;
+  letter-spacing: 0.5px; /* Reducido de 1px */
+  color: var(--text-white) !important;
+  transition: transform 0.3s ease;
+}
+
+.navbar-brand i {
+  color: var(--america-red);
+  margin-right: 0.3rem; /* Reducido de 0.5rem */
+  font-size: 1.4rem; /* Reducido de 1.8rem */
+  filter: drop-shadow(0 0 6px rgba(220, 38, 38, 0.3));
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem; /* Reducido de 0.9rem */
+  letter-spacing: 0.3px; /* Reducido de 0.5px */
+  padding: 0.5rem 0.8rem !important; /* Reducido de 0.8rem 1.2rem */
+  border-radius: var(--border-radius-md);
+  margin: 0 0.1rem; /* Reducido de 0.2rem */
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.navbar-dark .navbar-nav .nav-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover::before {
+  left: 100%;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+  background-color: rgba(220, 38, 38, 0.2);
+  color: var(--text-white) !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.navbar-dark .navbar-nav .nav-link.active {
+  background: linear-gradient(
+    135deg,
+    var(--america-red) 0%,
+    var(--america-orange) 100%
+  );
+  color: var(--text-white) !important;
+  box-shadow: var(--shadow-md);
+}
+
+/* 🦸‍♂️ Hero Section - Más compacto */
+.hero-section {
+  background: var(--bg-hero);
+  color: var(--text-white);
+  padding: 3rem 0 2rem; /* Reducido de 6rem 0 4rem */
+  margin-top: 60px; /* Reducido de 76px */
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+  opacity: 0.3;
+}
+
+.hero-section::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--america-red) 0%,
+    var(--america-orange) 100%
+  );
+  box-shadow: 0 0 15px rgba(220, 38, 38, 0.5); /* Reducido de 20px */
+}
+
+.hero-title {
+  font-size: 2.2rem; /* Reducido de 3.5rem */
+  font-weight: 800; /* Reducido de 900 */
+  margin-bottom: 1rem; /* Reducido de 1.5rem */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.hero-title i {
+  color: var(--america-red);
+  filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.5)); /* Reducido de 10px */
+}
+
+.hero-subtitle {
+  font-size: 1rem; /* Reducido de 1.3rem */
+  font-weight: 400;
+  opacity: 0.9;
+  margin-bottom: 1.2rem; /* Reducido de 2rem */
+  position: relative;
+  z-index: 1;
+}
+
+.hero-timestamp {
+  font-size: 0.9rem; /* Reducido de 1.1rem */
+  font-weight: 600;
+  color: var(--america-red);
+  font-family: "Roboto Mono", monospace;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-icon {
+  font-size: 4rem; /* Reducido de 8rem */
+  color: rgba(220, 38, 38, 0.2);
+  animation: float 6s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  } /* Reducido de -20px */
+}
+
+/* 📦 Contenedor principal - Más compacto */
+.main-container {
+  padding: 2rem 0; /* Reducido de 3rem */
+  position: relative;
+}
+
+/* 📊 Tarjetas estadísticas - Más pequeñas */
+.stat-card {
+  background: var(--bg-card);
+  border-radius: var(--border-radius-lg);
+  padding: 1.2rem; /* Reducido de 2rem */
+  box-shadow: var(--shadow-lg);
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  height: 100px; /* Reducido de 140px */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stat-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px; /* Reducido de 4px */
+  background: linear-gradient(
+    90deg,
+    var(--card-color) 0%,
+    var(--card-color-secondary) 100%
+  );
+}
+
+.stat-card:hover {
+  transform: translateY(-4px) scale(1.01); /* Reducido de -8px y 1.02 */
+  box-shadow: var(--shadow-xl);
+}
+
+/* 🎨 Colores específicos America TNT para cards */
+.stat-primary {
+  --card-color: var(--america-navy);
+  --card-color-secondary: var(--america-navy-light);
+}
+
+.stat-warning {
+  --card-color: var(--america-orange);
+  --card-color-secondary: var(--america-warning);
+}
+
+.stat-success {
+  --card-color: var(--america-success);
+  --card-color-secondary: #047857;
+}
+
+.stat-info {
+  --card-color: var(--america-red);
+  --card-color-secondary: var(--america-orange);
+}
+
+.stat-icon {
+  font-size: 2rem; /* Reducido de 3rem */
+  color: var(--card-color);
+  opacity: 0.8;
+  margin-right: 0.8rem; /* Reducido de 1rem */
+  min-width: 60px; /* Reducido de 80px */
+  text-align: center;
+}
+
+.stat-content h3 {
+  font-size: 1.8rem; /* Reducido de 2.5rem */
+  font-weight: 800; /* Reducido de 900 */
+  margin: 0;
+  color: var(--text-primary);
+  font-family: "Roboto Mono", monospace;
+}
+
+.stat-content p {
+  font-size: 0.8rem; /* Reducido de 1rem */
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px; /* Reducido de 0.5px */
+}
+
+/* 🎯 Tarjetas del dashboard - Más compactas */
+.dashboard-card {
+  background: var(--bg-card);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem; /* Reducido de 1.5rem */
+}
+
+.dashboard-card:hover {
+  transform: translateY(-1px); /* Reducido de -2px */
+  box-shadow: var(--shadow-xl);
+}
+
+.dashboard-card .card-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 2px solid var(--america-red); /* Reducido de 3px */
+  padding: 1rem; /* Reducido de 1.5rem */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard-card .card-header h5 {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1rem; /* Reducido de 1.2rem */
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px; /* Reducido de 0.5px */
+}
+
+.dashboard-card .card-header h5 i {
+  color: var(--america-red);
+  margin-right: 0.3rem; /* Reducido de 0.5rem */
+}
+
+.dashboard-card .card-body {
+  padding: 1rem; /* Reducido de 1.5rem */
+}
+
+/* ⚡ Acciones rápidas - Más compactas */
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(160px, 1fr)
+  ); /* Reducido de 200px */
+  gap: 0.8rem; /* Reducido de 1rem */
+}
+
+.quick-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.2rem 0.8rem; /* Reducido de 2rem 1rem */
+  text-decoration: none;
+  border-radius: var(--border-radius-lg);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px; /* Reducido de 0.5px */
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: none;
+}
+
+.quick-action-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.quick-action-btn:hover::before {
+  left: 100%;
+}
+
+.quick-action-btn:hover {
+  transform: translateY(-3px) scale(1.02); /* Reducido de -5px y 1.05 */
+  box-shadow: var(--shadow-xl);
+  text-decoration: none;
+  color: white;
+}
+
+/* 🏢 Botones con colores America TNT */
+.quick-action-btn.btn-primary {
+  background: linear-gradient(
+    135deg,
+    var(--america-navy) 0%,
+    var(--america-navy-light) 100%
+  );
+}
+
+.quick-action-btn.btn-success {
+  background: linear-gradient(135deg, var(--america-success) 0%, #047857 100%);
+}
+
+.quick-action-btn.btn-info {
+  background: linear-gradient(
+    135deg,
+    var(--america-red) 10%,
+    var(--america-orange) 90%
+  );
+}
+
+.quick-action-btn.btn-warning {
+  background: linear-gradient(
+    135deg,
+    var(--america-orange) 0%,
+    var(--america-warning) 100%
+  );
+}
+
+.quick-action-btn.btn-warning2 {
+  background: linear-gradient(
+    135deg,
+    var(--america-gray) 0%,
+    var(--america-navy-light) 100%
+  );
+}
+
+.quick-action-btn i {
+  font-size: 1.8rem; /* Reducido de 2.5rem */
+  margin-bottom: 0.6rem; /* Reducido de 1rem */
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.quick-action-btn span {
+  font-size: 0.75rem; /* Reducido de 0.9rem */
+  line-height: 1.1;
+}
+
+/* 📋 Tablas - Más compactas */
+.table {
+  margin-bottom: 0;
+  font-size: 0.8rem; /* Reducido de 0.9rem */
+}
+
+.table thead th {
+  border-bottom: 2px solid var(--america-red);
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 0.75rem; /* Reducido de 0.85rem */
+  padding: 0.8rem 0.6rem; /* Reducido de 1rem 0.75rem */
+  text-transform: uppercase;
+  letter-spacing: 0.2px; /* Reducido de 0.3px */
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.table tbody td {
+  padding: 0.8rem 0.6rem; /* Reducido de 1rem 0.75rem */
+  vertical-align: middle;
+  font-weight: 500;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.table-hover tbody tr {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.table-hover tbody tr:hover {
+  background: linear-gradient(90deg, #f8f9fa 0%, #e9ecef 100%);
+  transform: translateX(2px); /* Reducido de 3px */
+  box-shadow: var(--shadow-sm);
+}
+
+/* 🏷️ Badges - Más pequeños */
+.badge {
+  font-size: 0.7rem; /* Reducido de 0.8rem */
+  padding: 0.3rem 0.6rem; /* Reducido de 0.5rem 1rem */
+  border-radius: 15px; /* Reducido de 20px */
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2px; /* Reducido de 0.3px */
+}
+
+.bg-success {
+  background: linear-gradient(
+    135deg,
+    var(--america-success) 0%,
+    #047857 100%
+  ) !important;
+}
+
+.bg-warning {
+  background: linear-gradient(
+    135deg,
+    var(--america-orange) 0%,
+    var(--america-warning) 100%
+  ) !important;
+}
+
+.bg-primary {
+  background: linear-gradient(
+    135deg,
+    var(--america-navy) 0%,
+    var(--america-navy-light) 100%
+  ) !important;
+}
+
+.bg-secondary {
+  background: linear-gradient(
+    135deg,
+    var(--america-gray) 0%,
+    #475569 100%
+  ) !important;
+}
+
+/* 📭 Estado vacío - Más compacto */
+.empty-state {
+  text-align: center;
+  padding: 2rem 1rem; /* Reducido de 3rem */
+  color: var(--text-muted);
+}
+
+.empty-state i {
+  font-size: 3rem; /* Reducido de 4rem */
+  margin-bottom: 0.8rem; /* Reducido de 1rem */
+  opacity: 0.5;
+}
+
+.empty-state p {
+  font-size: 1rem; /* Reducido de 1.1rem */
+  font-weight: 500;
+  margin: 0;
+}
+
+/* ℹ️ Información del sistema - Más compacta */
+.sistema-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Reducido de 1.5rem */
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem; /* Reducido de 1rem */
+  padding: 0.8rem; /* Reducido de 1rem */
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: var(--border-radius-md);
+  border-left: 3px solid var(--america-red); /* Reducido de 4px */
+  transition: all 0.3s ease;
+}
+
+.info-item:hover {
+  transform: translateX(3px); /* Reducido de 5px */
+  box-shadow: var(--shadow-md);
+  border-left-color: var(--america-orange);
+}
+
+.info-item i {
+  font-size: 1.5rem; /* Reducido de 2rem */
+  min-width: 30px; /* Reducido de 40px */
+  text-align: center;
+}
+
+.info-item h6 {
+  margin: 0 0 0.3rem 0; /* Reducido de 0.5rem */
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 0.9rem; /* Reducido de 1rem */
+}
+
+.info-item p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.8rem; /* Reducido de 0.9rem */
+}
+
+/* 🔄 Estado del sistema - Más compacto */
+.sistema-status {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem; /* Reducido de 1rem */
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem; /* Reducido de 1rem */
+  padding: 0.8rem; /* Reducido de 1rem */
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: var(--border-radius-md);
+  transition: all 0.3s ease;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.status-item:hover {
+  transform: translateX(2px); /* Reducido de 3px */
+  box-shadow: var(--shadow-sm);
+}
+
+.status-indicator {
+  width: 10px; /* Reducido de 12px */
+  height: 10px; /* Reducido de 12px */
+  border-radius: 50%;
+  min-width: 10px; /* Reducido de 12px */
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(5, 150, 105, 0);
+  } /* Reducido de 10px */
+  100% {
+    box-shadow: 0 0 0 0 rgba(5, 150, 105, 0);
+  }
+}
+
+.status-indicator.bg-warning {
+  animation-name: pulse-warning;
+}
+
+@keyframes pulse-warning {
+  0% {
+    box-shadow: 0 0 0 0 rgba(234, 88, 12, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(234, 88, 12, 0);
+  } /* Reducido de 10px */
+  100% {
+    box-shadow: 0 0 0 0 rgba(234, 88, 12, 0);
+  }
+}
+
+/* 📱 Tipo summary - Más compacto */
+.tipo-summary {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: var(--border-radius-lg);
+  padding: 1rem; /* Reducido de 1.5rem */
+  display: flex;
+  align-items: center;
+  border: 1px solid #dee2e6;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.tipo-summary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px; /* Reducido de 3px */
+  background: var(--america-red);
+}
+
+.tipo-summary:hover {
+  transform: translateY(-2px); /* Reducido de -3px */
+  box-shadow: var(--shadow-lg);
+  border-color: var(--america-red);
+}
+
+.tipo-icon {
+  font-size: 2rem; /* Reducido de 2.5rem */
+  color: var(--america-red);
+  margin-right: 0.8rem; /* Reducido de 1rem */
+  min-width: 50px; /* Reducido de 60px */
+  text-align: center;
+}
+
+.tipo-content h4 {
+  font-size: 1rem; /* Reducido de 1.2rem */
+  font-weight: 700;
+  margin: 0 0 0.3rem 0; /* Reducido de 0.5rem */
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px; /* Reducido de 0.5px */
+}
+
+.tipo-content p {
+  margin: 0.1rem 0; /* Reducido de 0.2rem */
+  font-size: 0.8rem; /* Reducido de 0.9rem */
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* ⚠️ Alerts - Más compactos */
+.alert-custom {
+  border: none;
+  border-radius: var(--border-radius-lg);
+  padding: 1rem; /* Reducido de 1.5rem */
+  margin-bottom: 1rem; /* Reducido de 1.5rem */
+  box-shadow: var(--shadow-md);
+  border-left: 4px solid; /* Reducido de 5px */
+  font-weight: 600;
+  font-size: 1rem; /* Reducido de 1.1rem */
+}
+
+.alert-danger {
+  background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
+  color: var(--america-danger);
+  border-left-color: var(--america-danger);
+}
+
+/* 🦶 Footer - Más compacto */
+.footer {
+  background: linear-gradient(
+    135deg,
+    var(--america-navy-dark) 0%,
+    var(--america-navy) 100%
+  );
+  color: var(--text-white);
+  padding: 1.5rem 0; /* Reducido de 2rem */
+  margin-top: 3rem; /* Reducido de 4rem */
+  border-top: 2px solid var(--america-red); /* Reducido de 3px */
+}
+
+.footer p {
+  margin: 0;
+  font-weight: 500;
+  font-size: 0.85rem; /* Añadido para hacer texto más pequeño */
+}
+
+.footer .text-danger {
+  color: var(--america-red) !important;
+}
+
+/* 🔘 Botones pequeños - Más compactos */
+.btn-sm {
+  padding: 0.3rem 0.6rem; /* Reducido de 0.4rem 0.8rem */
+  font-size: 0.7rem; /* Reducido de 0.8rem */
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2px; /* Reducido de 0.3px */
+  border-radius: var(--border-radius-sm);
+  transition: all 0.3s ease;
+}
+
+.btn-outline-primary {
+  color: var(--america-navy);
+  border-color: var(--america-navy);
+}
+
+.btn-outline-primary:hover {
+  background: var(--america-navy);
+  border-color: var(--america-navy);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* 📱 Responsividad mejorada para versión compacta */
+@media (max-width: 992px) {
+  .hero-title {
+    font-size: 1.8rem; /* Reducido de 2.5rem */
+  }
+
+  .hero-subtitle {
+    font-size: 0.9rem; /* Reducido de 1.1rem */
+  }
+
+  .hero-icon {
+    font-size: 3rem; /* Reducido de 5rem */
+    margin-top: 1rem; /* Reducido de 2rem */
+  }
+
+  .stat-card {
+    margin-bottom: 0.8rem; /* Reducido de 1rem */
+    height: auto;
+    padding: 1rem; /* Reducido de 1.5rem */
+  }
+
+  .stat-content h3 {
+    font-size: 1.5rem; /* Reducido de 2rem */
+  }
+
+  .quick-actions {
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(140px, 1fr)
+    ); /* Reducido de 150px */
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 2rem 0 1rem; /* Reducido de 4rem 0 2rem */
+  }
+
+  .hero-title {
+    font-size: 1.5rem; /* Reducido de 2rem */
+  }
+
+  .hero-subtitle {
+    font-size: 0.85rem; /* Reducido de 1rem */
+  }
+
+  .main-container {
+    padding: 1.5rem 0; /* Reducido de 2rem */
+  }
+
+  .stat-card {
+    flex-direction: column;
+    text-align: center;
+    height: auto;
+    padding: 1rem; /* Reducido de 1.5rem */
+  }
+
+  .stat-icon {
+    margin-right: 0;
+    margin-bottom: 0.6rem; /* Reducido de 1rem */
+    min-width: auto;
+  }
+
+  .dashboard-card .card-header {
+    flex-direction: column;
+    gap: 0.6rem; /* Reducido de 1rem */
+    text-align: center;
+  }
+
+  .quick-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .info-item,
+  .status-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.3rem; /* Reducido de 0.5rem */
+  }
+
+  .info-item i {
+    margin-bottom: 0.3rem; /* Reducido de 0.5rem */
+  }
+}
+
+/* ✨ Animaciones mejoradas */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px); /* Reducido de 30px */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.dashboard-card {
+  animation: slideInUp 0.5s ease-out; /* Reducido de 0.6s */
+}
+
+.stat-card {
+  animation: slideInUp 0.5s ease-out; /* Reducido de 0.6s */
+}
+
+.stat-card:nth-child(1) {
+  animation-delay: 0.05s;
+} /* Reducido de 0.1s */
+.stat-card:nth-child(2) {
+  animation-delay: 0.1s;
+} /* Reducido de 0.2s */
+.stat-card:nth-child(3) {
+  animation-delay: 0.15s;
+} /* Reducido de 0.3s */
+.stat-card:nth-child(4) {
+  animation-delay: 0.2s;
+} /* Reducido de 0.4s */
+
+/* 🚀 Efectos de carga inicial */
+.hero-section {
+  animation: fadeIn 0.8s ease-out; /* Reducido de 1s */
+}
+
+.main-container {
+  animation: slideInUp 0.6s ease-out 0.1s both; /* Reducido de 0.8s y 0.2s */
+}
+
+/* ⚡ Mejoras de performance */
+.stat-card,
+.dashboard-card,
+.quick-action-btn,
+.tipo-summary {
+  will-change: transform;
+}
+
+/* 📜 Scroll suave */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-container {
+  flex: 1;
+  min-height: calc(100vh - 300px); /* Reducido de 400px */
+}
+
+.footer {
+  margin-top: auto;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1); /* Reducido de -4px 12px */
+}
+
+/* 🏭 CONTENEDORES DE BOTONES DIVIDIDOS - VERSIÓN COMPACTA */
+
+/* Contenedor para el botón de expedición - TAMAÑO COMPACTO */
+.expedicion-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-height: 80px; /* Reducido de 120px */
+}
+
+/* Botón normal de expedición - ESTILO COMPACTO */
+.expedicion-normal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3); /* Reducido de 4px 15px */
+  transition: all 0.4s ease;
+  opacity: 1;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.2rem 0.8rem; /* Reducido de 2rem 1rem */
+  border-radius: var(--border-radius-lg);
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px; /* Reducido de 0.5px */
+  overflow: hidden;
+  gap: 4px; /* Reducido de 8px */
+}
+
+.expedicion-normal i {
+  font-size: 1.8rem; /* Reducido de 2.5rem */
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.expedicion-normal span {
+  font-size: 0.75rem; /* Reducido de 0.9rem */
+  line-height: 1.1;
+}
+
+.expedicion-split {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  opacity: 0;
+  z-index: 1;
+  transition: all 0.4s ease;
+}
+
+/* Botones individuales cuando se dividen - TAMAÑO COMPACTO */
+.expedicion-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px; /* Reducido de 8px */
+  padding: 1.2rem 0.8rem; /* Reducido de 2rem 1rem */
+  text-decoration: none;
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px; /* Reducido de 0.5px */
+  transition: all 0.3s ease;
+  border: none;
+  transform: scale(0.95);
+  overflow: hidden;
+  position: relative;
+}
+
+.expedicion-btn i {
+  font-size: 1.5rem; /* Reducido de 2rem */
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.expedicion-btn span {
+  font-size: 0.65rem; /* Reducido de 0.8rem */
+  line-height: 1.1;
+  text-align: center;
+}
+
+.expedicion-btn:hover {
+  color: white;
+  text-decoration: none;
+  transform: scale(0.98) translateY(-1px); /* Reducido de -2px */
+}
+
+/* Estilos específicos para cada botón dividido */
+.expedicion-pendientes {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  border-radius: var(--border-radius-lg) 0 0 var(--border-radius-lg);
+  box-shadow: -1px 2px 8px rgba(231, 76, 60, 0.3); /* Reducido */
+}
+
+.expedicion-completadas {
+  background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+  border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
+  box-shadow: 1px 2px 8px rgba(39, 174, 96, 0.3); /* Reducido */
+}
+
+/* Efectos al hacer hover en el contenedor */
+.expedicion-container:hover .expedicion-normal {
+  opacity: 0;
+  transform: scale(0.95);
+  pointer-events: none;
+}
+
+.expedicion-container:hover .expedicion-split {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.expedicion-container:hover .expedicion-btn {
+  transform: scale(1);
+}
+
+/* Línea divisoria */
+.expedicion-split::after {
+  content: "";
+  position: absolute;
+  top: 20%; /* Ajustado para tamaño compacto */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 60%; /* Reducido de 70% */
+  background: rgba(255, 255, 255, 0.3);
+  z-index: 3;
+}
+
+/* 📦 BOTÓN DE DESPACHO CON EFECTO DE DIVISIÓN - VERSIÓN COMPACTA */
+.despacho-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-height: 80px; /* Reducido de 120px */
+}
+
+.despacho-normal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+  box-shadow: 0 2px 8px rgba(142, 68, 173, 0.3); /* Reducido */
+  transition: all 0.4s ease;
+  opacity: 1;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.2rem 0.8rem; /* Reducido */
+  border-radius: var(--border-radius-lg);
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px; /* Reducido */
+  overflow: hidden;
+  gap: 4px; /* Reducido */
+}
+
+.despacho-normal i {
+  font-size: 1.8rem; /* Reducido */
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.despacho-normal span {
+  font-size: 0.75rem; /* Reducido */
+  line-height: 1.1;
+}
+
+.despacho-split {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  opacity: 0;
+  z-index: 1;
+  transition: all 0.4s ease;
+}
+
+.despacho-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px; /* Reducido */
+  padding: 1.2rem 0.8rem; /* Reducido */
+  text-decoration: none;
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px; /* Reducido */
+  transition: all 0.3s ease;
+  border: none;
+  transform: scale(0.95);
+  overflow: hidden;
+  position: relative;
+}
+
+.despacho-btn i {
+  font-size: 1.5rem; /* Reducido */
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.despacho-btn span {
+  font-size: 0.65rem; /* Reducido */
+  line-height: 1.1;
+  text-align: center;
+}
+
+.despacho-btn:hover {
+  color: white;
+  text-decoration: none;
+  transform: scale(0.98) translateY(-1px); /* Reducido */
+}
+
+.despacho-pendientes {
+  background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+  border-radius: var(--border-radius-lg) 0 0 var(--border-radius-lg);
+  box-shadow: -1px 2px 8px rgba(142, 68, 173, 0.3); /* Reducido */
+}
+
+.despacho-completados {
+  background: linear-gradient(135deg, #058cca 0%, #2e646b 100%);
+  border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
+  box-shadow: 1px 2px 8px rgba(125, 60, 152, 0.3); /* Reducido */
+}
+
+.despacho-container:hover .despacho-normal {
+  opacity: 0;
+  transform: scale(0.95);
+  pointer-events: none;
+}
+
+.despacho-container:hover .despacho-split {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.despacho-container:hover .despacho-btn {
+  transform: scale(1);
+}
+
+.despacho-split::after {
+  content: "";
+  position: absolute;
+  top: 20%; /* Ajustado para tamaño compacto */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 60%; /* Reducido */
+  background: rgba(255, 255, 255, 0.3);
+  z-index: 3;
+}
+
+/* 🏭 BOTÓN DE NUEVA PRODUCCIÓN CON EFECTO DE DIVISIÓN - VERSIÓN COMPACTA */
+.produccion-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-height: 80px; /* Reducido de 120px */
+}
+
+.produccion-normal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--america-success) 0%, #047857 100%);
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3); /* Reducido */
+  transition: all 0.4s ease;
+  opacity: 1;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.2rem 0.8rem; /* Reducido */
+  border-radius: var(--border-radius-lg);
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px; /* Reducido */
+  overflow: hidden;
+  gap: 4px; /* Reducido */
+}
+
+.produccion-normal i {
+  font-size: 1.8rem; /* Reducido */
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.produccion-normal span {
+  font-size: 0.75rem; /* Reducido */
+  line-height: 1.1;
+}
+
+.produccion-split {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  opacity: 0;
+  z-index: 1;
+  transition: all 0.4s ease;
+}
+
+.produccion-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px; /* Reducido */
+  padding: 1.2rem 0.8rem; /* Reducido */
+  text-decoration: none;
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px; /* Reducido */
+  transition: all 0.3s ease;
+  border: none;
+  transform: scale(0.95);
+  overflow: hidden;
+  position: relative;
+}
+
+.produccion-btn i {
+  font-size: 1.5rem; /* Reducido */
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.produccion-btn span {
+  font-size: 0.65rem; /* Reducido */
+  line-height: 1.1;
+  text-align: center;
+}
+
+.produccion-btn:hover {
+  color: white;
+  text-decoration: none;
+  transform: scale(0.98) translateY(-1px); /* Reducido */
+}
+
+.produccion-etiquetar {
+  background: linear-gradient(135deg, var(--america-success) 0%, #047857 100%);
+  border-radius: var(--border-radius-lg) 0 0 var(--border-radius-lg);
+  box-shadow: -1px 2px 8px rgba(5, 150, 105, 0.3); /* Reducido */
+}
+
+.produccion-pendientes {
+  background: linear-gradient(135deg, #ffaf01 0%, #8d5813 100%);
+  border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
+  box-shadow: 1px 2px 8px rgba(22, 160, 133, 0.3); /* Reducido */
+}
+
+.produccion-container:hover .produccion-normal {
+  opacity: 0;
+  transform: scale(0.95);
+  pointer-events: none;
+}
+
+.produccion-container:hover .produccion-split {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.produccion-container:hover .produccion-btn {
+  transform: scale(1);
+}
+
+.produccion-split::after {
+  content: "";
+  position: absolute;
+  top: 20%; /* Ajustado para tamaño compacto */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 60%; /* Reducido */
+  background: rgba(255, 255, 255, 0.3);
+  z-index: 3;
+}
+/* Estilo base para el botón de Configuración */
+.quick-action-btn.btn-dark {
+  background-color: #1c1c1c;
+  border: none;
+  color: #ffffff;
+  transition: all 0.3s ease-in-out;
+  text-align: center;
+}
+
+/* Ícono del botón */
+.quick-action-btn.btn-dark i {
+  font-size: 1.8rem;
+  margin-bottom: 5px;
+  display: block;
+}
+
+/* Texto del botón */
+.quick-action-btn.btn-dark span {
+  font-weight: 500;
+  font-size: 0.9rem;
+  line-height: 1.1rem;
+}
+
+/* Hover: brillo sutil y sombra */
+.quick-action-btn.btn-dark:hover {
+  background-color: #000000;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
+}
+
+/* Animación al hacer clic */
+.quick-action-btn.btn-dark:active {
+  transform: scale(0.97);
+  box-shadow: none;
+}
+
+.quick-action-btn.btn-second {
+  background-color: #7a7a7a;
+  border: none;
+  color: #ffffff;
+  transition: all 0.3s ease-in-out;
+  text-align: center;
+}
+
+/* Ícono del botón */
+.quick-action-btn.btn-second i {
+  font-size: 1.8rem;
+  margin-bottom: 5px;
+  display: block;
+}
+
+/* Texto del botón */
+.quick-action-btn.btn-second span {
+  font-weight: 500;
+  font-size: 0.9rem;
+  line-height: 1.1rem;
+}
+
+/* Hover: brillo sutil y sombra */
+.quick-action-btn.btn-second:hover {
+  background-color: #7a7a7a;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
+}
+
+/* Animación al hacer clic */
+.quick-action-btn.btn-second:active {
+  transform: scale(0.97);
+  box-shadow: none;
+}

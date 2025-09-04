@@ -1,0 +1,511 @@
+/**
+ * Estilos para Stock Agregado - America TNT
+ * Optimizado SOLO para PC y Notebooks - Sin responsive
+ */
+
+/* ==========================================================================
+   Variables y Configuración Base
+   ========================================================================== */
+
+:root {
+  /* 🏢 Colores principales America TNT */
+  --america-navy: #325b91;
+  --america-navy-dark: #152c47;
+  --america-navy-light: #2d4d73;
+  --america-red: #dc2626;
+  --america-orange: #ea580c;
+  --america-gray: #64748b;
+  --america-blue-light: #3b82f6;
+
+  /* 🎨 Paleta extendida */
+  --america-success: #059669;
+  --america-warning: #d97706;
+  --america-danger: #dc2626;
+  --america-info: var(--america-blue-light);
+
+  /* 🖼️ Backgrounds */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #e2e8f0;
+  --bg-card: #ffffff;
+
+  /* 📝 Texto */
+  --text-primary: #1e293b;
+  --text-secondary: var(--america-gray);
+  --text-muted: #94a3b8;
+  --text-white: #ffffff;
+
+  /* 🌫️ Sombras */
+  --shadow-sm: 0 1px 2px rgba(30, 58, 95, 0.1);
+  --shadow-md: 0 2px 4px rgba(30, 58, 95, 0.12);
+  --shadow-lg: 0 4px 8px rgba(30, 58, 95, 0.15);
+  --shadow-xl: 0 6px 12px rgba(30, 58, 95, 0.18);
+
+  /* 🔄 Bordes y radios */
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+}
+
+/* Reset y configuración base */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", "Roboto", "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #cbd5e0 100%);
+  color: var(--text-primary);
+  line-height: 1.5;
+  margin: 0;
+  min-height: 100vh;
+  font-weight: 500;
+  padding-top: 60px;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+
+/* ==========================================================================
+   Navbar
+   ========================================================================== */
+.navbar {
+  background: linear-gradient(
+    135deg,
+    var(--america-navy-dark) 0%,
+    var(--america-navy) 100%
+  );
+  box-shadow: var(--shadow-lg);
+  border-bottom: 2px solid var(--america-red);
+  padding: 0.6rem 0;
+  backdrop-filter: blur(10px);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-white) !important;
+  transition: transform 0.3s ease;
+}
+
+.navbar-brand img {
+  transition: transform 0.3s ease;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.3px;
+  padding: 0.5rem 0.8rem !important;
+  border-radius: var(--border-radius-md);
+  margin: 0 0.1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.navbar-dark .navbar-nav .nav-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover::before {
+  left: 100%;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+  background-color: rgba(220, 38, 38, 0.2);
+  color: var(--text-white) !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.navbar-dark .navbar-nav .nav-link.active {
+  background: linear-gradient(
+    135deg,
+    var(--america-red) 0%,
+    var(--america-orange) 100%
+  );
+  color: var(--text-white) !important;
+  box-shadow: var(--shadow-md);
+}
+
+/* ==========================================================================
+   Contenedor Principal
+   ========================================================================== */
+.main-container {
+  flex: 1;
+  padding: 2rem 0;
+  position: relative;
+  animation: slideInUp 0.6s ease-out 0.1s both;
+}
+
+/* ==========================================================================
+   Filtros
+   ========================================================================== */
+.filter-section {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.filtros-form .form-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-control,
+.form-select {
+  border: 1px solid #dee2e6;
+  border-radius: var(--border-radius-sm);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--america-navy);
+  box-shadow: 0 0 0 0.2rem rgba(50, 91, 145, 0.25);
+}
+
+/* ==========================================================================
+   Botones
+   ========================================================================== */
+.btn-primary {
+  background: linear-gradient(
+    135deg,
+    var(--america-navy) 0%,
+    var(--america-navy-light) 100%
+  );
+  border: none;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  border-radius: var(--border-radius-sm);
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(
+    135deg,
+    var(--america-navy-dark) 0%,
+    var(--america-navy) 100%
+  );
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-outline-secondary {
+  border-color: var(--america-gray);
+  color: var(--america-gray);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  padding: 0.5rem 1rem;
+}
+
+.btn-outline-secondary:hover {
+  background-color: var(--america-gray);
+  border-color: var(--america-gray);
+  color: white;
+}
+
+.btn-outline-primary {
+  border-color: var(--america-navy);
+  color: var(--america-navy);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  padding: 0.5rem 1rem;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--america-navy);
+  border-color: var(--america-navy);
+  color: white;
+}
+
+/* ==========================================================================
+   Tabla de Stock
+   ========================================================================== */
+.table-responsive {
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.stock-table {
+  font-size: 0.8rem;
+  border-collapse: collapse;
+  margin-bottom: 0;
+}
+
+.stock-table th {
+  background: linear-gradient(
+    135deg,
+    var(--america-navy-dark) 0%,
+    var(--america-navy) 100%
+  );
+  color: var(--text-white);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border: none;
+  padding: 0.8rem 0.6rem;
+  text-align: left;
+  font-size: 0.75rem;
+}
+
+.stock-table td {
+  padding: 0.8rem 0.6rem;
+  border-bottom: 1px solid #e9ecef;
+  vertical-align: middle;
+  font-size: 0.8rem;
+}
+
+.stock-table tbody tr {
+  transition: all 0.2s ease;
+  will-change: transform;
+}
+
+.stock-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.stock-table tbody tr:hover {
+  background: linear-gradient(90deg, #f8f9fa 0%, #e9ecef 100%);
+  transform: translateX(2px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ==========================================================================
+   Elementos de la tabla
+   ========================================================================== */
+.producto-info {
+  line-height: 1.3;
+}
+
+.producto-nombre {
+  font-weight: 600;
+  margin-bottom: 3px;
+  color: var(--america-navy);
+  font-size: 0.85rem;
+}
+
+.producto-specs {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.badge-tipo {
+  font-size: 0.65rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--border-radius-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  color: white;
+}
+
+.cantidad-container {
+  text-align: center;
+}
+
+.fw-medium {
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Cards y contenedores
+   ========================================================================== */
+.card {
+  border: 1px solid #e2e8f0;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+  will-change: transform;
+}
+
+.card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-body {
+  padding: 0;
+}
+
+.card-footer {
+  background-color: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  padding: 1rem;
+}
+
+/* ==========================================================================
+   Paginación
+   ========================================================================== */
+.pagination {
+  margin: 0;
+}
+
+.page-link {
+  color: var(--america-navy);
+  border-color: #dee2e6;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+}
+
+.page-link:hover {
+  color: var(--america-navy-dark);
+  background-color: #e9ecef;
+  border-color: #dee2e6;
+}
+
+.page-item.active .page-link {
+  background-color: var(--america-navy);
+  border-color: var(--america-navy);
+  color: white;
+}
+
+.page-item.disabled .page-link {
+  color: #6c757d;
+  background-color: #fff;
+  border-color: #dee2e6;
+}
+
+/* ==========================================================================
+   Estados vacíos
+   ========================================================================== */
+.text-center.py-5 {
+  padding: 3rem 1.5rem;
+  color: var(--text-secondary);
+}
+
+.text-center.py-5 i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+  color: var(--america-gray);
+}
+
+.text-center.py-5 h4 {
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+/* ==========================================================================
+   Botón flotante
+   ========================================================================== */
+.btn-floating {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==========================================================================
+   Alertas
+   ========================================================================== */
+.alert-custom {
+  border-radius: 8px;
+  border: none;
+  box-shadow: var(--shadow-sm);
+  font-size: 0.85rem;
+}
+
+/* ==========================================================================
+   Animaciones de entrada
+   ========================================================================== */
+.fade-in {
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.3s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   Estados de texto y colores
+   ========================================================================== */
+.text-success {
+  color: var(--america-success) !important;
+}
+
+.text-warning {
+  color: var(--america-warning) !important;
+}
+
+.text-primary {
+  color: var(--america-navy) !important;
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+.bg-info {
+  background-color: var(--america-info) !important;
+}
+
+/* ==========================================================================
+   Badges y indicadores
+   ========================================================================== */
+.badge {
+  font-size: 0.7rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--border-radius-sm);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Animaciones principales
+   ========================================================================== */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   Scroll suave
+   ========================================================================== */
+html {
+  scroll-behavior: smooth;
+}

@@ -1,0 +1,514 @@
+/* === VARIABLES DE AMERICA TNT === */
+:root {
+  /* 🏢 Colores principales America TNT */
+  --america-navy: #325b91;
+  --america-navy-dark: #152c47;
+  --america-red: #dc2626;
+  --america-orange: #ea580c;
+  --america-gray: #64748b;
+  --america-blue-light: #3b82f6;
+
+  /* 🎨 Paleta extendida */
+  --america-success: #059669;
+  --america-warning: #d97706;
+  --america-danger: #dc2626;
+
+  --primary-color: #2563eb;
+  --secondary-color: #64748b;
+  --success-color: #059669;
+  --warning-color: #d97706;
+  --danger-color: #dc2626;
+  --info-color: #0891b2;
+  --light-bg: #f8fafc;
+  --border-color: #e2e8f0;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+
+  /* 🖼️ Backgrounds */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #e2e8f0;
+  --bg-card: #ffffff;
+
+  /* 📝 Texto */
+  --text-white: #ffffff;
+  --text-muted: #94a3b8;
+
+  /* Grises */
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: var(--america-gray);
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1e293b;
+  --gray-900: var(--america-navy-dark);
+
+  /* 🌫️ Sombras industriales */
+  --shadow-sm: 0 1px 2px rgba(30, 58, 95, 0.1);
+  --shadow-md: 0 2px 4px rgba(30, 58, 95, 0.12);
+  --shadow-lg: 0 4px 8px rgba(30, 58, 95, 0.15);
+  --shadow-xl: 0 6px 12px rgba(30, 58, 95, 0.18);
+
+  /* 🔄 Bordes y radios */
+  --border-radius: 8px;
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+}
+
+/* ===== BASE ===== */
+* {
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+  color: var(--gray-900);
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.main-container {
+  padding-top: 80px;
+  min-height: 100vh;
+}
+
+/* ===== NAVBAR - AMERICA TNT STYLE ===== */
+.navbar {
+  background: linear-gradient(
+    135deg,
+    var(--america-navy-dark) 0%,
+    var(--america-navy) 100%
+  );
+  box-shadow: var(--shadow-lg);
+  border-bottom: 2px solid var(--america-red);
+  padding: 0.6rem 0;
+  backdrop-filter: blur(10px);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-white) !important;
+  transition: transform 0.3s ease;
+}
+
+.navbar-brand img {
+  filter: brightness(1.1);
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.3px;
+  padding: 0.5rem 0.8rem !important;
+  border-radius: var(--border-radius-md);
+  margin: 0 0.1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.navbar-dark .navbar-nav .nav-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover::before {
+  left: 100%;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+  background-color: rgba(220, 38, 38, 0.2);
+  color: var(--text-white) !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.navbar-dark .navbar-nav .nav-link.active {
+  background: linear-gradient(
+    135deg,
+    var(--america-red) 0%,
+    var(--america-orange) 100%
+  );
+  color: var(--text-white) !important;
+  box-shadow: var(--shadow-md);
+}
+
+/* === HEADER === */
+.header-section {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1.5rem 0;
+  margin-bottom: 1.5rem;
+}
+
+.header-title {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-title i {
+  color: var(--primary-color);
+  font-size: 1.8rem;
+}
+
+.header-description {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+
+/* === BOTONES === */
+.btn {
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.btn-outline-primary {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+}
+
+.btn-secondary {
+  background: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+.btn-close {
+  filter: brightness(0) invert(1);
+}
+
+/* === ESTADO SIN ITEMS === */
+.no-items {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: var(--text-secondary);
+}
+
+.no-items i {
+  color: var(--border-color);
+  margin-bottom: 0.8rem;
+}
+
+.no-items h5 {
+  color: var(--text-primary);
+  margin-bottom: 0.8rem;
+}
+
+/* === HISTORIAL ITEMS === */
+.historial-item {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.8rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.historial-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: var(--primary-color);
+}
+
+/* === BADGES DE ESTADO === */
+.estado-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.estado-badge.success {
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.estado-badge.danger {
+  background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.estado-badge.primary {
+  background: linear-gradient(135deg, #cce7ff, #b3d9ff);
+  color: #004085;
+  border: 1px solid #b3d9ff;
+}
+
+.estado-badge.warning {
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.estado-badge.info {
+  background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+  color: #0c5460;
+  border: 1px solid #bee5eb;
+}
+
+/* === BADGES DE TIEMPO === */
+.tiempo-badge {
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.tiempo-badge.success {
+  background: #d4edda;
+  color: #155724;
+}
+
+.tiempo-badge.info {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.tiempo-badge.warning {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.tiempo-badge.danger {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* === BADGES DE TIPO === */
+.tipo-badge {
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-right: 0.5rem;
+}
+
+/* === BADGES DE OBSERVACIONES === */
+.observaciones-badge {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.75rem;
+  margin: 0.2rem 0;
+}
+
+.observaciones-badge.text-success {
+  border-color: #c3e6cb;
+  background: #d4edda;
+}
+
+.observaciones-badge.text-danger {
+  border-color: #f5c6cb;
+  background: #f8d7da;
+}
+
+.observaciones-badge.text-warning {
+  border-color: #ffeaa7;
+  background: #fff3cd;
+}
+
+.observaciones-badge.text-info {
+  border-color: #bee5eb;
+  background: #d1ecf1;
+}
+
+.observaciones-badge.text-muted {
+  border-color: #dee2e6;
+  background: #f8f9fa;
+}
+
+/* === MODAL === */
+.modal-header {
+  background: linear-gradient(135deg, var(--primary-color), #3730a3);
+  color: white;
+  border-radius: 8px 8px 0 0;
+}
+
+.modal-title {
+  font-weight: 300;
+  display: flex;
+  align-items: center;
+}
+
+.modal-body {
+  padding: 1rem;
+}
+
+/* === LOADING SPINNER === */
+.loading-spinner {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+.loading-spinner i {
+  color: var(--primary-color);
+  margin-bottom: 0.8rem;
+}
+
+/* === PAGINACIÓN === */
+.pagination {
+  justify-content: center;
+}
+
+.page-link {
+  color: var(--primary-color);
+  border-color: var(--border-color);
+  padding: 0.4rem 0.6rem;
+}
+
+.page-link:hover {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+}
+
+.page-item.active .page-link {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.page-item.disabled .page-link {
+  color: #6c757d;
+  pointer-events: none;
+  background-color: #fff;
+  border-color: #dee2e6;
+}
+
+/* === FORMULARIOS === */
+.form-control,
+.form-select {
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  padding: 0.4rem 0.6rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.15rem rgba(37, 99, 235, 0.25);
+}
+
+.form-label {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* === ALERTAS === */
+.alert {
+  border-radius: 6px;
+  border: none;
+  padding: 0.8rem 1rem;
+}
+
+.alert-info {
+  background: linear-gradient(135deg, #d1ecf1, #b8daff);
+  color: #0c5460;
+}
+
+.alert-success {
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  color: #155724;
+}
+
+.alert-warning {
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  color: #856404;
+}
+
+.alert-danger {
+  background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+  color: #721c24;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .header-title {
+    font-size: 1.6rem;
+  }
+
+  .historial-item {
+    padding: 0.8rem;
+  }
+
+  .main-container {
+    margin-top: 55px;
+  }
+}
+
+/* === ANIMACIONES === */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.historial-item {
+  animation: fadeInUp 0.4s ease forwards;
+}

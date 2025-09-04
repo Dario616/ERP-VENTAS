@@ -1,0 +1,734 @@
+/* === VARIABLES DE AMERICA TNT - SOLO LAS NECESARIAS === */
+:root {
+  /* 🏢 Colores principales America TNT */
+  --america-navy: #325b91;
+  --america-navy-dark: #152c47;
+  --america-red: #dc2626;
+  --america-orange: #ea580c;
+  --america-gray: #64748b;
+  --america-blue-light: #3b82f6;
+
+  /* 🎨 Paleta extendida */
+  --america-success: #059669;
+  --america-warning: #d97706;
+  --america-danger: #dc2626;
+  --america-info: var(--america-blue-light);
+
+  --primary-color: #2563eb;
+  --secondary-color: #64748b;
+  --success-color: #059669;
+  --warning-color: #d97706;
+  --danger-color: #dc2626;
+  --info-color: #0891b2;
+  --light-bg: #f8fafc;
+  --border-color: #e2e8f0;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+
+  /* 🖼️ Backgrounds */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #e2e8f0;
+  --bg-card: #ffffff;
+
+  /* 📝 Texto */
+  --text-muted: #94a3b8;
+  --text-white: #ffffff;
+
+  /* Grises */
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-900: var(--america-navy-dark);
+
+  /* 🌫️ Sombras */
+  --shadow-md: 0 2px 4px rgba(30, 58, 95, 0.12);
+  --shadow-lg: 0 4px 8px rgba(30, 58, 95, 0.15);
+  --shadow-xl: 0 6px 12px rgba(30, 58, 95, 0.18);
+
+  /* 🔄 Bordes y radios */
+  --border-radius: 8px;
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+}
+
+/* ===== BASE ===== */
+* {
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+  color: var(--gray-900);
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.main-container {
+  padding-top: 80px;
+  min-height: 100vh;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+  background: linear-gradient(
+    135deg,
+    var(--america-navy-dark) 0%,
+    var(--america-navy) 100%
+  );
+  box-shadow: var(--shadow-lg);
+  border-bottom: 2px solid var(--america-red);
+  padding: 0.6rem 0;
+  backdrop-filter: blur(10px);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-white) !important;
+  transition: transform 0.3s ease;
+}
+
+.navbar-brand img {
+  filter: brightness(1.1);
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.3px;
+  padding: 0.5rem 0.8rem !important;
+  border-radius: var(--border-radius-md);
+  margin: 0 0.1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.navbar-dark .navbar-nav .nav-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover::before {
+  left: 100%;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+  background-color: rgba(220, 38, 38, 0.2);
+  color: var(--text-white) !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.navbar-dark .navbar-nav .nav-link.active {
+  background: linear-gradient(
+    135deg,
+    var(--america-red) 0%,
+    var(--america-orange) 100%
+  );
+  color: var(--text-white) !important;
+  box-shadow: var(--shadow-md);
+}
+
+/* === HEADER === */
+.header-section {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1.5rem 0;
+  margin-bottom: 1.5rem;
+}
+
+.header-title {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-title i {
+  color: var(--primary-color);
+  font-size: 1.8rem;
+}
+
+.header-description {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+
+/* === GRID DE REJILLAS === */
+.rejillas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.rejilla-card {
+  background: white;
+  border-radius: var(--border-radius-lg);
+  padding: 1rem;
+  box-shadow: var(--shadow-md);
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.rejilla-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--primary-color);
+  transition: all 0.3s ease;
+}
+
+.rejilla-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--primary-color);
+}
+
+.rejilla-card:hover::before {
+  height: 4px;
+  background: linear-gradient(90deg, var(--america-red), var(--america-orange));
+}
+
+/* Estados de rejillas */
+.rejilla-card.estado-disponible::before {
+  background: var(--success-color);
+}
+
+.rejilla-card.estado-ocupada::before {
+  background: var(--warning-color);
+}
+
+.rejilla-card.estado-llena::before {
+  background: var(--danger-color);
+}
+
+.rejilla-card.estado-mantenimiento::before {
+  background: var(--secondary-color);
+}
+
+.rejilla-card.estado-sobrecargada {
+  background: linear-gradient(
+    135deg,
+    rgba(220, 38, 38, 0.05),
+    rgba(220, 38, 38, 0.1)
+  );
+  border: 2px solid rgba(220, 38, 38, 0.5) !important;
+  animation: pulse-sobrecarga 2s infinite;
+  box-shadow: 0 0 15px rgba(220, 38, 38, 0.3);
+}
+
+.rejilla-card.estado-sobrecargada::before {
+  background: #dc2626;
+  height: 4px;
+}
+
+.rejilla-card.estado-sobrecargada:hover {
+  border-color: rgba(220, 38, 38, 0.7) !important;
+  box-shadow: 0 0 20px rgba(220, 38, 38, 0.4);
+}
+
+.rejilla-card.estado-sobrecargada .rejilla-numero {
+  color: var(--america-red) !important;
+}
+
+.rejilla-card.estado-sobrecargada .rejilla-numero i {
+  color: var(--america-red) !important;
+}
+
+.rejilla-card.estado-sobrecargada .capacidad-actual {
+  color: var(--america-red) !important;
+  font-weight: 800 !important;
+}
+
+@keyframes pulse-sobrecarga {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 15px rgba(220, 38, 38, 0.3);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(220, 38, 38, 0.5);
+  }
+}
+
+.rejilla-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.rejilla-numero {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.rejilla-numero i {
+  color: var(--primary-color);
+  font-size: 1.1rem;
+}
+
+.rejilla-estado {
+  padding: 0.25rem 0.5rem;
+  border-radius: 15px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.estado-disponible {
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.estado-ocupada {
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.estado-llena {
+  background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.estado-mantenimiento {
+  background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+  color: #0c5460;
+  border: 1px solid #bee5eb;
+}
+
+.estado-sobrecargada {
+  background: linear-gradient(135deg, #fee2e2, #fecaca) !important;
+  color: #dc2626 !important;
+  border: 1px solid #dc2626 !important;
+  font-weight: 700 !important;
+  animation: blink-badge 1.5s infinite;
+}
+
+@keyframes blink-badge {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* === CAPACIDAD Y PROGRESO === */
+.rejilla-capacidad {
+  margin: 0.8rem 0;
+  padding: 12px;
+}
+
+.capacidad-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.capacidad-actual {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.capacidad-total {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.progress-rejilla {
+  height: 10px;
+  border-radius: 8px;
+  background-color: #e9ecef;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 4px;
+}
+
+.progress-bar-rejilla {
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.5s ease;
+  position: relative;
+}
+
+.progress-bar-rejilla.bg-success {
+  background: linear-gradient(90deg, #28a745, #20c997);
+}
+
+.progress-bar-rejilla.bg-warning {
+  background: linear-gradient(90deg, #ffc107, #fd7e14);
+}
+
+.progress-bar-rejilla.bg-danger {
+  background: linear-gradient(90deg, #dc3545, #e74c3c);
+}
+
+.progress-bar-rejilla.bg-sobrecargada {
+  background: linear-gradient(90deg, #dc2626, #b91c1c);
+  animation: progress-pulse 1.5s infinite;
+}
+
+@keyframes progress-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Barra de producción */
+.progress-produccion {
+  width: 100%;
+  height: 8px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  margin-top: 8px;
+}
+
+.progress-bar-produccion {
+  height: 100%;
+  background: linear-gradient(90deg, #198754 0%, #20c997 100%);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.progress-bar-produccion::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 255, 255, 0.1) 2px,
+    rgba(255, 255, 255, 0.1) 4px
+  );
+  animation: progress-animation 1s linear infinite;
+}
+
+@keyframes progress-animation {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* === ASIGNACIONES === */
+.rejilla-asignaciones {
+  border-top: 1px solid var(--border-color);
+  padding-top: 0.8rem;
+  margin-top: 0.8rem;
+}
+
+.asignaciones-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.asignacion-item {
+  text-align: center;
+  padding: 0.5rem;
+  background: var(--gray-50);
+  border-radius: var(--border-radius-sm);
+}
+
+.asignacion-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.asignacion-label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* === DESCRIPCIÓN === */
+.rejilla-descripcion {
+  margin-top: 8px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 6px;
+  border-left: 3px solid #007bff;
+}
+
+.descripcion-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.descripcion-text {
+  flex: 1;
+  font-size: 0.85rem;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.descripcion-text span {
+  display: block;
+  margin-top: 2px;
+}
+
+.btn-editar-desc {
+  background: none;
+  border: none;
+  color: #6c757d;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.btn-editar-desc:hover {
+  background: rgba(0, 123, 255, 0.1);
+  color: #007bff;
+}
+
+.rejilla-card:hover .btn-editar-desc {
+  color: #007bff;
+}
+
+/* === BOTONES === */
+.btn {
+  border-radius: var(--border-radius-sm);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.btn-success {
+  background: var(--success-color);
+  border-color: var(--success-color);
+}
+
+.btn-success:hover {
+  background: #047857;
+  border-color: #047857;
+}
+
+.btn-secondary {
+  background: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+.btn-sm {
+  font-size: 0.65rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2);
+}
+
+.btn-sm:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(37, 99, 235, 0.3);
+}
+
+.btn-sm i {
+  font-size: 0.7rem;
+}
+
+/* === MODAL === */
+.modal-header {
+  background: linear-gradient(135deg, var(--primary-color), #3730a3);
+  color: white;
+  border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+}
+
+.modal-title {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.btn-close {
+  filter: brightness(0) invert(1);
+}
+
+.modal-content {
+  border: none;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+}
+
+/* === LOADING === */
+.loading-spinner {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+.loading-spinner i {
+  color: var(--primary-color);
+  margin-bottom: 0.8rem;
+}
+
+/* === NO ITEMS === */
+.no-items {
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  color: var(--text-secondary);
+}
+
+.no-items i {
+  color: var(--border-color);
+  margin-bottom: 0.8rem;
+}
+
+.no-items h5 {
+  color: var(--text-primary);
+  margin-bottom: 0.8rem;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 1200px) {
+  .rejillas-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .header-title {
+    font-size: 1.6rem;
+  }
+
+  .rejillas-grid {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .main-container {
+    margin-top: 55px;
+  }
+
+  .asignaciones-info {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
+}
+
+/* === ANIMACIONES === */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rejilla-card {
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+/* Estado con expedición abierta - celeste */
+.rejilla-card.estado-con_expedicion_abierta::before {
+  background: #17a2b8 !important; /* Celeste */
+}
+
+.estado-con_expedicion_abierta {
+  background: linear-gradient(135deg, #d1ecf1, #bee5eb) !important;
+  color: #0c5460 !important;
+  border: 1px solid #17a2b8 !important;
+}
+
+.rejilla-card.estado-con_expedicion_abierta:hover {
+  border-color: #138496 !important;
+}
+
+.rejilla-card.estado-con_expedicion_abierta .rejilla-numero {
+  color: #0c5460 !important;
+}
