@@ -62,22 +62,9 @@ $configuracion = $controller->obtenerConfiguracion();
 
 $breadcrumb_items = ['DESPACHADOS'];
 $item_urls = [];
+$additional_css = [$url_base . 'secciones/despacho/utils/completados.css'];
+include $path_base . "components/head.php";
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="icon" href="<?php echo $url_base; ?>utils/icon.ico" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="<?php echo $url_base; ?>secciones/despacho/utils/completados.css">
-    <title>Expediciones Despachadas - America TNT</title>
-</head>
-
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
     <div class="container-fluid">
@@ -146,37 +133,10 @@ $item_urls = [];
             </div>
         </div>
 
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="mb-0">
-                            <i class="fas fa-list-alt me-2"></i>
-                            Resultados
-                            <span class="badge bg-light text-dark ms-2"><?php echo number_format($totalExpediciones); ?> expediciones</span>
-                            <span class="badge bg-info text-white ms-1">Con datos de producción</span>
-                        </h5>
-                        <?php if (!empty($codigoExpedicion)): ?>
-                            <div class="mt-2">
-                                <small class="text-muted">
-                                    <i class="fas fa-filter me-1"></i>
-                                    Filtrando por código: <strong><?php echo htmlspecialchars($codigoExpedicion); ?></strong>
-                                </small>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                    <div class="btn-group">
-                        <button class="btn btn-outline-primary btn-sm" onclick="actualizarVista()" title="Actualizar datos">
-                            <i class="fas fa-sync-alt me-1"></i>Actualizar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+     
         <div class="row">
             <div class="col-12">
-                <div class="dashboard-card">
+                <div class="dashboard-card2">
                     <div class="card-body">
                         <?php if (empty($expedicionesDespachadas)): ?>
                             <div class="empty-state">
@@ -513,9 +473,6 @@ $item_urls = [];
                 }
             }, 4000);
         }
-
-        console.log(`📊 Módulo Expediciones Despachadas ENRIQUECIDO v${DESPACHO_CONFIG.moduloVersion} - Con datos completos de sist_prod_stock - BÚSQUEDA CORREGIDA`);
     </script>
 </body>
 
-</html>

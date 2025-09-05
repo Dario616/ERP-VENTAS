@@ -46,11 +46,6 @@ if (!isset($breadcrumb_items)) {
                         <i class="fas fa-user-circle me-1"></i><?php echo htmlspecialchars($_SESSION['nombre']); ?>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="<?php echo $url_base; ?>perfil.php">
-                                <i class="fas fa-id-card me-2"></i>Mi Perfil</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
                         <li><a class="dropdown-item" href="<?php echo $url_base; ?>auth/cerrar_sesion.php">
                                 <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
                     </ul>

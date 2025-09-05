@@ -2,8 +2,6 @@
 include "../../config/conexionBD.php";
 include "../../auth/verificar_sesion.php";
 requerirRol(['1']);
-
-// Verificar que existe el directorio y archivo del controller
 if (file_exists("controllers/reservasController.php")) {
     include "controllers/reservasController.php";
 } else {
@@ -15,34 +13,20 @@ $filtrosAplicados = $filtrosAplicados ?? [];
 $mensajeError = $mensajeError ?? '';
 $paginacion = $paginacion ?? [];
 
-// Función helper para evitar el error de htmlspecialchars con null
 function safeHtmlSpecialChars($string, $flags = ENT_QUOTES, $encoding = 'UTF-8')
 {
     return htmlspecialchars($string ?? '', $flags, $encoding);
 }
 
-// Manejar sesión si no está iniciada
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Establecer URL base si no está definida
-if (!isset($url_base) || empty($url_base)) {
-    // Detectar automáticamente la URL base
-    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
-    $host = $_SERVER['HTTP_HOST'];
-    $script = $_SERVER['SCRIPT_NAME'];
-    $path = dirname(dirname($script)); // Subir dos niveles desde /secciones/stock/
-    $url_base = $protocol . '://' . $host . $path . '/';
-}
-
-// Verificar que todas las variables necesarias estén definidas
 $configuracionJS = $configuracionJS ?? $controller->obtenerConfiguracionJS();
 $datosReservas = $datosReservas ?? ['datos' => [], 'paginacion' => [], 'estadisticas' => []];
 $filtrosAplicados = $filtrosAplicados ?? [];
 $mensajeError = $mensajeError ?? '';
 
-// Datos adicionales para debugging
 $configuracionJS['currentUrl'] = $_SERVER['REQUEST_URI'] ?? '';
 $configuracionJS['timestamp'] = date('Y-m-d H:i:s');
 $configuracionJS['debug'] = isset($_GET['debug']) ? true : false;
@@ -50,43 +34,19 @@ $breadcrumb_items = ['CONFIGURACION', 'ORGANIZAR STOCK'];
 $item_urls = [
     $url_base . 'secciones/configuracion/index.php',
 ];
+$additional_css = [$url_base . 'secciones/stock/utils/stock.css'];
+include $path_base . "components/head.php";
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($titulo); ?></title>
-
-    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo $url_base; ?>assets/favicon-32.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="<?php echo $url_base; ?>assets/favicon-192.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo $url_base; ?>assets/apple-touch-icon.png">
-    <link rel="icon" href="<?php echo $url_base; ?>utils/icon.ico" type="image/x-icon">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="<?php echo $url_base; ?>secciones/stock/utils/stock.css">
-
-
-</head>
-
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
-    <!-- Main Content -->
     <div class="main-container">
         <div class="container-fluid">
-            <!-- Error Message -->
             <?php if (!empty($mensajeError)): ?>
                 <div class="alert alert-danger">
                     <i class="fas fa-exclamation-triangle me-2"></i>
                     <?php echo htmlspecialchars($mensajeError); ?>
                 </div>
             <?php endif; ?>
-            <!-- Filtros -->
             <div class="filter-section">
                 <form class="filtros-form" method="GET">
                     <div class="row align-items-end">
@@ -118,7 +78,6 @@ $item_urls = [
                 </form>
             </div>
 
-            <!-- Tabla de Productos -->
             <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -158,18 +117,15 @@ $item_urls = [
                                 </table>
                             </div>
 
-                            <!-- Paginación -->
                             <div class="card-footer bg-light" id="paginacionContainer" style="display: none;">
                                 <div class="row align-items-center">
                                     <div class="col-md-6">
                                         <small class="text-muted" id="infoPaginacion">
-                                            <!-- Info dinámica -->
                                         </small>
                                     </div>
                                     <div class="col-md-6">
                                         <nav aria-label="Page navigation">
                                             <ul class="pagination justify-content-end mb-0" id="paginacionLista">
-                                                <!-- Páginas dinámicas -->
                                             </ul>
                                         </nav>
                                     </div>
@@ -182,7 +138,6 @@ $item_urls = [
         </div>
     </div>
 
-    <!-- Modal de Detalles de Reservas -->
     <div class="modal fade" id="modalDetallesReservas" tabindex="-1">
         <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
@@ -236,7 +191,6 @@ $item_urls = [
                                 </tr>
                             </thead>
                             <tbody id="tablaReservasDetalle">
-                                <!-- Reservas dinámicas -->
                             </tbody>
                         </table>
                     </div>
@@ -251,7 +205,6 @@ $item_urls = [
         </div>
     </div>
 
-    <!-- Modal de Cancelación de Reservas -->
     <div class="modal fade" id="modalCancelarReservas" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
@@ -268,8 +221,6 @@ $item_urls = [
                         <strong>Atención:</strong> Al cancelar una reserva, el stock se liberará y volverá a estar disponible.
                         Esta acción no se puede deshacer.
                     </div>
-
-                    <!-- Filtros de búsqueda -->
                     <div class="row mb-3">
                         <div class="col-md-12">
                             <label for="filtroClienteCancelacion" class="form-label">Filtrar por Cliente:</label>
@@ -277,27 +228,20 @@ $item_urls = [
                                 placeholder="Nombre del cliente..." onkeyup="filtrarReservasCancelacion()">
                         </div>
                     </div>
-
-                    <!-- Lista de reservas para cancelar -->
                     <div id="listaReservasCancelacion">
                         <div class="text-center py-4">
                             <div class="loading-spinner mb-3 mx-auto"></div>
                             <div class="text-muted">Cargando reservas disponibles...</div>
                         </div>
                     </div>
-
-                    <!-- Motivo de cancelación -->
                     <div class="mt-4">
                         <label for="motivoCancelacionReservas" class="form-label">Motivo de la cancelación:</label>
                         <textarea class="form-control" id="motivoCancelacionReservas" rows="3"
                             placeholder="Describa el motivo de la cancelación..."></textarea>
                     </div>
-
-                    <!-- Resumen de cancelación -->
                     <div id="resumenCancelacion" class="mt-3 p-3 bg-light rounded" style="display: none;">
                         <h6>Resumen de Cancelación:</h6>
                         <ul id="listaCancelaciones" class="mb-0">
-                            <!-- Lista dinámica -->
                         </ul>
                     </div>
                 </div>
@@ -312,28 +256,20 @@ $item_urls = [
         </div>
     </div>
 
-    <!-- Botón flotante de actualización -->
     <button class="btn btn-primary btn-floating" onclick="cargarProductos()" title="Actualizar datos">
         <i class="fas fa-sync-alt"></i>
     </button>
 
-    <!-- Scripts Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Configuración global para JavaScript -->
     <script>
-        // ===== CONFIGURACIÓN GLOBAL PARA JAVASCRIPT =====
         window.RESERVAS_CONFIG = <?php echo json_encode($configuracionJS); ?>;
-
-        // ===== DATOS INICIALES =====
         window.DATOS_INICIALES = {
             datosReservas: <?php echo json_encode($datosReservas); ?>,
             filtrosAplicados: <?php echo json_encode($filtrosAplicados); ?>,
             mensajeError: <?php echo json_encode($mensajeError); ?>,
             timestamp: '<?php echo date('Y-m-d H:i:s'); ?>'
         };
-
-        // ===== DEBUGGING AVANZADO =====
         window.DEBUG_INFO = {
             urlBase: '<?php echo $url_base ?? ''; ?>',
             usuarioActual: '<?php echo $_SESSION['nombre'] ?? 'Desconocido'; ?>',
@@ -352,7 +288,6 @@ $item_urls = [
                                     ?>
         };
 
-        // ===== FUNCIONES DE DEBUGGING GLOBAL =====
         window.debugReservas = function() {
             console.group('🔍 DEBUG RESERVAS - Información del sistema');
             console.log('📊 Configuración:', window.RESERVAS_CONFIG);
@@ -374,7 +309,6 @@ $item_urls = [
             };
         };
 
-        // ===== TEST DE CONECTIVIDAD AUTOMÁTICO =====
         window.testConectividadAutomatico = function() {
             return fetch(window.location.pathname + '?action=test_conectividad', {
                     method: 'GET',
@@ -397,8 +331,6 @@ $item_urls = [
                     return false;
                 });
         };
-
-        // ===== MANEJO DE ERRORES GLOBAL =====
         window.addEventListener('error', function(event) {
             console.error('❌ Error JavaScript:', {
                 message: event.message,
@@ -408,13 +340,11 @@ $item_urls = [
                 error: event.error
             });
 
-            // Mostrar toast de error si existe la función
             if (typeof showToast === 'function') {
                 showToast('❌ Error JavaScript: ' + event.message, 'error');
             }
         });
 
-        // ===== MANEJO DE PROMESAS RECHAZADAS =====
         window.addEventListener('unhandledrejection', function(event) {
             console.error('❌ Promesa rechazada:', event.reason);
 
@@ -423,14 +353,11 @@ $item_urls = [
             }
         });
 
-        // ===== LOG INICIAL =====
         console.log('🎯 Sistema de Reservas por Productos iniciado');
         console.log('⚙️ Configuración cargada:', window.RESERVAS_CONFIG);
         console.log('💡 Funciones de debug disponibles: debugReservas(), testConectividadAutomatico()');
 
-        // ===== VERIFICACIÓN AUTOMÁTICA AL CARGAR =====
         document.addEventListener('DOMContentLoaded', function() {
-            // Verificar elementos críticos
             const elementosRequeridos = [
                 'tablaProductosBody',
                 'modalDetallesReservas',
@@ -450,7 +377,6 @@ $item_urls = [
                 console.log('✅ Todos los elementos HTML necesarios están presentes');
             }
 
-            // Test de conectividad inicial
             if (window.DEBUG_INFO.connectionAvailable) {
                 console.log('✅ Conexión a base de datos OK');
             } else {
@@ -461,7 +387,6 @@ $item_urls = [
                 }
             }
 
-            // Verificar Bootstrap
             if (typeof bootstrap === 'undefined') {
                 console.error('❌ Bootstrap no está cargado');
 
@@ -474,16 +399,12 @@ $item_urls = [
         });
     </script>
 
-    <!-- Script principal de reservas -->
     <script src="js/reservas.js"></script>
 
-    <!-- Script de inicialización final -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🎯 Sistema de Reservas por Productos v2.0 cargado correctamente');
             console.log('📊 Configuración:', window.RESERVAS_CONFIG);
-
-            // Ejecutar debugging si está habilitado
             if (window.RESERVAS_CONFIG && window.RESERVAS_CONFIG.debug) {
                 setTimeout(() => {
                     debugReservas();
@@ -492,5 +413,3 @@ $item_urls = [
         });
     </script>
 </body>
-
-</html>

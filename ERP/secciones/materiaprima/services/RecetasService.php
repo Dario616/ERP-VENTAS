@@ -52,11 +52,6 @@ class RecetasService
             }
         }
 
-        $descripcion = trim($datos['descripcion'] ?? '');
-        if (!empty($descripcion) && strlen($descripcion) < 3) {
-            $errores[] = "La descripción debe tener al menos 3 caracteres";
-        }
-
         $nombre_receta = trim($datos['nombre_receta'] ?? '');
         if (!empty($nombre_receta) && strlen($nombre_receta) < 3) {
             $errores[] = "El nombre de la receta debe tener al menos 3 caracteres";
@@ -75,7 +70,6 @@ class RecetasService
             'id_tipo_producto' => $id_tipo_producto,
             'id_materia_prima' => $id_materia_prima,
             'cantidad_por_kilo' => floatval($porcentaje),
-            'descripcion' => $descripcion,
             'nombre_receta' => empty($nombre_receta) ? 'Receta Principal' : $nombre_receta,
             'version_receta' => $version_receta,
             'es_materia_extra' => $es_materia_extra,
@@ -148,7 +142,6 @@ class RecetasService
                 continue;
             }
 
-            $descripcion = trim($materia['descripcion'] ?? '');
             $es_materia_extra = isset($materia['es_materia_extra']) && $materia['es_materia_extra'];
             $unidad_medida_extra = trim($materia['unidad_medida_extra'] ?? '');
 
@@ -172,7 +165,41 @@ class RecetasService
                 'id_materia_prima' => $id_materia_prima,
                 'nombre_materia' => $materias_map[$id_materia_prima],
                 'cantidad_por_kilo' => $cantidad_valor,
-                'descripcion' => $descripcion,
+                'es_materia_extra' => $es_materia_extra,
+                'unidad_medida_extra' => $es_materia_extra ? $unidad_medida_extra : null
+            ];
+
+            // Validaciones específicas según el tipo de materia
+            if ($es_materia_extra) {
+                if (empty($unidad_medida_extra)) {
+                    $errores[] = "Fila $fila: Debe especificar la unidad de medida para materias extras";
+                    continue;
+                }
+            } else {
+                // Es materia principal - validar como porcentaje
+                if (floatval($cantidad) > 100) {
+                    $errores[] = "Fila $fila: El porcentaje no puede ser mayor a 100%";
+                    continue;
+                }
+
+                // NUEVA VALIDACIÓN: Verificar que materias principales no tengan unidad = 'Unidad'
+                $materia_info = array_filter($materias_disponibles, function ($m) use ($id_materia_prima) {
+                    return $m['id'] == $id_materia_prima;
+                });
+
+                if (!empty($materia_info) && reset($materia_info)['unidad'] === 'Unidad') {
+                    $errores[] = "Fila $fila: '{$materias_map[$id_materia_prima]}' solo puede usarse como materia extra";
+                    continue;
+                }
+
+                $tiene_materias_principales = true;
+            }
+
+            $cantidad_valor = floatval($cantidad);
+            $materias_validadas[] = [
+                'id_materia_prima' => $id_materia_prima,
+                'nombre_materia' => $materias_map[$id_materia_prima],
+                'cantidad_por_kilo' => $cantidad_valor,
                 'es_materia_extra' => $es_materia_extra,
                 'unidad_medida_extra' => $es_materia_extra ? $unidad_medida_extra : null
             ];

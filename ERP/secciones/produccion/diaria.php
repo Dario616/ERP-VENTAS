@@ -9,7 +9,6 @@ $filtro_estado = isset($_GET['estado']) ? trim($_GET['estado']) : 'en stock';
 
 $usuario_actual = obtenerUsuarioActual();
 $es_admi = $usuario_actual['rol'] == '1';
-
 function calcularPesoTeorico($gramatura, $metragem, $largura, $bobinas_pacote)
 {
     if (!$gramatura || !$metragem || !$largura || !$bobinas_pacote) {
@@ -17,7 +16,6 @@ function calcularPesoTeorico($gramatura, $metragem, $largura, $bobinas_pacote)
     }
     return ($gramatura * $metragem * $largura / 1000.0) * $bobinas_pacote;
 }
-
 function clasificarPeso($peso_real, $peso_teorico)
 {
     if ($peso_teorico == 0) return ['categoria' => 'Sin datos', 'clase' => 'sin-datos'];
@@ -98,22 +96,9 @@ try {
 }
 $breadcrumb_items = ['Produccion Diaria'];
 $item_urls = [];
+$additional_css = [$url_base . 'secciones/produccion/utils/diaria.css'];
+include $path_base . "components/head.php";
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>America TNT - Produccion del Día</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" href="<?php echo $url_base; ?>utils/icon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="<?php echo $url_base; ?>secciones/produccion/utils/diaria.css">
-</head>
-
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
     <div class="main-container">
@@ -218,8 +203,6 @@ $item_urls = [];
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Comparación de peso -->
                         <?php if ($peso_teorico > 0): ?>
                             <div class="peso-comparison">
                                 <div class="peso-item">
@@ -239,11 +222,9 @@ $item_urls = [];
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
         let itemsSeleccionados = new Set();
         let pesoSeleccionado = 0;
-
         function toggleSelection(card, itemId, pesoLiquido) {
             const isSelected = itemsSeleccionados.has(itemId);
 

@@ -497,11 +497,6 @@ body {
   cursor: pointer;
 }
 
-.table-hover tbody tr:hover {
-  background: linear-gradient(90deg, #f8f9fa 0%, #e9ecef 100%);
-  transform: translateX(2px); /* Reducido de 3px */
-  box-shadow: var(--shadow-sm);
-}
 
 /* 🏷️ Badges - Más pequeños */
 .badge {
@@ -1418,4 +1413,8 @@ body {
 .quick-action-btn.btn-second:active {
   transform: scale(0.97);
   box-shadow: none;
+}
+.main-container {
+  margin-top: 70px;
+  padding: 0.8rem;
 }

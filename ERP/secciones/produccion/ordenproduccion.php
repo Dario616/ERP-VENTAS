@@ -6,10 +6,8 @@ include "services/ProductionService.php";
 include "services/PrintService.php";
 include "controllers/ProductionController.php";
 include "MaterialConsumptionManager.php";
-
 requerirRol(['1', '2', '3']);
 requerirLogin();
-
 $productionController = new ProductionController($conexion);
 MaterialConsumptionManager::initialize($conexion, true);
 $datosVista = $productionController->manejarPeticion();
@@ -22,31 +20,16 @@ if ($ordenEncontrada && !empty($productosOrden)) {
 }
 $breadcrumb_items = ['IMPRIMIR'];
 $item_urls = [];
+$additional_css = [$url_base . 'secciones/produccion/utils/ordenproduccion.css'];
+include $path_base . "components/head.php";
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>America TNT - Imprimir</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" href="<?php echo $url_base; ?>utils/icon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="<?php echo $url_base; ?>secciones/produccion/utils/ordenproduccion.css">
-</head>
 
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
-    <!-- Contenido Principal -->
     <div class="main-container">
         <div class="container-fluid">
             <div class="production-card">
                 <div class="form-section">
-
-                    <!-- Mensajes -->
                     <?php if ($error): ?>
                         <div class="alert alert-danger alert-custom">
                             <i class="fas fa-exclamation-triangle me-2"></i><?php echo $error; ?>
@@ -58,12 +41,9 @@ $item_urls = [];
                             <i class="fas fa-check-circle me-2"></i><?php echo $mensaje; ?>
                         </div>
                     <?php endif; ?>
-
-                    <!-- Búsqueda de orden -->
                     <div class="row mb-4">
                         <div class="col-md-12">
                             <?php if (!$ordenEncontrada): ?>
-                                <!-- ESTADO: No hay orden cargada - Mostrar búsqueda -->
                                 <form method="POST" action="" id="formBuscarOrden">
                                     <input type="hidden" name="buscar_orden" value="1">
                                     <div class="input-group input-group-lg">
@@ -81,7 +61,6 @@ $item_urls = [];
                                     </div>
                                 </form>
                             <?php else: ?>
-                                <!-- ESTADO: Orden cargada - Mostrar información y botón cambiar -->
                                 <div class="orden-cargada-container">
                                     <div class="d-flex align-items-center justify-content-between bg-light p-3 rounded border">
                                         <div class="orden-info">
@@ -115,11 +94,8 @@ $item_urls = [];
                     </div>
 
                     <?php if ($ordenEncontrada): ?>
-                        <!-- Layout principal en dos columnas -->
                         <div class="row">
-                            <!-- Columna izquierda: Información y registro -->
                             <div class="col-md-5">
-                                <!-- Formulario dinámico según tipo de producto -->
                                 <form method="POST" action="" id="formRegistrarProduccion">
                                     <input type="hidden" name="registrar_produccion" value="1">
                                     <input type="hidden" name="numero_orden" value="<?php echo $ordenEncontrada['id']; ?>">
@@ -172,13 +148,11 @@ $item_urls = [];
                                             </div>
                                         </div>
 
-                                        <!-- Campos ocultos con valores por defecto para productos simplificados -->
                                         <input type="hidden" name="metragem" value="0">
                                         <input type="hidden" name="largura" value="0">
                                         <input type="hidden" name="gramatura" value="0">
                                         <input type="hidden" name="bobinas_pacote" value="1">
 
-                                        <!-- Información específica para el tipo -->
                                         <div class="row mt-2">
                                             <div class="col-md-12">
                                                 <small class="text-muted">
@@ -295,7 +269,6 @@ $item_urls = [];
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- Campo Quantidade de Bobinas/Pacote (condicional) -->
                                             <div class="col-md-4" id="bobinas_pacote_container" style="display: none;">
                                                 <div class="form-group-custom">
                                                     <label class="form-label-custom">
@@ -317,9 +290,7 @@ $item_urls = [];
                                         </div>
                                     <?php endif; ?>
 
-                                    <!-- Botones de acción -->
                                     <div class="btn-group-custom mt-3 d-flex gap-2 flex-nowrap">
-                                        <!-- Botón registrar -->
                                         <button type="submit" class="btn btn-success action-btn-compact">
                                             <i class="fas fa-plus me-2"></i>Registrar
                                         </button>
@@ -361,8 +332,6 @@ $item_urls = [];
                                         <i class="fas fa-hand-pointer me-1"></i>
                                         Seleccione una fila de la tabla para reimprimir su etiqueta
                                     </small>
-
-                                    <!-- Información de selección actual -->
                                     <div class="alert alert-info mt-3" id="seleccion-info-unificado" style="display: none; border-radius: 8px;">
                                         <div class="d-flex align-items-center justify-content-between">
                                             <div>
@@ -374,8 +343,6 @@ $item_urls = [];
                                         </div>
                                     </div>
                                 </form>
-
-                                <!-- Progreso de producción -->
                                 <?php if ($ordenEncontrada && $estadisticasProduccion['success']): ?>
                                     <div class="progress-info mt-3 p-3" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 8px; border-left: 4px solid <?php echo $estadisticasProduccion['completado'] ? '#28a745' : '#ffc107'; ?>;">
                                         <div class="d-flex justify-content-between align-items-center">
@@ -403,16 +370,12 @@ $item_urls = [];
                                                 <?php endif; ?>
                                             </div>
                                         </div>
-
-                                        <!-- Barra de progreso -->
                                         <div class="progress mt-2" style="height: 6px;">
                                             <div class="progress-bar bg-<?php echo $estadisticasProduccion['completado'] ? 'success' : 'warning'; ?>"
                                                 style="width: <?php echo min(100, $estadisticasProduccion['porcentaje']); ?>%"></div>
                                         </div>
                                     </div>
                                 <?php endif; ?>
-
-                                <!-- Diferencia de Peso (solo para productos no simplificados) -->
                                 <?php if ($ordenEncontrada && !$esProductoSimplificado && isset($diferenciaPeso) && $diferenciaPeso['success']): ?>
                                     <div class="diferencia-peso-info mt-3 p-3" style="background: linear-gradient(135deg, <?php echo $diferenciaPeso['clase'] === 'success' ? '#f0fff4 0%, #e6fffa 100%' : '#fed7d7 0%, #feb2b2 100%'; ?>); border-radius: 8px; border-left: 4px solid <?php echo $diferenciaPeso['clase'] === 'success' ? '#28a745' : '#dc2626'; ?>;">
                                         <div class="row">
@@ -442,7 +405,6 @@ $item_urls = [];
                                     </div>
                                 <?php endif; ?>
 
-                                <!-- Formularios ocultos -->
                                 <form method="POST" action="" id="formReimprimirUnificado" style="display: none;">
                                     <input type="hidden" name="reimprimir_etiqueta_unificado" value="1">
                                     <input type="hidden" name="numero_orden_reimprimir" id="orden_reimprimir_unificado" value="">
@@ -462,12 +424,9 @@ $item_urls = [];
                                 </form>
                             </div>
 
-                            <!-- Columna derecha: Historial y estadísticas -->
                             <div class="col-md-7">
-                                <!-- Información de la orden encontrada -->
                                 <div class="orden-info-card mb-4 <?php echo ($ordenEncontrada && $ordenEncontrada['finalizado']) ? 'finalizada' : ''; ?>">
 
-                                    <!-- AGREGAR ALERTA SI LA ORDEN ESTÁ FINALIZADA -->
                                     <?php if ($ordenEncontrada && $ordenEncontrada['finalizado']): ?>
                                         <div class="alert alert-orden-finalizada mb-3">
                                             <div class="d-flex align-items-center">
@@ -491,7 +450,6 @@ $item_urls = [];
                                             <p class="mb-1"><strong>Cliente:</strong> <?php echo htmlspecialchars($ordenEncontrada['cliente']); ?></p>
                                             <p class="mb-0"><strong>Producto:</strong> <?php echo htmlspecialchars($productosOrden[0]['descripcion']); ?> (<?php echo $productosOrden[0]['tipo']; ?>)</p>
 
-                                            <!-- Mostrar fecha de finalización si está disponible -->
                                             <?php if ($ordenEncontrada && $ordenEncontrada['finalizado']): ?>
                                                 <p class="mb-0"><small class="text-success"><i class="fas fa-calendar-check me-1"></i><strong>Estado:</strong> Orden Finalizada</small></p>
                                             <?php endif; ?>
@@ -539,7 +497,6 @@ $item_urls = [];
                                     </div>
                                 </div>
 
-                                <!-- Búsqueda por ID -->
                                 <div class="row mb-3">
                                     <div class="col-md-12">
                                         <div class="input-group">
@@ -559,7 +516,6 @@ $item_urls = [];
                                     </div>
                                 </div>
 
-                                <!-- Últimos registros -->
                                 <?php
                                 $totalRegistros = $datosPaginacion['total_registros'];
                                 $totalPaginas = $datosPaginacion['total_paginas'];
@@ -606,7 +562,6 @@ $item_urls = [];
                                                                 <br><small class="text-warning"><i class="fas fa-unlink"></i></small>
                                                             </td>
 
-                                                            <!-- Estado - solo para productos no simplificados -->
                                                             <?php if (!$esProductoSimplificado): ?>
                                                                 <td class="text-center">
                                                                     <div class="clasificacion-badge clasificacion-<?php echo $registro['clasificacion']['clase']; ?>"
@@ -648,8 +603,6 @@ $item_urls = [];
 
                                                             <td><?php echo number_format($registro['peso_bruto'], 2); ?> kg</td>
                                                             <td><strong><?php echo number_format($registro['peso_liquido'], 2); ?> kg</strong></td>
-
-                                                            <!-- Peso teórico y diferencia - solo para productos no simplificados -->
                                                             <?php if (!$esProductoSimplificado): ?>
                                                                 <td class="text-muted">
                                                                     <?php if ($registro['peso_teorico'] > 0): ?>
@@ -671,7 +624,6 @@ $item_urls = [];
 
                                                             <td><?php echo number_format($registro['tara'], 2); ?> kg</td>
 
-                                                            <!-- Metragem y bobinas - solo para productos no simplificados -->
                                                             <?php if (!$esProductoSimplificado): ?>
                                                                 <td><?php echo number_format($registro['metragem']); ?>m</td>
                                                                 <td><?php echo number_format($registro['bobinas_pacote']); ?></td>
@@ -686,7 +638,6 @@ $item_urls = [];
                                             </table>
                                         </div>
 
-                                        <!-- Paginación -->
                                         <?php if ($totalPaginas > 1): ?>
                                             <nav aria-label="Paginación de registros" class="pagination-custom">
                                                 <ul class="pagination pagination-sm justify-content-center">
@@ -787,7 +738,6 @@ $item_urls = [];
                             </div>
                         </div>
                     <?php else: ?>
-                        <!-- Mensaje cuando no hay orden cargada -->
                         <div class="text-center py-5">
                             <i class="fas fa-search fa-4x text-muted mb-4"></i>
                             <h4 class="text-muted">Busque una orden de producción para comenzar</h4>
@@ -798,8 +748,6 @@ $item_urls = [];
             </div>
         </div>
     </div>
-
-    <!-- Modal para Reimpresión en Lote -->
     <div class="modal fade" id="modalReimpresionLote" tabindex="-1" aria-labelledby="modalReimpresionLoteLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -892,11 +840,7 @@ $item_urls = [];
             </div>
         </div>
     </div>
-
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Scripts en orden de dependencia -->
     <script src="js/produccion/config.js"></script>
     <script src="js/produccion/weight-validator.js"></script>
     <script src="js/produccion/form-handler.js"></script>
@@ -904,10 +848,7 @@ $item_urls = [];
     <script src="js/produccion/batch-reprint.js"></script>
     <script src="js/produccion/ui-manager.js"></script>
     <script src="js/produccion/main.js"></script>
-
-    <!-- Script principal de inicialización -->
     <script>
-        // Configuración global de la aplicación
         window.APP_CONFIG = {
             esProductoSimplificado: <?php echo $esProductoSimplificado ? 'true' : 'false'; ?>,
             tipoProducto: '<?php echo $ordenEncontrada ? $productosOrden[0]['tipo'] : ''; ?>',
@@ -926,8 +867,6 @@ $item_urls = [];
                 autoPrintUrl: null
             });
         <?php endif; ?>
-
-        // Configurar validación de peso según tipo de producto
         <?php if (!$esProductoSimplificado && isset($datosPesoPromedio) && $datosPesoPromedio['success']): ?>
             console.log("📊 Configurando validación de peso TEÓRICO ±15% para <?php echo $datosPesoPromedio['bobinas_pacote']; ?> bobina(s):", <?php echo json_encode($datosPesoPromedio); ?>);
             configurarValidacionPeso(<?php echo json_encode($datosPesoPromedio); ?>);
@@ -952,7 +891,6 @@ $item_urls = [];
             });
         <?php endif; ?>
 
-        // Función para buscar nueva orden
         function buscarNuevaOrden() {
             const totalItems = <?php echo isset($datosPaginacion['total_registros']) ? $datosPaginacion['total_registros'] : 0; ?>;
 
@@ -968,7 +906,6 @@ $item_urls = [];
             }
         }
 
-        // Funciones de búsqueda
         function buscarPorId() {
             const filtroId = document.getElementById('buscar_id').value;
             if (filtroId) {
@@ -986,13 +923,10 @@ $item_urls = [];
             }
         }
 
-        // Inicialización cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Aplicación iniciada - Modo:', window.APP_CONFIG.esProductoSimplificado ? 'Simplificado' : 'Completo');
 
-            // Configurar eventos específicos según el tipo de producto
             if (window.APP_CONFIG.esProductoSimplificado) {
-                // Solo cálculo de peso líquido para productos simplificados
                 const pesoBruto = document.getElementById('peso_bruto');
                 const tara = document.getElementById('tara');
 
@@ -1015,15 +949,12 @@ $item_urls = [];
         });
     </script>
 
-    <!-- IFRAME OCULTO PARA IMPRESIÓN AUTOMÁTICA -->
     <?php if (isset($auto_print_url) && !empty($auto_print_url)): ?>
         <iframe id="print-frame-unificado"
             src="<?php echo htmlspecialchars($auto_print_url); ?>"
             style="display: none; width: 0; height: 0; border: none;"
             onload="autoPrintUnificado()">
         </iframe>
-
-        <!-- Indicador visual de impresión -->
         <div id="print-indicator-unificado" class="position-fixed top-0 end-0 m-3" style="z-index: 9999; display: none;">
             <div class="alert alert-info alert-dismissible fade show shadow-lg" style="min-width: 300px;">
                 <div class="d-flex align-items-center">
@@ -1038,5 +969,3 @@ $item_urls = [];
         </div>
     <?php endif; ?>
 </body>
-
-</html>

@@ -161,7 +161,6 @@ class ProduccionController
                 'cantidad_por_kilo' => $receta['cantidad_por_kilo'],
                 'es_materia_extra' => $receta['es_materia_extra'],
                 'unidad_medida_extra' => $receta['unidad_medida_extra'],
-                'descripcion' => $receta['descripcion']
             ];
         }
 

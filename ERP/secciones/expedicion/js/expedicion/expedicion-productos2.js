@@ -389,66 +389,78 @@ function generarResumenProduccionExpedicionCompacto(
   porcentajePendiente
 ) {
   return `
-    <div class="presupuesto-resumen p-2 bg-light border rounded mt-2">
-      <h6 class="fw-bold text-primary mb-2 small">
-        <i class="fas fa-chart-pie me-2"></i>
-        Asignación: Producción / Desde Stock
-      </h6>
-      
-      <div class="row g-2 mb-2">
-        <div class="col-4">
-          <div class="stat-card-compact text-center p-1 bg-white border rounded">
-            <div class="stat-value-compact fw-bold">${unidadesVendidas}</div>
-            <div class="stat-label-compact small text-muted">PEDIDO</div>
-            <small class="text-muted" style="font-size: 0.65rem;">${pesoTotalVendido.toFixed(
-              1
-            )} kg</small>
-          </div>
+   <div class="presupuesto-resumen p-2 bg-light border rounded mt-2">
+  <!-- Título más compacto -->
+  <div class="d-flex align-items-center justify-content-between mb-2">
+    <h6 class="fw-bold text-primary mb-0 small">
+      <i class="fas fa-chart-pie me-1"></i>
+      Asignación: Producción / Stock
+    </h6>
+    <!-- Barra de progreso inline con el título -->
+    <div class="progreso-container-compact flex-grow-1 ms-3">
+      <div class="progreso-bar-compact bg-light border rounded" style="height: 12px; position: relative;">
+        <div class="progreso-fill-multi d-flex" style="height: 100%;">
+          <div class="progreso-segment" 
+               style="width: ${porcentajeProduccion}%; background: linear-gradient(90deg, #fff3cd, #f8e5a0); border-radius: 2px;" 
+               title="Producción: ${porcentajeProduccion.toFixed(1)}%"></div>
+          <div class="progreso-segment" 
+               style="width: ${porcentajeExpedicion}%; background: linear-gradient(90deg, #d1ecf1, #b8dde6); border-radius: 2px;" 
+               title="Desde Stock: ${porcentajeExpedicion.toFixed(1)}%"></div>
         </div>
-        <div class="col-4">
-          <div class="stat-card-compact text-center p-1 border rounded" style="background-color: rgba(255, 193, 7, 0.32); border-color: rgba(255, 193, 7, 0.05) !important;">
-            <div class="stat-value-compact fw-bold" style="color: rgba(192, 144, 0, 1);">${unidadesProduccion}</div>
-            <div class="stat-label-compact small text-muted">PRODUCCIÓN</div>
-            <small class="text-muted" style="font-size: 0.65rem;">${pesoProduccion.toFixed(
-              1
-            )} kg (${porcentajeProduccion.toFixed(1)}%)</small>
-          </div>
-        </div>
-        <div class="col-4">
-          <div class="stat-card-compact text-center p-1 border rounded" style="background-color: rgba(1, 213, 255, 0.27); border-color: rgba(13, 202, 240, 0.05) !important;">
-            <div class="stat-value-compact fw-bold" style="color: rgba(0, 163, 196, 1);">${unidadesExpedicion}</div>
-            <div class="stat-label-compact small text-muted">DESDE STOCK</div>
-            <small class="text-muted" style="font-size: 0.65rem;">${pesoExpedicion.toFixed(
-              1
-            )} kg (${porcentajeExpedicion.toFixed(1)}%)</small>
-          </div>
-        </div>
-      </div>
-    
-      <!-- Barra de progreso compacta -->
-      <div class="progreso-container-compact">
-        <div class="progreso-bar-compact bg-light border rounded" style="height: 15px; position: relative;">
-          <div class="progreso-fill-multi d-flex" style="height: 100%;">
-            <div class="progreso-segment" 
-                 style="width: ${porcentajeProduccion}%; background: linear-gradient(90deg, #fff3cd, #f8e5a0); border-radius: 2px;" 
-                 title="Producción: ${porcentajeProduccion.toFixed(1)}%"></div>
-            <div class="progreso-segment" 
-                 style="width: ${porcentajeExpedicion}%; background: linear-gradient(90deg, #d1ecf1, #b8dde6); border-radius: 2px;" 
-                 title="Desde Stock: ${porcentajeExpedicion.toFixed(1)}%"></div>
-          </div>
-          <div class="progreso-text-compact position-absolute top-50 start-50 translate-middle" style="font-size: 0.65rem; font-weight: 600;">
-            ${porcentajeProduccion.toFixed(
-              1
-            )}% Prod | ${porcentajeExpedicion.toFixed(1)}% Stock
-            ${
-              porcentajePendiente > 0
-                ? ` | ${porcentajePendiente.toFixed(1)}% Pend.`
-                : ""
-            }
-          </div>
+        <div class="progreso-text-compact position-absolute top-50 start-50 translate-middle" style="font-size: 0.6rem; font-weight: 600; color: #666;">
+          ${porcentajeProduccion.toFixed(1)}% | ${porcentajeExpedicion.toFixed(
+    1
+  )}%${
+    porcentajePendiente > 0 ? ` | ${porcentajePendiente.toFixed(1)}% Pend.` : ""
+  }
         </div>
       </div>
     </div>
+  </div>
+  
+  <!-- Estadísticas en una sola línea más compacta -->
+  <div class="row g-1">
+    <div class="col-4">
+      <div class="stat-card-compact text-center py-1 px-2 bg-white border rounded">
+        <div class="d-flex align-items-center justify-content-center">
+          <div class="me-2">
+            <div class="stat-value-compact fw-bold" style="font-size: 0.9rem;">${unidadesVendidas}</div>
+            <div class="stat-label-compact" style="font-size: 0.65rem; color: #666;">PEDIDO</div>
+          </div>
+          <small class="text-muted" style="font-size: 0.6rem;">${pesoTotalVendido.toFixed(
+            1
+          )} kg</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="stat-card-compact text-center py-1 px-2 border rounded" style="background-color: rgba(255, 193, 7, 0.32); border-color: rgba(255, 193, 7, 0.05) !important;">
+        <div class="d-flex align-items-center justify-content-center">
+          <div class="me-2">
+            <div class="stat-value-compact fw-bold" style="font-size: 0.9rem; color: rgba(192, 144, 0, 1);">${unidadesProduccion}</div>
+            <div class="stat-label-compact" style="font-size: 0.65rem; color: #666;">PRODUCCIÓN</div>
+          </div>
+          <small class="text-muted" style="font-size: 0.6rem;">${pesoProduccion.toFixed(
+            1
+          )} kg<br>(${porcentajeProduccion.toFixed(1)}%)</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="stat-card-compact text-center py-1 px-2 border rounded" style="background-color: rgba(1, 213, 255, 0.27); border-color: rgba(13, 202, 240, 0.05) !important;">
+        <div class="d-flex align-items-center justify-content-center">
+          <div class="me-2">
+            <div class="stat-value-compact fw-bold" style="font-size: 0.9rem; color: rgba(0, 163, 196, 1);">${unidadesExpedicion}</div>
+            <div class="stat-label-compact" style="font-size: 0.65rem; color: #666;">STOCK</div>
+          </div>
+          <small class="text-muted" style="font-size: 0.6rem;">${pesoExpedicion.toFixed(
+            1
+          )} kg<br>(${porcentajeExpedicion.toFixed(1)}%)</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
   `;
 }
 
@@ -478,77 +490,73 @@ function generarFormularioReservaCompletaCompacto(
   const esPañoOToallita = esProductoPañoOToallita(producto.nombre_producto);
 
   return `
-    <div class="asignacion-completa-form mt-2 p-2 bg-success bg-opacity-10 border border-success rounded">
-      <h6 class="fw-bold text-success mb-2 small">
-        <i class="fas fa-rocket me-2"></i>
-        Asignar a Rejillas
-      </h6>
-      
-      <form class="expedicion-form-simplificado" data-form-type="reserva-completa">
-        <input type="hidden" name="id_venta" value="${venta.id_venta}">
-        <input type="hidden" name="id_producto_presupuesto" value="${
-          producto.id_producto_presupuesto
-        }">
-        <input type="hidden" name="nombre_producto" value="${escapeHtml(
-          producto.nombre_producto
-        )}">
-        <input type="hidden" name="cliente" value="${escapeHtml(
-          nombreCliente
-        )}">
-        
-        <!-- Información compacta -->
-        <div class="peso-info-card-compact mb-2 p-2 bg-white border rounded">
-          <div class="d-flex align-items-center mb-1">
+    <div class="asignacion-completa-form mt-2 p-2 verdeclaro bg-opacity-10 border border-success rounded">
+  <form class="expedicion-form-simplificado" data-form-type="reserva-completa">
+    <input type="hidden" name="id_venta" value="${venta.id_venta}">
+    <input type="hidden" name="id_producto_presupuesto" value="${
+      producto.id_producto_presupuesto
+    }">
+    <input type="hidden" name="nombre_producto" value="${escapeHtml(
+      producto.nombre_producto
+    )}">
+    <input type="hidden" name="cliente" value="${escapeHtml(nombreCliente)}">
+    
+    <!-- Información compacta en una sola línea -->
+    <div class="peso-info-card-compact mb-2 p-2 bg-white border rounded">
+      <div class="row align-items-center g-2">
+        <div class="col-3">
+          <div class="d-flex align-items-center">
             <i class="fas fa-calculator me-2 text-primary" style="font-size: 0.8rem;"></i>
-            <strong class="small">Se asignará todo lo disponible:</strong>
-          </div>
-          <div class="row text-center g-1">
-            <div class="col-4">
-              <div class="fw-bold text-primary" style="font-size: 0.9rem;">${disponibleParaReservar}</div>
-              <small class="text-muted" style="font-size: 0.65rem;">${unidadMedida}</small>
-            </div>
-            <div class="col-4">
-              <div class="fw-bold text-success" style="font-size: 0.9rem;">${pesoDisponible.toFixed(
-                2
-              )}</div>
-              <small class="text-muted" style="font-size: 0.65rem;">kg total</small>
-            </div>
-            <div class="col-4">
-              <div class="fw-bold text-info" style="font-size: 0.9rem;">${pesoUnitario.toFixed(
-                2
-              )}</div>
-              <small class="text-muted" style="font-size: 0.65rem;">kg/${
-                esPañoOToallita ? "caja" : "unidad"
-              }</small>
-            </div>
+            <small class="fw-bold">Se asignará todo:</small>
           </div>
         </div>
-        
-        <div class="row g-2 align-items-end">
-          <div class="col-8">
-            <label class="form-label small fw-bold mb-1">Rejilla destino</label>
-            <select class="form-select form-select-sm rejilla-select" name="id_rejilla" required>
-              <option value="">Seleccionar rejilla...</option>
-              ${generarOpcionesRejillas()}
-            </select>
-          </div>
-          <div class="col-4">
-            <button type="submit" class="btn btn-success btn-sm w-100 btn-reservar-completo py-1">
-              <i class="fas fa-rocket me-1"></i>
-              <span class="btn-text small">Asignar</span>
-              <span class="btn-loading" style="display: none;">
-                <i class="fas fa-spinner fa-spin"></i>
-              </span>
-            </button>
-          </div>
+        <div class="col-3 text-center">
+          <div class="fw-bold text-primary" style="font-size: 0.9rem;">${disponibleParaReservar}</div>
+          <small class="text-muted" style="font-size: 0.65rem;">${unidadMedida}</small>
         </div>
-        
-        <div class="alert alert-success mt-2 mb-0 p-1" style="display: none; font-size: 0.7rem;" id="info-rejilla">
-          <i class="fas fa-check-circle me-1"></i>
-          <small>Información de la rejilla aparecerá aquí</small>
+        <div class="col-3 text-center">
+          <div class="fw-bold text-success" style="font-size: 0.9rem;">${pesoDisponible.toFixed(
+            2
+          )}</div>
+          <small class="text-muted" style="font-size: 0.65rem;">kg total</small>
         </div>
-      </form>
+        <div class="col-3 text-center">
+          <div class="fw-bold text-info" style="font-size: 0.9rem;">${pesoUnitario.toFixed(
+            2
+          )}</div>
+          <small class="text-muted" style="font-size: 0.65rem;">kg/${
+            esPañoOToallita ? "caja" : "unidad"
+          }</small>
+        </div>
+      </div>
     </div>
+    
+    <!-- Selector y botón -->
+    <div class="row g-2 align-items-end">
+      <div class="col-8">
+        <select class="form-select form-select-sm rejilla-select" name="id_rejilla" required>
+          <option value="">Seleccionar rejilla...</option>
+          ${generarOpcionesRejillas()}
+        </select>
+      </div>
+      <div class="col-4">
+        <button type="submit" class="btn btn-success btn-sm w-100 btn-reservar-completo py-1">
+          <i class="fas fa-rocket me-1"></i>
+          <span class="btn-text small">Asignar</span>
+          <span class="btn-loading" style="display: none;">
+            <i class="fas fa-spinner fa-spin"></i>
+          </span>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Alerta compacta -->
+    <div class="alert alert-success mt-2 mb-0 py-1 px-2" style="display: none; font-size: 0.7rem;" id="info-rejilla">
+      <i class="fas fa-check-circle me-1"></i>
+      <small>Información de la rejilla aparecerá aquí</small>
+    </div>
+  </form>
+</div>
   `;
 }
 

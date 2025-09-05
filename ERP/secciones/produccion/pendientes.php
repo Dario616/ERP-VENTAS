@@ -4,22 +4,15 @@ include "../../config/conexionBD.php";
 include "repository/productionRepository.php";
 requerirRol(['1', '2', '3']);
 requerirLogin();
-
-// Crear instancia del repositorio
 $productionRepo = new ProductionRepositoryUniversal($conexion);
-
-// Variables para filtros y paginación
 $filtro_numero_orden = isset($_GET['numero_orden']) ? trim($_GET['numero_orden']) : '';
 $filtro_cliente = isset($_GET['cliente']) ? trim($_GET['cliente']) : '';
 $filtro_tipo = isset($_GET['tipo']) ? trim($_GET['tipo']) : '';
 $filtro_estado = isset($_GET['estado']) ? trim($_GET['estado']) : '';
 $pagina_actual = isset($_GET['pagina']) ? max(1, intval($_GET['pagina'])) : 1;
 $items_por_pagina = 10;
-
-// Construir criterios de búsqueda
 $criterios = [];
 if (!empty($filtro_numero_orden)) {
-    // Validar que sea un número
     if (is_numeric($filtro_numero_orden)) {
         $criterios['numero_orden'] = intval($filtro_numero_orden);
     }
@@ -30,19 +23,14 @@ if (!empty($filtro_cliente)) {
 if (!empty($filtro_tipo)) {
     $criterios['tipo_producto'] = $filtro_tipo;
 }
-
-// Obtener órdenes
 $resultado = $productionRepo->buscarOrdenesPorCriterios($criterios);
 $ordenes = $resultado['ordenes'] ?? [];
 $error = $resultado['error'] ?? null;
-
-// Paginación simple
 $total_ordenes = count($ordenes);
 $total_paginas = ceil($total_ordenes / $items_por_pagina);
 $offset = ($pagina_actual - 1) * $items_por_pagina;
 $ordenes_pagina = array_slice($ordenes, $offset, $items_por_pagina);
 
-// Función para obtener detalles adicionales de una orden
 function obtenerDetallesOrden($conexion, $numeroOrden)
 {
     try {
@@ -62,11 +50,9 @@ function obtenerDetallesOrden($conexion, $numeroOrden)
     }
 }
 
-// Función para obtener el tipo de producto de una orden
 function obtenerTipoProducto($conexion, $numeroOrden)
 {
     try {
-        // Buscar en TNT primero
         $sql = "SELECT 'TNT' as tipo, 
                        CASE WHEN LOWER(COALESCE(nombre, '')) LIKE '%laminado%' THEN 'LAMINADORA' ELSE 'TNT' END as tipo_real,
                        nombre as producto
@@ -92,8 +78,6 @@ function obtenerTipoProducto($conexion, $numeroOrden)
         return ['tipo_real' => 'ERROR', 'producto' => 'Error al consultar'];
     }
 }
-
-// Función para obtener historial reciente de una orden
 function obtenerHistorialOrden($conexion, $numeroOrden, $limite = 3)
 {
     try {
@@ -116,28 +100,14 @@ function obtenerHistorialOrden($conexion, $numeroOrden, $limite = 3)
 }
 $breadcrumb_items = ['Pendientes'];
 $item_urls = [];
+$additional_css = [$url_base . 'secciones/produccion/utils/pendientes.css'];
+include $path_base . "components/head.php";
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>America TNT - Órdenes Pendientes</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" href="<?php echo $url_base; ?>utils/icon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="<?php echo $url_base; ?>secciones/produccion/utils/pendientes.css">
-</head>
 
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
-    <!-- Contenido Principal -->
     <div class="main-container">
         <div class="container-fluid">
-            <!-- Filtros -->
             <div class="filtros-container">
                 <form method="GET" action="" class="row g-3">
                     <div class="col-md-2">
@@ -189,8 +159,6 @@ $item_urls = [];
                         <?php endif; ?>
                     </div>
                 </form>
-
-                <!-- Mostrar filtros activos -->
                 <?php if (!empty($filtro_numero_orden) || !empty($filtro_cliente) || !empty($filtro_tipo)): ?>
                     <div class="filtros-activos">
                         <small class="text-muted me-2"><i class="fas fa-filter me-1"></i>Filtros activos:</small>
@@ -218,14 +186,11 @@ $item_urls = [];
                     </div>
                 <?php endif; ?>
             </div>
-            <!-- Mensajes de error -->
             <?php if ($error): ?>
                 <div class="alert alert-danger alert-custom">
                     <i class="fas fa-exclamation-triangle me-2"></i><?php echo htmlspecialchars($error); ?>
                 </div>
             <?php endif; ?>
-
-            <!-- Lista de órdenes -->
             <?php if (empty($ordenes_pagina)): ?>
                 <div class="no-orders">
                     <i class="fas fa-inbox fa-4x mb-3 d-block"></i>
@@ -322,8 +287,6 @@ $item_urls = [];
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Historial mini -->
                         <?php if (!empty($historial)): ?>
                             <div class="historial-mini">
                                 <div style="font-size: 0.65rem; font-weight: 600; color: var(--america-navy); margin-bottom: 0.2rem;">
@@ -336,7 +299,6 @@ $item_urls = [];
                                 <?php endforeach; ?>
                             </div>
                         <?php endif; ?>
-
                         <div class="acciones-orden">
                             <a href="ordenproduccion.php?orden=<?php echo $orden['numero_orden']; ?>" class="btn-accion btn-producir" onclick="event.stopPropagation()">
                                 <i class="fas fa-play"></i>
@@ -349,8 +311,6 @@ $item_urls = [];
                         </div>
                     </div>
                 <?php endforeach; ?>
-
-                <!-- Paginación -->
                 <?php if ($total_paginas > 1): ?>
                     <nav aria-label="Paginación de órdenes" class="mt-4">
                         <ul class="pagination justify-content-center">
@@ -384,8 +344,6 @@ $item_urls = [];
 
         </div>
     </div>
-
-    <!-- Modal para detalles de orden -->
     <div class="modal fade modal-orden-detalle" id="modalDetallesOrden" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -412,24 +370,17 @@ $item_urls = [];
             </div>
         </div>
     </div>
-
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         let selectedOrder = null;
 
         function selectOrder(card, numeroOrden) {
-            // Limpiar selección anterior
             document.querySelectorAll('.orden-card').forEach(c => {
                 c.classList.remove('selected');
             });
-
-            // Seleccionar nueva tarjeta
             card.classList.add('selected');
             selectedOrder = numeroOrden;
-
-            // Efecto visual
             card.style.transform = 'translateY(-2px) scale(1.01)';
             card.style.boxShadow = '0 8px 25px rgba(220, 38, 38, 0.3)';
         }
@@ -445,15 +396,13 @@ $item_urls = [];
         function removerFiltro(filtro) {
             const url = new URL(window.location);
             url.searchParams.delete(filtro);
-            url.searchParams.delete('pagina'); // Reset página cuando cambia filtro
+            url.searchParams.delete('pagina');
             window.location.href = url.toString();
         }
 
         function showOrderDetails(numeroOrden) {
             selectedOrder = numeroOrden;
             const modal = new bootstrap.Modal(document.getElementById('modalDetallesOrden'));
-
-            // Mostrar modal con loading
             document.getElementById('modalContent').innerHTML = `
                 <div class="text-center py-4">
                     <div class="spinner-border text-primary" role="status">
@@ -464,10 +413,7 @@ $item_urls = [];
             `;
 
             modal.show();
-
-            // Simular carga de detalles
             setTimeout(() => {
-                // Obtener datos de la orden desde el DOM
                 const orderCard = document.querySelector(`[onclick*="${numeroOrden}"]`);
                 let clienteText = 'Cliente no disponible';
                 let tipoText = 'Tipo no disponible';
@@ -526,17 +472,12 @@ $item_urls = [];
                 `;
             }, 800);
         }
-
-        // Configurar botón de ir a producción en modal
         document.getElementById('btnIrAProduccion').addEventListener('click', function() {
             if (selectedOrder) {
                 window.location.href = `ordenproduccion.php?orden=${selectedOrder}`;
             }
         });
-
-        // Atajos de teclado
         document.addEventListener('keydown', function(e) {
-            // Escape para limpiar selección
             if (e.key === 'Escape') {
                 document.querySelectorAll('.orden-card').forEach(c => {
                     c.classList.remove('selected');
@@ -546,36 +487,29 @@ $item_urls = [];
                 selectedOrder = null;
             }
 
-            // Enter para ir a producción con orden seleccionada
             if (e.key === 'Enter' && selectedOrder) {
                 goToProduction(selectedOrder);
             }
 
-            // F5 para actualizar
             if (e.key === 'F5') {
                 e.preventDefault();
                 location.reload();
             }
 
-            // Ctrl+F para focus en filtro de número de orden
             if (e.ctrlKey && e.key === 'f') {
                 e.preventDefault();
                 document.querySelector('input[name="numero_orden"]').focus();
             }
         });
 
-        // Auto-completar número de orden mientras escribes
         document.querySelector('input[name="numero_orden"]').addEventListener('input', function(e) {
             const valor = e.target.value;
             if (valor.length >= 3) {
-                // Aquí podrías implementar autocompletado si tienes un endpoint para ello
                 console.log(`Buscando órdenes que contengan: ${valor}`);
             }
         });
 
-        // Auto-actualizar cada 2 minutos
         setInterval(function() {
-            // Mostrar indicador sutil de actualización
             const indicator = document.createElement('div');
             indicator.style.cssText = `
                 position: fixed; 
@@ -591,7 +525,6 @@ $item_urls = [];
             `;
             indicator.innerHTML = '<i class="fas fa-sync fa-spin me-2"></i>Actualizando...';
 
-            // Agregar animación CSS
             const style = document.createElement('style');
             style.textContent = `
                 @keyframes fadeInOut {
@@ -606,9 +539,7 @@ $item_urls = [];
                 location.reload();
             }, 1500);
 
-        }, 120000); // 2 minutos
-
-        console.log('🏭 Sistema de Órdenes Pendientes America TNT cargado correctamente con filtro de número de orden');
+        }, 120000); 
     </script>
 </body>
 

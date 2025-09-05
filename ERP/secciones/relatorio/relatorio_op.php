@@ -34,40 +34,13 @@ $breadcrumb_items = ['REPORTES', 'REPORE OP'];
 $item_urls = [
     $url_base . 'secciones/relatorio/main.php',
 ];
+$additional_css = [$url_base . 'secciones/relatorio/utils/relatorio_op.css'];
+include $path_base . "components/head.php";
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($titulo); ?></title>
-
-    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo $url_base; ?>assets/favicon-32.png">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="<?php echo $url_base; ?>secciones/relatorio/utils/relatorio_op.css">
-
-
-</head>
 
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
-    <!-- Hero Section -->
-    <div class="hero-section">
-        <div class="container-fluid">
-            <div class="row align-items-center">
-                <div class="col-lg-8">
-                    <h1 class="hero-title">
-                        <i class="fas fa-clipboard-list me-3"></i>Órdenes de Producción
-                    </h1>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Main Content -->
     <div class="main-container">
         <div class="container-fluid">

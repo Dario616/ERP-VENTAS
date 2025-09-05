@@ -102,19 +102,29 @@ function distanciaLevenshtein(a, b) {
 }
 
 /**
- * Buscar las 10 materias más similares
+ * Buscar las 10 materias más similares CON FILTRO POR TIPO
  */
-function buscarMateriasSimilares(consulta) {
+function buscarMateriasSimilares(consulta, tipoMateria = "ambos") {
   if (!consulta || consulta.trim().length < 1) {
     return [];
   }
 
-  const resultados = materiasDisponibles.map((materia) => ({
+  // FILTRAR SEGÚN EL TIPO
+  let materiasFiltradas = materiasDisponibles;
+
+  if (tipoMateria === "principal") {
+    // Para materias principales: EXCLUIR las que tienen unidad = 'Unidad'
+    materiasFiltradas = materiasDisponibles.filter(
+      (materia) => materia.unidad !== "Unidad"
+    );
+  }
+  // Para materias extras no filtrar nada (tipoMateria === 'extra' o 'ambos')
+
+  const resultados = materiasFiltradas.map((materia) => ({
     ...materia,
     similitud: calcularSimilitud(consulta, materia.descripcion),
   }));
 
-  // Ordenar por similitud y tomar los 10 mejores
   return resultados
     .filter((item) => item.similitud > 0)
     .sort((a, b) => b.similitud - a.similitud)
@@ -135,7 +145,7 @@ function resaltarCoincidencias(texto, consulta) {
 }
 
 /**
- * Crear buscador inteligente de materias
+ * Crear buscador inteligente CON TIPO
  */
 function crearBuscadorInteligente(namePrefix, idSuffix, tipo = "principal") {
   const searchId = `search_${namePrefix}_${idSuffix}`;
@@ -150,9 +160,9 @@ function crearBuscadorInteligente(namePrefix, idSuffix, tipo = "principal") {
              id="${searchId}"
              placeholder="Buscar materia prima..."
              autocomplete="off"
-             onkeyup="manejarBusqueda('${searchId}', '${hiddenId}', '${suggestionsId}')"
+             onkeyup="manejarBusqueda('${searchId}', '${hiddenId}', '${suggestionsId}', '${tipo}')"
              onkeydown="navegarSugerencias(event, '${suggestionsId}')"
-             onfocus="mostrarSugerencias('${searchId}', '${hiddenId}', '${suggestionsId}')"
+             onfocus="mostrarSugerencias('${searchId}', '${hiddenId}', '${suggestionsId}', '${tipo}')"
              onblur="ocultarSugerenciasConDelay('${suggestionsId}')">
       <button type="button" class="clear-selection" id="clear_${searchId}" 
               onclick="limpiarSeleccion('${searchId}', '${hiddenId}', '${suggestionsId}')"
@@ -174,9 +184,14 @@ function crearBuscadorInteligente(namePrefix, idSuffix, tipo = "principal") {
 }
 
 /**
- * Manejar búsqueda en tiempo real
+ * Manejar búsqueda en tiempo real CON TIPO
  */
-function manejarBusqueda(searchId, hiddenId, suggestionsId) {
+function manejarBusqueda(
+  searchId,
+  hiddenId,
+  suggestionsId,
+  tipoMateria = "principal"
+) {
   const input = document.getElementById(searchId);
   const hidden = document.getElementById(hiddenId);
   const suggestionsDiv = document.getElementById(suggestionsId);
@@ -184,7 +199,6 @@ function manejarBusqueda(searchId, hiddenId, suggestionsId) {
 
   const consulta = input.value.trim();
 
-  // Limpiar selección si el input está vacío
   if (!consulta) {
     hidden.value = "";
     suggestionsDiv.style.display = "none";
@@ -193,8 +207,8 @@ function manejarBusqueda(searchId, hiddenId, suggestionsId) {
     return;
   }
 
-  // Buscar materias similares
-  const resultados = buscarMateriasSimilares(consulta);
+  // PASAR EL TIPO A LA BÚSQUEDA
+  const resultados = buscarMateriasSimilares(consulta, tipoMateria);
 
   if (resultados.length > 0) {
     let html = "";
@@ -207,9 +221,12 @@ function manejarBusqueda(searchId, hiddenId, suggestionsId) {
         <div class="suggestion-item ${index === 0 ? "selected" : ""}" 
              data-id="${materia.id}" 
              data-text="${materia.descripcion}"
+             data-unidad="${materia.unidad || ""}"
              onclick="seleccionarMateria('${searchId}', '${hiddenId}', '${suggestionsId}', ${
         materia.id
-      }, '${materia.descripcion.replace(/'/g, "\\'")}')">
+      }, '${materia.descripcion.replace(/'/g, "\\'")}', '${
+        materia.unidad || ""
+      }', '${tipoMateria}')">
           ${textoResaltado}
         </div>
       `;
@@ -223,20 +240,23 @@ function manejarBusqueda(searchId, hiddenId, suggestionsId) {
     suggestionsDiv.style.display = "block";
   }
 
-  // Mostrar botón de limpiar si hay texto
   clearBtn.style.display = consulta ? "inline-block" : "none";
 }
 
 /**
- * Mostrar sugerencias al hacer focus
+ * Mostrar sugerencias CON TIPO
  */
-function mostrarSugerencias(searchId, hiddenId, suggestionsId) {
+function mostrarSugerencias(
+  searchId,
+  hiddenId,
+  suggestionsId,
+  tipoMateria = "principal"
+) {
   const input = document.getElementById(searchId);
   if (input.value.trim()) {
-    manejarBusqueda(searchId, hiddenId, suggestionsId);
+    manejarBusqueda(searchId, hiddenId, suggestionsId, tipoMateria);
   }
 }
-
 /**
  * Ocultar sugerencias con delay para permitir clics
  */
@@ -250,14 +270,16 @@ function ocultarSugerenciasConDelay(suggestionsId) {
 }
 
 /**
- * Seleccionar materia de las sugerencias
+ * Seleccionar materia CON PRESELECCIÓN AUTOMÁTICA DE UNIDAD
  */
 function seleccionarMateria(
   searchId,
   hiddenId,
   suggestionsId,
   id,
-  descripcion
+  descripcion,
+  unidad = "",
+  tipoMateria = "principal"
 ) {
   const input = document.getElementById(searchId);
   const hidden = document.getElementById(hiddenId);
@@ -270,13 +292,67 @@ function seleccionarMateria(
   suggestionsDiv.style.display = "none";
   clearBtn.style.display = "inline-block";
 
-  // Trigger change event para validaciones
+  // PRESELECCIONAR UNIDAD PARA MATERIAS EXTRAS
+  if (tipoMateria === "extra") {
+    // Buscar el select de unidad en la misma fila
+    const fila = input.closest("tr");
+    const selectUnidad = fila.querySelector(
+      'select[name*="unidad_medida_extra"]'
+    );
+
+    if (selectUnidad && unidad) {
+      let unidadSeleccionada = "";
+      let bloquearCambio = false;
+
+      // Mapear unidades de la base de datos a opciones del select
+      switch (unidad) {
+        case "Unidad":
+          unidadSeleccionada = "unidades";
+          bloquearCambio = true; // Bloquear cambio para unidades fijas
+          break;
+        case "Kilos":
+          unidadSeleccionada = "kilogramos";
+          bloquearCambio = true; // Bloquear cambio para unidades fijas
+          break;
+        default:
+          // Para otras unidades, intentar mapear directamente
+          unidadSeleccionada = unidad.toLowerCase();
+          bloquearCambio = false;
+          break;
+      }
+
+      // Verificar si la opción existe en el select
+      const opcionExiste = Array.from(selectUnidad.options).some(
+        (option) => option.value === unidadSeleccionada
+      );
+
+      if (opcionExiste) {
+        selectUnidad.value = unidadSeleccionada;
+        selectUnidad.disabled = bloquearCambio;
+
+        // Añadir indicador visual si está bloqueado
+        if (bloquearCambio) {
+          selectUnidad.style.backgroundColor = "#f8f9fa";
+          selectUnidad.title = `Unidad fija para esta materia: ${unidad}`;
+        } else {
+          selectUnidad.style.backgroundColor = "";
+          selectUnidad.title = "";
+        }
+      } else {
+        // Si no existe la opción, no bloquear el select
+        selectUnidad.disabled = false;
+        selectUnidad.style.backgroundColor = "";
+        selectUnidad.title = "";
+      }
+    }
+  }
+
   input.dispatchEvent(new Event("change"));
   hidden.dispatchEvent(new Event("change"));
 }
 
 /**
- * Limpiar selección
+ * Limpiar selección CON RESET DE UNIDADES
  */
 function limpiarSeleccion(searchId, hiddenId, suggestionsId) {
   const input = document.getElementById(searchId);
@@ -289,6 +365,20 @@ function limpiarSeleccion(searchId, hiddenId, suggestionsId) {
   input.classList.remove("selected-value");
   suggestionsDiv.style.display = "none";
   clearBtn.style.display = "none";
+
+  // RESETEAR SELECT DE UNIDAD SI ES MATERIA EXTRA
+  const fila = input.closest("tr");
+  const selectUnidad = fila
+    ? fila.querySelector('select[name*="unidad_medida_extra"]')
+    : null;
+
+  if (selectUnidad) {
+    selectUnidad.disabled = false;
+    selectUnidad.style.backgroundColor = "";
+    selectUnidad.title = "";
+    selectUnidad.selectedIndex = 0; // Volver a la primera opción
+  }
+
   input.focus();
 }
 

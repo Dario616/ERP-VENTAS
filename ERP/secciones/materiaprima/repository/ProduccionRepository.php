@@ -163,20 +163,16 @@ class ProduccionRepository
             // NUEVO: Detectar si es tubo
             $esTubo = $this->esTubo($datos['nombre']);
 
-            // NUEVA VALIDACIÓN: Verificar stock antes de crear (excepto para tubos sin receta)
-            if (!$esTubo) {
-                $validacionStock = $this->validarStockDisponible($datos['id_op'], $datos['peso_bruto']);
+            // Verificar stock antes de crear
+            $validacionStock = $this->validarStockDisponible($datos['id_op'], $datos['peso_bruto']);
 
-                if (!$validacionStock['valido']) {
-                    return [
-                        'success' => false,
-                        'id' => null,
-                        'error' => $validacionStock['mensaje'],
-                        'tipo_error' => 'stock_insuficiente'
-                    ];
-                }
-            } else {
-                error_log("🔧 Material TUBO detectado - Omitiendo validación de stock por receta");
+            if (!$validacionStock['valido']) {
+                return [
+                    'success' => false,
+                    'id' => null,
+                    'error' => $validacionStock['mensaje'],
+                    'tipo_error' => 'stock_insuficiente'
+                ];
             }
 
             $this->conexion->beginTransaction();
@@ -221,12 +217,8 @@ class ProduccionRepository
                 $this->actualizarPesoYCantidadEstimado($datos['nombre'], $datos['peso_bruto'], $datos['cantidad'] ?? null);
             }
 
-            // Descontar materias primas según receta (NO para tubos)
-            if (!$esTubo) {
-                $this->descontarMateriaPrimaSegunReceta($datos['id_op'], $datos['peso_bruto']);
-            } else {
-                error_log("🔧 TUBO - Omitiendo descuento por receta");
-            }
+            // Descontar materias primas según receta
+            $this->descontarMateriaPrimaSegunReceta($datos['id_op'], $datos['peso_bruto']);
 
             $this->conexion->commit();
 
@@ -511,12 +503,7 @@ class ProduccionRepository
                 );
             }
 
-            // Revertir descuento de materias primas según receta (NO para tubos)
-            if (!$esTubo) {
-                $this->revertirDescuentoReceta($produccion['id_op'], $produccion['peso_bruto']);
-            } else {
-                error_log("🔧 TUBO - Omitiendo reversión de descuento por receta");
-            }
+            $this->revertirDescuentoReceta($produccion['id_op'], $produccion['peso_bruto']);
 
             $this->conexion->commit();
 

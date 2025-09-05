@@ -5,34 +5,17 @@ requerirRol(['1']);
 include "controllers/nuevaordenController.php";
 $breadcrumb_items = ['NUEVA ORDEN'];
 $item_urls = [];
+$additional_css = [$url_base . 'secciones/produccion/utils/nueva_orden_manual.css'];
+include $path_base . "components/head.php";
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nueva Orden de Producción</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="icon" href="<?php echo $url_base; ?>utils/icon.ico" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="<?php echo $url_base; ?>secciones/produccion/utils/nueva_orden_manual.css">
-</head>
-
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
-    <!-- Main Content -->
     <div class="main-container">
         <div class="container-fluid">
             <div class="row">
-                <!-- Formulario - Columna Izquierda -->
                 <div class="col-lg-5 col-xl-4">
                     <form method="POST" id="formNuevaOrden">
                         <input type="hidden" name="crear_orden" value="1">
-
-                        <!-- Información del Producto -->
                         <div class="card mb-3">
                             <div class="card-header">
                                 <h6 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Nueva Orden de Producción para Stock</h6>
@@ -61,8 +44,6 @@ $item_urls = [];
                                         <i class="fas fa-exclamation-triangle me-2"></i>
                                         <strong>Producto requerido:</strong> Solo se pueden crear órdenes con productos existentes en la base de datos.
                                     </div>
-
-                                    <!-- Vista previa de especificaciones -->
                                     <div id="previewBox" class="preview-box">
                                         <h6 id="previewTitle"><i class="fas fa-database me-2"></i>Producto Seleccionado:</h6>
                                         <div id="statusIndicator"></div>
@@ -104,8 +85,6 @@ $item_urls = [];
                         </div>
                     </form>
                 </div>
-
-                <!-- Listado de Órdenes - Columna Derecha -->
                 <div class="col-lg-7 col-xl-8">
                     <div class="card">
                         <div class="card-header">
@@ -139,37 +118,12 @@ $item_urls = [];
             </div>
         </div>
     </div>
-
-    <!-- ⭐ INFORMACIÓN DE DEBUG (OPCIONAL) ⭐ -->
-    <div class="debug-info" id="debugInfo">
-        <strong>Debug Info:</strong><br>
-        <span id="debugContent">Sistema inicializado</span>
-    </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const ITEMS_POR_PAGINA = <?php echo $items_por_pagina; ?>;
-
-        // ⭐ CONFIGURACIÓN PARA TIPOS SOPORTADOS ⭐
         const TIPOS_SOPORTADOS = <?php echo json_encode($tipos_soportados); ?>;
-
-        // ⭐ INFORMACIÓN DEL USUARIO Y SESIÓN ⭐
         const USUARIO_ACTUAL = "<?php echo htmlspecialchars($_SESSION['nombre']); ?>";
         const URL_BASE = "<?php echo $url_base; ?>";
-
-        // ⭐ FUNCIÓN DE DEBUG (OPCIONAL) ⭐
-        function updateDebugInfo(mensaje) {
-            const debugElement = document.getElementById('debugContent');
-            if (debugElement) {
-                const timestamp = new Date().toLocaleTimeString();
-                debugElement.innerHTML = `${timestamp}: ${mensaje}`;
-            }
-        }
-
-        // Log inicial
-        console.log('Nueva Orden de Producción - Sistema iniciado');
-        console.log('Tipos soportados:', TIPOS_SOPORTADOS);
-        updateDebugInfo('Sistema iniciado correctamente');
     </script>
     <script src="js/nueva-orden.js"></script>
 </body>

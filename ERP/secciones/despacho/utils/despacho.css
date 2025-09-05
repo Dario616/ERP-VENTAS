@@ -26,93 +26,11 @@
   --gray-900: #0f172a;
 }
 
-/* ===== BASE ===== */
-* {
-  font-family: "Inter", sans-serif;
-}
-
 body {
   background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
   color: var(--gray-900);
   line-height: 1.5;
   font-size: 14px;
-}
-
-/* ===== NAVBAR ===== */
-.navbar {
-  background: linear-gradient(
-    135deg,
-    var(--america-navy-dark) 0%,
-    var(--america-navy) 100%
-  );
-  box-shadow: 0 4px 8px rgba(30, 58, 95, 0.15);
-  border-bottom: 2px solid var(--america-red);
-  padding: 0.6rem 0;
-  backdrop-filter: blur(10px);
-}
-
-.navbar-brand {
-  font-weight: 700;
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: white !important;
-  transition: transform 0.3s ease;
-}
-
-.navbar-brand img {
-  filter: brightness(1.1);
-}
-
-.navbar-dark .navbar-nav .nav-link {
-  color: rgba(255, 255, 255, 0.9) !important;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  letter-spacing: 0.3px;
-  padding: 0.5rem 0.8rem !important;
-  border-radius: 8px;
-  margin: 0 0.1rem;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.navbar-dark .navbar-nav .nav-link::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.1),
-    transparent
-  );
-  transition: left 0.5s;
-}
-
-.navbar-dark .navbar-nav .nav-link:hover::before {
-  left: 100%;
-}
-
-.navbar-dark .navbar-nav .nav-link:hover {
-  background-color: rgba(220, 38, 38, 0.2);
-  color: white !important;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(30, 58, 95, 0.12);
-}
-
-.navbar-dark .navbar-nav .nav-link.active {
-  background: linear-gradient(
-    135deg,
-    var(--america-red) 0%,
-    var(--america-orange) 100%
-  );
-  color: white !important;
-  box-shadow: 0 2px 4px rgba(30, 58, 95, 0.12);
 }
 
 /* ===== DASHBOARD CARD ===== */

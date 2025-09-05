@@ -8,32 +8,22 @@ requerirRol(['1', '2']);
 requerirLogin();
 
 $recetasController = new RecetasController($conexion);
-
-// Manejar peticiones AJAX
 if (isset($_POST['ajax']) && $_POST['ajax'] === 'true') {
     $recetasController->manejarAjaxAgrupado();
     exit();
 }
-
-// Manejar solicitud de detalle de receta
 if (isset($_GET['accion']) && $_GET['accion'] === 'obtener_detalle_receta' && isset($_GET['id_tipo_producto'])) {
     header('Content-Type: application/json');
     $detalle = $recetasController->obtenerDetalleReceta($_GET['id_tipo_producto']);
     echo json_encode($detalle, JSON_UNESCAPED_UNICODE);
     exit();
 }
-
-// ✅ NUEVO: Manejar toda la petición con PRG
 $datosVista = $recetasController->manejarPeticionAgrupada();
-
-// Si el controlador devuelve null, significa que se hizo un redirect
 if ($datosVista === null) {
-    exit(); // No continuar con el renderizado
+    exit();
 }
 
 extract($datosVista);
-
-// Función para formatear números
 function formatearNumero($numero, $decimales = 1)
 {
     $num = floatval($numero);
@@ -46,29 +36,15 @@ $breadcrumb_items = ['MATERIALES', 'RECETAS PRODUCTOS'];
 $item_urls = [
     $url_base . 'secciones/materiaprima/main.php',
 ];
+$additional_css = [$url_base . 'secciones/materiaprima/utils/recetas.css'];
+include $path_base . "components/head.php";
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>America TNT - Recetas de Productos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" href="<?php echo $url_base; ?>utils/icon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="<?php echo $url_base; ?>secciones/materiaprima/utils/recetas.css">
-</head>
 
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
-    <!-- Contenido Principal -->
     <div class="main-container">
         <div class="container-fluid">
             <div class="production-card">
-                <!-- Header de la sección -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <h4 class="mb-2 text-primary">
@@ -85,8 +61,6 @@ $item_urls = [
                         </button>
                     </div>
                 </div>
-
-                <!-- ✅ MEJORADO: Mostrar mensajes con mejor styling y PRG -->
                 <?php if (!empty($mensaje)): ?>
                     <div class="alert alert-success alert-custom alert-success-custom alert-dismissible fade show alert-fade-in" role="alert">
                         <i class="fas fa-check-circle alert-icon"></i>
@@ -102,8 +76,6 @@ $item_urls = [
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
                     </div>
                 <?php endif; ?>
-
-                <!-- ✅ NUEVO: Indicador de acción reciente (si hay) -->
                 <?php if (isset($_GET['action']) && !empty($_GET['action'])): ?>
                     <div class="alert alert-info alert-dismissible fade show" role="alert">
                         <i class="fas fa-info-circle me-2"></i>
@@ -132,8 +104,6 @@ $item_urls = [
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
                     </div>
                 <?php endif; ?>
-
-                <!-- Panel de búsqueda -->
                 <div class="form-section" id="panelBusqueda" style="display: none;">
                     <div class="card border-info mb-4">
                         <div class="card-header bg-info text-white">
@@ -180,8 +150,6 @@ $item_urls = [
                         </div>
                     </div>
                 </div>
-
-                <!-- Listado de tipos de productos con versiones -->
                 <div class="ultimas-cajas">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h6 class="text-secondary mb-0">
@@ -273,7 +241,6 @@ $item_urls = [
                                                                 onclick="agregarNuevaVersion(<?php echo $registro['id_tipo_producto']; ?>)">
                                                                 <i class="fas fa-plus me-2"></i>Nueva Versión
                                                             </a></li>
-                                                        <!-- NUEVO BOTÓN PARA PDF -->
                                                         <?php if ($registro['total_versiones'] > 0): ?>
                                                             <li>
                                                                 <hr class="dropdown-divider">
@@ -301,8 +268,6 @@ $item_urls = [
                                 </tbody>
                             </table>
                         </div>
-
-                        <!-- Paginación -->
                         <?php if ($datosPaginacion['total_paginas'] > 1): ?>
                             <nav aria-label="Paginación" class="pagination-custom">
                                 <ul class="pagination pagination-sm justify-content-center">
@@ -314,7 +279,6 @@ $item_urls = [
                                             </a>
                                         </li>
                                     <?php endif; ?>
-
                                     <?php
                                     $inicio = max(1, $pagina_actual - 2);
                                     $fin = min($datosPaginacion['total_paginas'], $pagina_actual + 2);
@@ -356,7 +320,6 @@ $item_urls = [
         </div>
     </div>
 
-    <!-- Modal Ver Todas las Versiones -->
     <div class="modal fade" id="modalVersiones" tabindex="-1" aria-labelledby="modalVersionesLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -390,7 +353,6 @@ $item_urls = [
         </div>
     </div>
 
-    <!-- Modal de Receta (Nueva Versión) -->
     <div class="modal fade" id="modalReceta" tabindex="-1" aria-labelledby="modalRecetaLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -405,7 +367,6 @@ $item_urls = [
                     <div class="modal-body">
                         <input type="hidden" name="accion" id="accionFormulario" value="crear_multiples">
 
-                        <!-- Información de versión -->
                         <div class="row mb-4">
                             <div class="col-md-4">
                                 <div class="form-group-custom">
@@ -445,8 +406,6 @@ $item_urls = [
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Indicador de suma total -->
                         <div id="indicadorSuma" class="alert alert-info d-none mb-4">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
@@ -463,8 +422,6 @@ $item_urls = [
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Tabs para separar materias principales y extras -->
                         <div id="seccionMateriasPrimas" style="display: none;">
                             <ul class="nav nav-tabs" id="tabsMaterias" role="tablist">
                                 <li class="nav-item" role="presentation">
@@ -482,11 +439,12 @@ $item_urls = [
                             </ul>
 
                             <div class="tab-content mt-4" id="contenidoTabsMaterias">
-                                <!-- Tab Materias Principales -->
                                 <div class="tab-pane fade show active" id="tabPrincipales" role="tabpanel">
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <h6 class="text-secondary mb-0">
-                                            <i class="fas fa-percentage me-2"></i>Composición Principal del Producto (debe sumar 100%)
+                                            <i class="fas fa-percentage me-2"></i>Componentes Principales (Solo se admite kilos)
+                                            <br />
+                                            <i class="fas fa-search me-2"></i>Obs; Todo lo que se cargue aqui sera en base a 1 Kg del Producto
                                         </h6>
                                         <button type="button" class="btn btn-success btn-sm" onclick="agregarFilaMateria('principal')">
                                             <i class="fas fa-plus me-1"></i>Agregar Materia Principal
@@ -497,23 +455,23 @@ $item_urls = [
                                         <table class="table table-sm" id="tablaMateriasprincipales">
                                             <thead class="table-light">
                                                 <tr>
-                                                    <th width="50%">Materia Prima</th>
-                                                    <th width="25%">Porcentaje (%)</th>
-                                                    <th width="25%">Acciones</th>
+                                                    <th width="80%">Materia Prima</th>
+                                                    <th width="15%">Porcentaje (%)</th>
+                                                    <th width="5%">Acciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="tbodyMateriasPrincipales">
-                                                <!-- Las filas se agregan dinámicamente -->
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
 
-                                <!-- Tab Materias Extras -->
                                 <div class="tab-pane fade" id="tabExtras" role="tabpanel">
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <h6 class="text-secondary mb-0">
-                                            <i class="fas fa-plus-circle me-2"></i>Materias Extras (no cuentan para el 100%)
+                                            <i class="fas fa-plus-circle me-2"></i>Componentes Extras (Se admiten kilos y unidades)
+                                            <br />
+                                            <i class="fas fa-search me-2"></i>Obs; Kilos se basan en 1kg del producto y unidad en base a cada item
                                         </h6>
                                         <button type="button" class="btn btn-warning btn-sm" onclick="agregarFilaMateria('extra')">
                                             <i class="fas fa-plus me-1"></i>Agregar Materia Extra
@@ -524,14 +482,13 @@ $item_urls = [
                                         <table class="table table-sm" id="tablaMateriasExtras">
                                             <thead class="table-light">
                                                 <tr>
-                                                    <th width="40%">Materia Prima</th>
-                                                    <th width="20%">Cantidad</th>
-                                                    <th width="20%">Unidad</th>
-                                                    <th width="20%">Acciones</th>
+                                                    <th width="65%">Materia Prima</th>
+                                                    <th width="15%">Cantidad</th>
+                                                    <th width="15%">Unidad</th>
+                                                    <th width="5%">Acciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="tbodyMateriasExtras">
-                                                <!-- Las filas se agregan dinámicamente -->
                                             </tbody>
                                         </table>
                                     </div>
@@ -555,7 +512,6 @@ $item_urls = [
         </div>
     </div>
 
-    <!-- Formularios ocultos -->
     <form method="POST" action="" id="formEliminar" style="display: none;">
         <input type="hidden" name="accion" value="eliminar_todas_recetas">
         <input type="hidden" name="id_tipo_producto" id="idTipoProductoEliminar" value="">
@@ -572,14 +528,10 @@ $item_urls = [
         <input type="hidden" name="version_receta" id="versionEliminar" value="">
     </form>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Script de datos PHP para JavaScript -->
     <script>
-        // Transferir datos PHP a JavaScript
         document.addEventListener('DOMContentLoaded', function() {
-            // ✅ NUEVO: Auto-cerrar alertas después de un tiempo
             setTimeout(function() {
                 const alertas = document.querySelectorAll('.alert-dismissible');
                 alertas.forEach(function(alerta) {
@@ -587,46 +539,34 @@ $item_urls = [
                     setTimeout(function() {
                         try {
                             bsAlert.close();
-                        } catch (e) {
-                            // Ignorar errores si la alerta ya fue cerrada
-                        }
-                    }, 8000); // 8 segundos para auto-cerrar
+                        } catch (e) {}
+                    }, 8000);
                 });
             }, 1000);
 
-            // Inicializar sistema con datos del servidor
             inicializarSistema(
                 <?php echo json_encode($materiasPrimas); ?>,
                 <?php echo json_encode($tiposProducto); ?>
             );
 
-            // ✅ NUEVO: Limpiar parámetros de URL después de mostrar el mensaje
             if (window.location.search.includes('action=') || window.location.search.includes('_t=')) {
-                // Crear nueva URL sin los parámetros temporales
                 const url = new URL(window.location);
                 url.searchParams.delete('action');
                 url.searchParams.delete('_t');
-
-                // Reemplazar la URL actual sin recargar la página
                 window.history.replaceState({}, '', url.toString());
             }
         });
 
-        // ✅ NUEVO: Función para refrescar datos sin reload completo
         function refrescarDatos() {
-            // Mostrar indicador de carga
             const btnRefresh = document.querySelector('[onclick="refrescarDatos()"]');
             const iconoOriginal = btnRefresh.innerHTML;
             btnRefresh.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Actualizando...';
             btnRefresh.disabled = true;
-
-            // Recargar página después de un breve delay
             setTimeout(function() {
                 window.location.reload();
             }, 500);
         }
 
-        // ✅ NUEVO: Función mejorada para toggle de búsqueda
         function toggleBusqueda() {
             const panel = document.getElementById('panelBusqueda');
             const btn = document.querySelector('[onclick="toggleBusqueda()"]');
@@ -644,9 +584,5 @@ $item_urls = [
             }
         }
     </script>
-
-    <!-- JavaScript externo actualizado -->
     <script src="<?php echo $url_base; ?>secciones/materiaprima/js/recetas-productos.js"></script>
 </body>
-
-</html>

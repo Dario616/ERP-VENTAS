@@ -144,8 +144,10 @@ function limpiarFormulario() {
  * Cargar versiones de receta disponibles
  */
 async function cargarVersionesReceta() {
-  const materiaPrimaId = document.getElementById("id_materia_prima").value;
+  const materiaPrimaSelect = document.getElementById("id_materia_prima");
+  const materiaPrimaId = materiaPrimaSelect.value;
   const selectVersiones = document.getElementById("version_receta");
+  const selectUnidad = document.getElementById("unidad_medida");
 
   if (!materiaPrimaId) {
     selectVersiones.disabled = true;
@@ -155,6 +157,27 @@ async function cargarVersionesReceta() {
     return;
   }
 
+  // Obtener y setear la unidad de medida automáticamente
+  const selectedOption =
+    materiaPrimaSelect.options[materiaPrimaSelect.selectedIndex];
+  const unidadMateria = selectedOption.dataset.unidad;
+
+  if (unidadMateria) {
+    // Mapear la unidad de la materia prima al select
+    if (
+      unidadMateria.toUpperCase() === "KILOS" ||
+      unidadMateria.toUpperCase() === "KG"
+    ) {
+      selectUnidad.value = "KG";
+    } else if (
+      unidadMateria.toUpperCase() === "UNIDAD" ||
+      unidadMateria.toUpperCase() === "UN"
+    ) {
+      selectUnidad.value = "UN";
+    }
+  }
+
+  // Resto del código existente para cargar versiones...
   selectVersiones.disabled = true;
   selectVersiones.innerHTML = '<option value="">Cargando versiones...</option>';
 
@@ -182,7 +205,6 @@ async function cargarVersionesReceta() {
           option.textContent = `Versión ${version.version_receta}: ${version.nombre_receta} (${version.porcentaje_formateado}% - ${version.estado_completitud})`;
           option.dataset.esCompleta = version.es_completa;
 
-          // Deshabilitar versiones incompletas
           if (!version.es_completa) {
             option.disabled = true;
             option.textContent += " - INCOMPLETA";

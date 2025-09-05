@@ -22,21 +22,9 @@ $breadcrumb_items = ['MATERIALES', 'ORDENES DE PRODUCCIÓN'];
 $item_urls = [
     $url_base . 'secciones/materiaprima/main.php',
 ];
+$additional_css = [$url_base . 'secciones/materiaprima/utils/orden-produccion-material.css'];
+include $path_base . "components/head.php";
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>America TNT - Órdenes de Producción Material</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" href="<?php echo $url_base; ?>utils/icon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="<?php echo $url_base; ?>secciones/materiaprima/utils/orden-produccion-material.css">
-</head>
 
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
@@ -295,7 +283,7 @@ $item_urls = [
                                     <select class="form-control form-control-custom" name="id_materia_prima" id="id_materia_prima" required onchange="cargarVersionesReceta()">
                                         <option value="">Seleccionar materia prima</option>
                                         <?php foreach ($materiasPrimasConRecetas as $materia): ?>
-                                            <option value="<?php echo $materia['id']; ?>">
+                                            <option value="<?php echo $materia['id']; ?>" data-unidad="<?php echo $materia['unidad']; ?>">
                                                 <?php echo htmlspecialchars($materia['descripcion']); ?>
                                             </option>
                                         <?php endforeach; ?>
@@ -445,5 +433,3 @@ $item_urls = [
     <!-- JavaScript externo -->
     <script src="<?php echo $url_base; ?>secciones/materiaprima/js/orden-produccion-material.js"></script>
 </body>
-
-</html>

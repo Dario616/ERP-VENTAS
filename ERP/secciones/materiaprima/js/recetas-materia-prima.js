@@ -103,22 +103,34 @@ function distanciaLevenshtein(a, b) {
 /**
  * Buscar los 10 componentes más similares (excluyendo la materia prima objetivo)
  */
-function buscarComponentesSimilares(consulta, idMateriaObjetivo = null) {
+function buscarComponentesSimilares(
+  consulta,
+  idMateriaObjetivo = null,
+  tipoMateria = "ambos"
+) {
   if (!consulta || consulta.trim().length < 1) {
     return [];
   }
 
   // Filtrar materias primas para excluir la materia prima objetivo
-  const materiasFilltradas = materiasDisponibles.filter(
+  let materiasFilltradas = materiasDisponibles.filter(
     (materia) => !idMateriaObjetivo || materia.id != idMateriaObjetivo
   );
+
+  // FILTRAR SEGÚN EL TIPO
+  if (tipoMateria === "principal") {
+    // Para componentes principales: EXCLUIR las que tienen unidad = 'Unidad'
+    materiasFilltradas = materiasFilltradas.filter(
+      (materia) => materia.unidad !== "Unidad"
+    );
+  }
+  // Para componentes extras no filtrar nada (tipoMateria === 'extra' o 'ambos')
 
   const resultados = materiasFilltradas.map((materia) => ({
     ...materia,
     similitud: calcularSimilitud(consulta, materia.descripcion),
   }));
 
-  // Ordenar por similitud y tomar los 10 mejores
   return resultados
     .filter((item) => item.similitud > 0)
     .sort((a, b) => b.similitud - a.similitud)
@@ -158,9 +170,9 @@ function crearBuscadorInteligenteComponentes(
              id="${searchId}"
              placeholder="Buscar componente..."
              autocomplete="off"
-             onkeyup="manejarBusquedaComponente('${searchId}', '${hiddenId}', '${suggestionsId}')"
+             onkeyup="manejarBusquedaComponente('${searchId}', '${hiddenId}', '${suggestionsId}', '${tipo}')"
              onkeydown="navegarSugerencias(event, '${suggestionsId}')"
-             onfocus="mostrarSugerenciasComponente('${searchId}', '${hiddenId}', '${suggestionsId}')"
+             onfocus="mostrarSugerenciasComponente('${searchId}', '${hiddenId}', '${suggestionsId}', '${tipo}')"
              onblur="ocultarSugerenciasConDelay('${suggestionsId}')">
       <button type="button" class="clear-selection" id="clear_${searchId}" 
               onclick="limpiarSeleccionComponente('${searchId}', '${hiddenId}', '${suggestionsId}')"
@@ -184,7 +196,12 @@ function crearBuscadorInteligenteComponentes(
 /**
  * Manejar búsqueda de componentes en tiempo real
  */
-function manejarBusquedaComponente(searchId, hiddenId, suggestionsId) {
+function manejarBusquedaComponente(
+  searchId,
+  hiddenId,
+  suggestionsId,
+  tipoMateria = "principal"
+) {
   const input = document.getElementById(searchId);
   const hidden = document.getElementById(hiddenId);
   const suggestionsDiv = document.getElementById(suggestionsId);
@@ -195,7 +212,6 @@ function manejarBusquedaComponente(searchId, hiddenId, suggestionsId) {
     "id_materia_prima_objetivo"
   ).value;
 
-  // Limpiar selección si el input está vacío
   if (!consulta) {
     hidden.value = "";
     suggestionsDiv.style.display = "none";
@@ -204,8 +220,12 @@ function manejarBusquedaComponente(searchId, hiddenId, suggestionsId) {
     return;
   }
 
-  // Buscar componentes similares
-  const resultados = buscarComponentesSimilares(consulta, idMateriaObjetivo);
+  // PASAR EL TIPO A LA BÚSQUEDA
+  const resultados = buscarComponentesSimilares(
+    consulta,
+    idMateriaObjetivo,
+    tipoMateria
+  );
 
   if (resultados.length > 0) {
     let html = "";
@@ -218,9 +238,12 @@ function manejarBusquedaComponente(searchId, hiddenId, suggestionsId) {
         <div class="suggestion-item ${index === 0 ? "selected" : ""}" 
              data-id="${materia.id}" 
              data-text="${materia.descripcion}"
+             data-unidad="${materia.unidad || ""}"
              onclick="seleccionarComponente('${searchId}', '${hiddenId}', '${suggestionsId}', ${
         materia.id
-      }, '${materia.descripcion.replace(/'/g, "\\'")}')">
+      }, '${materia.descripcion.replace(/'/g, "\\'")}', '${
+        materia.unidad || ""
+      }', '${tipoMateria}')">
           ${textoResaltado}
         </div>
       `;
@@ -234,17 +257,21 @@ function manejarBusquedaComponente(searchId, hiddenId, suggestionsId) {
     suggestionsDiv.style.display = "block";
   }
 
-  // Mostrar botón de limpiar si hay texto
   clearBtn.style.display = consulta ? "inline-block" : "none";
 }
 
 /**
  * Mostrar sugerencias de componentes al hacer focus
  */
-function mostrarSugerenciasComponente(searchId, hiddenId, suggestionsId) {
+function mostrarSugerenciasComponente(
+  searchId,
+  hiddenId,
+  suggestionsId,
+  tipoMateria = "principal"
+) {
   const input = document.getElementById(searchId);
   if (input.value.trim()) {
-    manejarBusquedaComponente(searchId, hiddenId, suggestionsId);
+    manejarBusquedaComponente(searchId, hiddenId, suggestionsId, tipoMateria);
   }
 }
 
@@ -268,7 +295,9 @@ function seleccionarComponente(
   hiddenId,
   suggestionsId,
   id,
-  descripcion
+  descripcion,
+  unidad = "",
+  tipoMateria = "principal"
 ) {
   const input = document.getElementById(searchId);
   const hidden = document.getElementById(hiddenId);
@@ -281,11 +310,58 @@ function seleccionarComponente(
   suggestionsDiv.style.display = "none";
   clearBtn.style.display = "inline-block";
 
-  // Trigger change event para validaciones
+  // PRESELECCIONAR UNIDAD PARA COMPONENTES EXTRAS
+  if (tipoMateria === "extra") {
+    const fila = input.closest("tr");
+    const selectUnidad = fila.querySelector(
+      'select[name*="unidad_medida_extra"]'
+    );
+
+    if (selectUnidad && unidad) {
+      let unidadSeleccionada = "";
+      let bloquearCambio = false;
+
+      switch (unidad) {
+        case "Unidad":
+          unidadSeleccionada = "unidades";
+          bloquearCambio = true;
+          break;
+        case "Kilos":
+          unidadSeleccionada = "kilogramos";
+          bloquearCambio = true;
+          break;
+        default:
+          unidadSeleccionada = unidad.toLowerCase();
+          bloquearCambio = false;
+          break;
+      }
+
+      const opcionExiste = Array.from(selectUnidad.options).some(
+        (option) => option.value === unidadSeleccionada
+      );
+
+      if (opcionExiste) {
+        selectUnidad.value = unidadSeleccionada;
+        selectUnidad.disabled = bloquearCambio;
+
+        if (bloquearCambio) {
+          selectUnidad.style.backgroundColor = "#f8f9fa";
+          selectUnidad.title = `Unidad fija para este componente: ${unidad}`;
+        } else {
+          selectUnidad.style.backgroundColor = "";
+          selectUnidad.title = "";
+        }
+      } else {
+        selectUnidad.disabled = false;
+        selectUnidad.style.backgroundColor = "";
+        selectUnidad.title = "";
+      }
+    }
+  }
+
   input.dispatchEvent(new Event("change"));
   hidden.dispatchEvent(new Event("change"));
 }
-
 /**
  * Limpiar selección de componente
  */
@@ -300,6 +376,20 @@ function limpiarSeleccionComponente(searchId, hiddenId, suggestionsId) {
   input.classList.remove("selected-value");
   suggestionsDiv.style.display = "none";
   clearBtn.style.display = "none";
+
+  // RESETEAR SELECT DE UNIDAD SI ES COMPONENTE EXTRA
+  const fila = input.closest("tr");
+  const selectUnidad = fila
+    ? fila.querySelector('select[name*="unidad_medida_extra"]')
+    : null;
+
+  if (selectUnidad) {
+    selectUnidad.disabled = false;
+    selectUnidad.style.backgroundColor = "";
+    selectUnidad.title = "";
+    selectUnidad.selectedIndex = 0;
+  }
+
   input.focus();
 }
 

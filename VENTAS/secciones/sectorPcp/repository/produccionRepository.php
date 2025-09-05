@@ -125,7 +125,7 @@ class ProduccionRepository
         try {
             $sql = "SELECT r.id, r.nombre_receta, r.version_receta, r.cantidad_por_kilo, 
                            r.es_materia_extra, r.unidad_medida_extra, r.activo, 
-                           r.fecha_creacion, r.usuario_creacion, r.descripcion,
+                           r.fecha_creacion, r.usuario_creacion,
                            tp.\"desc\" as tipo_producto,
                            mp.descripcion as nombre_materia_prima
                     FROM public.sist_prod_recetas r
@@ -155,7 +155,7 @@ class ProduccionRepository
         try {
             $sql = "SELECT r.id, r.nombre_receta, r.version_receta, r.cantidad_por_kilo, 
                            r.es_materia_extra, r.unidad_medida_extra, r.activo, 
-                           r.fecha_creacion, r.usuario_creacion, r.descripcion,
+                           r.fecha_creacion, r.usuario_creacion, 
                            tp.\"desc\" as tipo_producto,
                            mp.descripcion as nombre_materia_prima
                     FROM public.sist_prod_recetas r

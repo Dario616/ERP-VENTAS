@@ -1,6 +1,6 @@
 /**
  * CSS Optimizado para Gestión de Materia Prima - America TNT
- * Solo elimina estilos NO utilizados, conserva todo lo funcional
+ * Solo elimina estilos NO utilizados, conserva todo lo funcional - Sin navbar
  */
 
 /* Variables CSS - Colores Corporativos America TNT */
@@ -54,56 +54,8 @@ body {
   font-size: 14px;
 }
 
-/* Navbar - SIN CAMBIOS */
-.navbar {
-  background: linear-gradient(
-    135deg,
-    var(--america-navy-dark) 0%,
-    var(--america-navy) 100%
-  );
-  box-shadow: var(--shadow-lg);
-  border-bottom: 2px solid var(--america-red);
-  padding: 0.6rem 0;
-}
-
-.navbar-brand {
-  font-weight: 700;
-  font-size: 1.2rem !important;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: white !important;
-}
-
-.navbar-dark .navbar-nav .nav-link {
-  color: rgba(255, 255, 255, 0.9) !important;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  letter-spacing: 0.3px;
-  padding: 0.5rem 0.8rem !important;
-  border-radius: var(--border-radius-md);
-  margin: 0 0.1rem;
-  transition: all 0.2s ease;
-}
-
-.navbar-dark .navbar-nav .nav-link:hover {
-  background-color: rgba(220, 38, 38, 0.2);
-  color: var(--text-white) !important;
-}
-
-.navbar-dark .navbar-nav .nav-link.active {
-  background: linear-gradient(
-    135deg,
-    var(--america-red) 0%,
-    var(--america-orange) 100%
-  );
-  color: var(--text-white) !important;
-  box-shadow: var(--shadow-sm);
-}
-
 /* Contenedor principal */
 .main-container {
-  margin-top: 70px;
   padding: 1.5rem;
 }
 

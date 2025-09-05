@@ -359,7 +359,6 @@ class RecetasMateriaPrimaController
             $materia_procesada = [
                 'id_materia_prima' => intval($materia['id_materia_prima']),
                 'cantidad_por_kilo' => floatval($materia['cantidad_por_kilo']),
-                'descripcion' => trim($materia['descripcion'] ?? ''),
                 'es_materia_extra' => $es_extra
             ];
 

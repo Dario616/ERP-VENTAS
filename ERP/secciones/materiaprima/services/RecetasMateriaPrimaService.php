@@ -57,12 +57,6 @@ class RecetasMateriaPrimaService
                 $errores[] = "Debe especificar la unidad de medida para componentes extras";
             }
         }
-
-        $descripcion = trim($datos['descripcion'] ?? '');
-        if (!empty($descripcion) && strlen($descripcion) < 3) {
-            $errores[] = "La descripción debe tener al menos 3 caracteres";
-        }
-
         $nombre_receta = trim($datos['nombre_receta'] ?? '');
         if (!empty($nombre_receta) && strlen($nombre_receta) < 3) {
             $errores[] = "El nombre de la composición debe tener al menos 3 caracteres";
@@ -81,7 +75,6 @@ class RecetasMateriaPrimaService
             'id_materia_prima_objetivo' => $id_materia_prima_objetivo,
             'id_materia_prima' => $id_materia_prima,
             'cantidad_por_kilo' => floatval($porcentaje),
-            'descripcion' => $descripcion,
             'nombre_receta' => empty($nombre_receta) ? 'Composición Principal' : $nombre_receta,
             'version_receta' => $version_receta,
             'es_materia_extra' => $es_materia_extra,
@@ -160,7 +153,6 @@ class RecetasMateriaPrimaService
                 continue;
             }
 
-            $descripcion = trim($materia['descripcion'] ?? '');
             $es_materia_extra = isset($materia['es_materia_extra']) && $materia['es_materia_extra'];
             $unidad_medida_extra = trim($materia['unidad_medida_extra'] ?? '');
 
@@ -184,7 +176,6 @@ class RecetasMateriaPrimaService
                 'id_materia_prima' => $id_materia_prima,
                 'nombre_materia' => $materias_map[$id_materia_prima],
                 'cantidad_por_kilo' => $cantidad_valor,
-                'descripcion' => $descripcion,
                 'es_materia_extra' => $es_materia_extra,
                 'unidad_medida_extra' => $es_materia_extra ? $unidad_medida_extra : null
             ];

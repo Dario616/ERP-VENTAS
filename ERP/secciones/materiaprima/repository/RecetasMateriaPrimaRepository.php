@@ -22,11 +22,11 @@ class RecetasMateriaPrimaRepository
             $this->conexion->beginTransaction();
 
             $sql = "INSERT INTO public.sist_prod_recetas 
-                (tipo_receta, id_materia_prima_objetivo, id_materia_prima, cantidad_por_kilo, descripcion, 
+                (tipo_receta, id_materia_prima_objetivo, id_materia_prima, cantidad_por_kilo, 
                  usuario_creacion, fecha_creacion, fecha_modificacion, nombre_receta, 
                  version_receta, es_materia_extra, unidad_medida_extra)
                 VALUES 
-                (:tipo_receta, :id_materia_prima_objetivo, :id_materia_prima, :cantidad_por_kilo, :descripcion, 
+                (:tipo_receta, :id_materia_prima_objetivo, :id_materia_prima, :cantidad_por_kilo, 
                  :usuario_creacion, NOW(), NOW(), :nombre_receta, :version_receta,
                  :es_materia_extra, :unidad_medida_extra)
                 RETURNING id";
@@ -44,7 +44,6 @@ class RecetasMateriaPrimaRepository
             $stmt->bindParam(':id_materia_prima_objetivo', $datos['id_materia_prima_objetivo'], PDO::PARAM_INT);
             $stmt->bindParam(':id_materia_prima', $datos['id_materia_prima'], PDO::PARAM_INT);
             $stmt->bindParam(':cantidad_por_kilo', $datos['cantidad_por_kilo'], PDO::PARAM_STR);
-            $stmt->bindParam(':descripcion', $datos['descripcion'], PDO::PARAM_STR);
             $stmt->bindParam(':usuario_creacion', $datos['usuario_creacion'], PDO::PARAM_STR);
             $stmt->bindParam(':nombre_receta', $nombre_receta, PDO::PARAM_STR);
             $stmt->bindParam(':version_receta', $version_receta, PDO::PARAM_INT);
@@ -89,11 +88,11 @@ class RecetasMateriaPrimaRepository
             $errores = [];
 
             $sql = "INSERT INTO public.sist_prod_recetas 
-                (tipo_receta, id_materia_prima_objetivo, id_materia_prima, cantidad_por_kilo, descripcion, 
+                (tipo_receta, id_materia_prima_objetivo, id_materia_prima, cantidad_por_kilo, 
                  usuario_creacion, fecha_creacion, fecha_modificacion, nombre_receta, 
                  version_receta, es_materia_extra, unidad_medida_extra)
                 VALUES 
-                (:tipo_receta, :id_materia_prima_objetivo, :id_materia_prima, :cantidad_por_kilo, :descripcion, 
+                (:tipo_receta, :id_materia_prima_objetivo, :id_materia_prima, :cantidad_por_kilo, 
                  :usuario_creacion, NOW(), NOW(), :nombre_receta, :version_receta,
                  :es_materia_extra, :unidad_medida_extra)
                 RETURNING id";
@@ -116,7 +115,6 @@ class RecetasMateriaPrimaRepository
                     $stmt->bindParam(':id_materia_prima_objetivo', $id_materia_prima_objetivo, PDO::PARAM_INT);
                     $stmt->bindParam(':id_materia_prima', $materia['id_materia_prima'], PDO::PARAM_INT);
                     $stmt->bindParam(':cantidad_por_kilo', $materia['cantidad_por_kilo'], PDO::PARAM_STR);
-                    $stmt->bindParam(':descripcion', $materia['descripcion'], PDO::PARAM_STR);
                     $stmt->bindParam(':usuario_creacion', $usuario, PDO::PARAM_STR);
                     $stmt->bindParam(':nombre_receta', $nombre_receta, PDO::PARAM_STR);
                     $stmt->bindParam(':version_receta', $version_receta, PDO::PARAM_INT);
@@ -189,7 +187,6 @@ class RecetasMateriaPrimaRepository
                 SET id_materia_prima_objetivo = :id_materia_prima_objetivo,
                     id_materia_prima = :id_materia_prima,
                     cantidad_por_kilo = :cantidad_por_kilo,
-                    descripcion = :descripcion,
                     usuario_modificacion = :usuario_modificacion,
                     fecha_modificacion = NOW(),
                     es_materia_extra = :es_materia_extra,
@@ -214,7 +211,6 @@ class RecetasMateriaPrimaRepository
             $stmt->bindParam(':id_materia_prima_objetivo', $datos['id_materia_prima_objetivo'], PDO::PARAM_INT);
             $stmt->bindParam(':id_materia_prima', $datos['id_materia_prima'], PDO::PARAM_INT);
             $stmt->bindParam(':cantidad_por_kilo', $datos['cantidad_por_kilo'], PDO::PARAM_STR);
-            $stmt->bindParam(':descripcion', $datos['descripcion'], PDO::PARAM_STR);
             $stmt->bindParam(':usuario_modificacion', $datos['usuario_modificacion'], PDO::PARAM_STR);
             $stmt->bindParam(':es_materia_extra', $es_extra, PDO::PARAM_BOOL);
             $stmt->bindParam(':unidad_medida_extra', $unidad_medida_extra, PDO::PARAM_STR);
@@ -652,7 +648,6 @@ class RecetasMateriaPrimaRepository
                     mp_objetivo.descripcion as materia_prima_objetivo_desc,
                     r.id,
                     r.cantidad_por_kilo,
-                    r.descripcion as descripcion_receta,
                     r.nombre_receta,
                     r.version_receta,
                     r.es_materia_extra,
@@ -775,7 +770,7 @@ class RecetasMateriaPrimaRepository
     public function obtenerMateriasPrimas()
     {
         try {
-            $sql = "SELECT id, descripcion FROM public.sist_prod_materia_prima ORDER BY descripcion ASC";
+            $sql = "SELECT id, descripcion, unidad FROM public.sist_prod_materia_prima ORDER BY descripcion ASC";
             $stmt = $this->conexion->prepare($sql);
             $stmt->execute();
 
@@ -787,12 +782,12 @@ class RecetasMateriaPrimaRepository
     }
 
     /**
-     * Buscar materias primas disponibles
+     * Buscar materias primas disponibles (incluye unidad)
      */
     public function buscarMateriasDisponibles($termino = '', $excluir_id = null)
     {
         try {
-            $sql = "SELECT id, descripcion FROM public.sist_prod_materia_prima WHERE 1=1";
+            $sql = "SELECT id, descripcion, unidad FROM public.sist_prod_materia_prima WHERE 1=1";
             $parametros = [];
 
             if (!empty($termino)) {

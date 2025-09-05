@@ -18,26 +18,7 @@ class OrdenProduccionMaterialRepository
     public function crear($datos)
     {
         try {
-            // Validar stock disponible antes de crear la orden
-            if (isset($datos['cantidad_solicitada']) && $datos['cantidad_solicitada'] > 0) {
-                $validacionStock = $this->validarStockParaProduccion(
-                    $datos['id_materia_prima'],
-                    $datos['version_receta'],
-                    $datos['cantidad_solicitada']
-                );
-
-                if (!$validacionStock['valido']) {
-                    return [
-                        'success' => false,
-                        'id' => null,
-                        'error' => $validacionStock['mensaje'],
-                        'materiales_insuficientes' => $validacionStock['materiales_insuficientes'] ?? []
-                    ];
-                }
-            }
-
             $this->conexion->beginTransaction();
-
             $sql = "INSERT INTO public.sist_prod_ordenes_produccion_material 
                 (id_materia_prima, version_receta, cantidad_solicitada, unidad_medida, 
                  fecha_orden, estado, usuario_creacion, fecha_creacion, fecha_modificacion, observaciones)
@@ -67,8 +48,7 @@ class OrdenProduccionMaterialRepository
             return [
                 'success' => true,
                 'id' => $id,
-                'error' => null,
-                'stock_validado' => true
+                'error' => null
             ];
         } catch (Exception $e) {
             $this->conexion->rollBack();
@@ -96,29 +76,6 @@ class OrdenProduccionMaterialRepository
                     'error' => 'Orden no encontrada'
                 ];
             }
-
-            // Validar stock si la cantidad solicitada cambió
-            if (
-                isset($datos['cantidad_solicitada']) &&
-                $datos['cantidad_solicitada'] != $ordenActual['cantidad_solicitada']
-            ) {
-
-                $validacionStock = $this->validarStockParaProduccion(
-                    $datos['id_materia_prima'] ?? $ordenActual['id_materia_prima'],
-                    $datos['version_receta'] ?? $ordenActual['version_receta'],
-                    $datos['cantidad_solicitada']
-                );
-
-                if (!$validacionStock['valido']) {
-                    return [
-                        'success' => false,
-                        'registros_afectados' => 0,
-                        'error' => $validacionStock['mensaje'],
-                        'materiales_insuficientes' => $validacionStock['materiales_insuficientes'] ?? []
-                    ];
-                }
-            }
-
             $this->conexion->beginTransaction();
 
             $sql = "UPDATE public.sist_prod_ordenes_produccion_material 
@@ -150,8 +107,7 @@ class OrdenProduccionMaterialRepository
                 return [
                     'success' => true,
                     'registros_afectados' => $stmt->rowCount(),
-                    'error' => null,
-                    'stock_validado' => true
+                    'error' => null
                 ];
             } else {
                 throw new Exception("No se pudo actualizar la orden de producción");
@@ -253,7 +209,7 @@ class OrdenProduccionMaterialRepository
     public function obtenerMaterialesRequeridos($idMateriaPrima, $versionReceta, $cantidadSolicitada)
     {
         try {
-            $sqlRecetas = "SELECT r.id_materia_prima, r.cantidad_por_kilo, mp.descripcion, mp.peso_estimado, mp.unidad_medida
+            $sqlRecetas = "SELECT r.id_materia_prima, r.cantidad_por_kilo, mp.descripcion, mp.peso_estimado, mp.unidad
                           FROM public.sist_prod_recetas r
                           LEFT JOIN public.sist_prod_materia_prima mp ON r.id_materia_prima = mp.id
                           WHERE r.tipo_receta = 'MATERIA_PRIMA' 
@@ -589,17 +545,14 @@ class OrdenProduccionMaterialRepository
         }
     }
 
-    /**
-     * Obtener materias primas que tienen recetas
-     */
     public function obtenerMateriasPrimasConRecetas()
     {
         try {
-            $sql = "SELECT DISTINCT mp.id, mp.descripcion
-                    FROM public.sist_prod_materia_prima mp
-                    INNER JOIN public.sist_prod_recetas r ON mp.id = r.id_materia_prima_objetivo
-                    WHERE r.tipo_receta = 'MATERIA_PRIMA' AND r.activo = true
-                    ORDER BY mp.descripcion ASC";
+            $sql = "SELECT DISTINCT mp.id, mp.descripcion, mp.unidad as unidad
+                FROM public.sist_prod_materia_prima mp
+                INNER JOIN public.sist_prod_recetas r ON mp.id = r.id_materia_prima_objetivo
+                WHERE r.tipo_receta = 'MATERIA_PRIMA' AND r.activo = true
+                ORDER BY mp.descripcion ASC";
 
             $stmt = $this->conexion->prepare($sql);
             $stmt->execute();
@@ -610,7 +563,6 @@ class OrdenProduccionMaterialRepository
             return [];
         }
     }
-
     /**
      * Obtener versiones de receta disponibles para una materia prima
      */

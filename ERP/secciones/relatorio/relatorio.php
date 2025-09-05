@@ -28,95 +28,12 @@ $breadcrumb_items = ['REPORTES', 'REPORE GENERAL'];
 $item_urls = [
     $url_base . 'secciones/relatorio/main.php',
 ];
+$additional_css = [$url_base . 'secciones/relatorio/utils/relatorio.css'];
+include $path_base . "components/head.php";
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($titulo); ?></title>
-
-    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo $url_base; ?>assets/favicon-32.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="<?php echo $url_base; ?>assets/favicon-192.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo $url_base; ?>assets/apple-touch-icon.png">
-    <link rel="icon" href="<?php echo $url_base; ?>utils/icon.ico" type="image/x-icon">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="<?php echo $url_base; ?>secciones/relatorio/utils/relatorio.css">
-
-    <style>
-        /* Estilos adicionales para los campos de hora */
-        .hora-container {
-            border: 2px dashed #e5e7eb;
-            border-radius: 8px;
-            padding: 1rem;
-            background-color: #f9fafb;
-            transition: all 0.3s ease;
-        }
-
-        .hora-container.visible {
-            border-color: #325b91;
-            background-color: rgba(50, 91, 145, 0.05);
-        }
-
-        .hora-info {
-            font-size: 0.875rem;
-            color: #6b7280;
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .hora-info i {
-            color: #325b91;
-        }
-
-        .fade-in {
-            animation: fadeIn 0.3s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .campo-hora input {
-            font-family: 'Roboto Mono', monospace;
-            font-weight: 500;
-        }
-    </style>
-</head>
 
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
-    <!-- Hero Section -->
-    <div class="hero-section">
-        <div class="container-fluid">
-            <div class="row align-items-center">
-                <div class="col-lg-8">
-                    <h1 class="hero-title">
-                        <i class="fas fa-chart-line me-3"></i>
-                        Reporte General
-                    </h1>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Main Content -->
     <div class="main-container">
         <div class="container-fluid">

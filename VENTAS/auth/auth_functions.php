@@ -1,10 +1,6 @@
 <?php
-// Archivo: auth/auth_functions.php
-// Funciones de autenticación y autorización
-
 require_once __DIR__ . "/../config/database/conexionBD.php";
 
-// Iniciar sesión si no está iniciada
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }

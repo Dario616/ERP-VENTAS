@@ -1,7 +1,7 @@
 <?php
 include "../../config/database/conexionBD.php";
 include "../../auth/verificar_sesion.php";
-requerirRol(['1', '4']); // Administrador y Producción
+requerirRol(['1', '4']);
 
 // Establecer la zona horaria de Paraguay
 date_default_timezone_set('America/Asuncion');
@@ -79,6 +79,7 @@ $item_urls = [
 $additional_css = [$url_base . 'secciones/sectorPcp/utils/styles.css'];
 include $path_base . "components/head.php";
 ?>
+
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
     <div class="container-fluid my-4">
@@ -606,20 +607,13 @@ include $path_base . "components/head.php";
             </div>
         </div>
     <?php endif; ?>
-
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Configuración global desde el controller
         const PRODUCCION_CONFIG = <?php echo json_encode($configuracionJS); ?>;
-
-        // Variables globales simplificadas
         let recetasSeleccionadas = {};
         let productosConRecetas = {};
         let usandoRecetas = false;
-
-        // Mostrar modal automáticamente si hay resultado exitoso
         <?php if ($resultadoExito): ?>
             document.addEventListener('DOMContentLoaded', function() {
                 <?php if ($resultadoExito['tipo'] === 'emision'): ?>
@@ -628,8 +622,6 @@ include $path_base . "components/head.php";
                 <?php elseif ($resultadoExito['tipo'] === 'devolucion'): ?>
                     const modalDevolucion = new bootstrap.Modal(document.getElementById('modalExitoDevolucion'));
                     modalDevolucion.show();
-
-                    // Auto-continuar después de 10 segundos
                     setTimeout(function() {
                         continuar();
                     }, 10000);
@@ -637,17 +629,14 @@ include $path_base . "components/head.php";
             });
         <?php endif; ?>
 
-        // ✅ Toggle simplificado para recetas
         function toggleRecetas() {
             const btn = document.getElementById('btnToggleRecetas');
             const texto = document.getElementById('textoToggleRecetas');
             const usarRecetasInput = document.getElementById('usar_recetas');
 
             if (!usandoRecetas) {
-                // Activar uso de recetas
                 configurarRecetas();
             } else {
-                // Desactivar uso de recetas
                 usandoRecetas = false;
                 btn.classList.remove('active');
                 btn.querySelector('.recetas-configuradas')?.remove();
@@ -733,8 +722,6 @@ include $path_base . "components/head.php";
         function mostrarModalRecetas(productosConRecetas) {
             const container = document.getElementById('productos-recetas-container');
             container.innerHTML = '';
-
-            // Verificar si hay productos con recetas
             const tieneRecetas = Object.keys(productosConRecetas).some(idProducto =>
                 productosConRecetas[idProducto].recetas && productosConRecetas[idProducto].recetas.length > 0
             );
@@ -749,13 +736,10 @@ include $path_base . "components/head.php";
                     </div>
                 `;
             } else {
-                // Generar HTML para productos con recetas
                 Object.entries(productosConRecetas).forEach(([idProducto, data]) => {
                     const productoHtml = crearHtmlProductoConRecetas(idProducto, data);
                     container.innerHTML += productoHtml;
                 });
-
-                // Preseleccionar versión 1 después de crear el HTML
                 setTimeout(() => {
                     preseleccionarVersion1();
                 }, 100);
@@ -765,7 +749,6 @@ include $path_base . "components/head.php";
             modal.show();
         }
 
-        // ✅ Preseleccionar versión 1 automáticamente
         function preseleccionarVersion1() {
             console.log('Preseleccionando versión 1 para productos:', Object.keys(productosConRecetas));
 
@@ -774,8 +757,6 @@ include $path_base . "components/head.php";
                 if (version1Radio) {
                     version1Radio.checked = true;
                     version1Radio.closest('.receta-card').classList.add('selected');
-
-                    // Agregar a recetas seleccionadas
                     const nombreReceta = version1Radio.dataset.nombre;
                     const versionData = productosConRecetas[idProducto].recetas
                         .find(g => g.nombre === nombreReceta)?.versiones['1'];
@@ -798,7 +779,6 @@ include $path_base . "components/head.php";
             console.log('Estado final de recetas seleccionadas:', recetasSeleccionadas);
         }
 
-        // ✅ FUNCIÓN MEJORADA: Crear HTML compacto con grid layout
         function crearHtmlProductoConRecetas(idProducto, data) {
             const producto = data.producto;
             const recetasAgrupadas = data.recetas;
@@ -840,7 +820,6 @@ include $path_base . "components/head.php";
                                                                 ${mp.cantidad_por_kilo} ${mp.es_materia_extra ? (mp.unidad_medida_extra || 'kg') + '/kg' : '%'}
                                                             </span>
                                                         </div>
-                                                        ${mp.descripcion ? `<small class="text-muted">${mp.descripcion}</small>` : ''}
                                                     </div>
                                                 `).join('')}
                                             </div>
@@ -883,30 +862,21 @@ include $path_base . "components/head.php";
             `;
         }
 
-        // Manejar selección de receta con radio buttons
         function manejarSeleccionReceta(radio) {
             const idProducto = radio.dataset.idProducto;
             const version = radio.dataset.version;
             const nombreReceta = radio.dataset.nombre;
 
             console.log(`Cambiando receta para producto ${idProducto} a versión ${version} de ${nombreReceta}`);
-
-            // Remover selección visual de todas las tarjetas de este producto
             document.querySelectorAll(`input[name="receta_${idProducto}"]`).forEach(r => {
                 r.closest('.receta-card').classList.remove('selected');
             });
-
-            // Agregar selección visual a la tarjeta seleccionada
             radio.closest('.receta-card').classList.add('selected');
-
-            // Limpiar recetas anteriores de este producto
             if (recetasSeleccionadas[idProducto]) {
                 recetasSeleccionadas[idProducto] = {};
             } else {
                 recetasSeleccionadas[idProducto] = {};
             }
-
-            // Obtener los IDs de las recetas desde las materias primas
             const versionData = productosConRecetas[idProducto].recetas
                 .find(g => g.nombre === nombreReceta)?.versiones[version];
 
@@ -934,30 +904,21 @@ include $path_base . "components/head.php";
         }
 
         function aplicarRecetas() {
-            // Guardar las recetas seleccionadas en el campo oculto
             document.getElementById('recetas_configuradas').value = JSON.stringify(recetasSeleccionadas);
             document.getElementById('usar_recetas').value = '1';
-
-            // Cerrar modal
             const modal = bootstrap.Modal.getInstance(document.getElementById('modalRecetas'));
             modal.hide();
-
-            // Actualizar botón toggle
             const btn = document.getElementById('btnToggleRecetas');
             const texto = document.getElementById('textoToggleRecetas');
 
             usandoRecetas = true;
             btn.classList.add('active');
             texto.textContent = 'Recetas Configuradas';
-
-            // Agregar indicador visual
             if (!btn.querySelector('.recetas-configuradas')) {
                 const indicator = document.createElement('div');
                 indicator.className = 'recetas-configuradas';
                 btn.appendChild(indicator);
             }
-
-            // Mostrar mensaje de éxito
             Swal.fire({
                 title: 'Recetas Configuradas',
                 text: 'Las recetas han sido configuradas correctamente para la producción',
@@ -969,11 +930,8 @@ include $path_base . "components/head.php";
             console.log('Recetas aplicadas:', recetasSeleccionadas);
         }
 
-        // Preparar formulario antes del envío
         function prepararFormularioParaEnvio() {
             const form = document.getElementById('confirmarForm');
-
-            // Limpiar inputs dinámicos anteriores
             const existingInputs = form.querySelectorAll('input[name="recetas_seleccionadas"]');
             existingInputs.forEach(input => input.remove());
 
@@ -981,29 +939,22 @@ include $path_base . "components/head.php";
             console.log('usandoRecetas:', usandoRecetas);
             console.log('recetasSeleccionadas:', recetasSeleccionadas);
 
-            // Si estamos usando recetas, asegurar que se envíen
             if (usandoRecetas && Object.keys(recetasSeleccionadas).length > 0) {
-                // Crear input para recetas seleccionadas
                 const recetasInput = document.createElement('input');
                 recetasInput.type = 'hidden';
                 recetasInput.name = 'recetas_seleccionadas';
                 recetasInput.value = JSON.stringify(recetasSeleccionadas);
                 form.appendChild(recetasInput);
-
-                // Asegurar que usar_recetas esté en 1
                 document.getElementById('usar_recetas').value = '1';
                 document.getElementById('recetas_configuradas').value = JSON.stringify(recetasSeleccionadas);
 
                 console.log('✅ ENVIANDO CON RECETAS - JSON:', JSON.stringify(recetasSeleccionadas));
             } else {
-                // No usar recetas
                 document.getElementById('usar_recetas').value = '0';
                 document.getElementById('recetas_configuradas').value = '';
 
                 console.log('❌ ENVIANDO SIN RECETAS');
             }
-
-            // Verificar campos finales del formulario
             console.log('Campos del formulario antes del envío:');
             console.log('- usar_recetas:', document.getElementById('usar_recetas').value);
             console.log('- recetas_configuradas:', document.getElementById('recetas_configuradas').value);
@@ -1016,7 +967,6 @@ include $path_base . "components/head.php";
             return Array.from(checkboxes).map(cb => cb.id.replace('producto_', ''));
         }
 
-        // Funciones del modal
         function abrirPDF(idOrden, tipo) {
             let url;
             if (tipo === "TOALLITAS") {
@@ -1039,7 +989,6 @@ include $path_base . "components/head.php";
             <?php endif; ?>
         }
 
-        // FUNCIONES PARA DEVOLUCIONES
         function toggleDevolucionSelection(element, productId) {
             const checkbox = document.getElementById('devolucion_' + productId);
 
@@ -1071,7 +1020,6 @@ include $path_base . "components/head.php";
             });
         }
 
-        // Funciones para confirmación de producción
         function toggleProductSelection(element, productId) {
             const checkbox = document.getElementById('producto_' + productId);
             if (event.target.type === 'checkbox') {
@@ -1100,8 +1048,6 @@ include $path_base . "components/head.php";
                 }
             });
         }
-
-        // Validaciones
         async function validarDevolucion() {
             const checkboxes = document.querySelectorAll('.devolucion-checkbox:checked');
 
@@ -1159,8 +1105,6 @@ include $path_base . "components/head.php";
                 await Swal.fire('Error', 'Seleccione al menos un producto', 'error');
                 return false;
             }
-
-            // Verificar estado de recetas
             const recetasCount = Object.keys(recetasSeleccionadas).length;
             let mensajeRecetas = '';
 
@@ -1188,24 +1132,19 @@ include $path_base . "components/head.php";
             return result.isConfirmed;
         }
 
-        // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
-            // Evitar propagación en checkboxes
             const checkboxes = document.querySelectorAll('.form-check-input');
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('click', function(e) {
                     e.stopPropagation();
                 });
             });
-
-            // Formularios
             const confirmarForm = document.getElementById('confirmarForm');
             if (confirmarForm) {
                 confirmarForm.addEventListener('submit', async function(e) {
                     e.preventDefault();
                     const confirmed = await validarConfirmacion();
                     if (confirmed) {
-                        // Asegurar que las recetas se envíen correctamente
                         prepararFormularioParaEnvio();
                         this.submit();
                     }

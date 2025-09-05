@@ -21,26 +21,9 @@ $breadcrumb_items = ['MATERIALES', 'MATERIALES PRODUCCION'];
 $item_urls = [
     $url_base . 'secciones/materiaprima/main.php',
 ];
+$additional_css = [$url_base . 'secciones/materiaprima/utils/produccion_mp.css'];
+include $path_base . "components/head.php";
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>America TNT - Materiales en Producción</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" href="<?php echo $url_base; ?>utils/icon.ico" type="image/x-icon">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Estilos personalizados -->
-    <link rel="stylesheet" href="<?php echo $url_base; ?>secciones/materiaprima/utils/produccion_mp.css">
-</head>
-
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
     <!-- Contenido Principal -->
@@ -861,112 +844,6 @@ $item_urls = [
             }
         });
     </script>
-
-    <style>
-        /* Estilos específicos para producción */
-        .production-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        }
-
-        .table-success th {
-            background-color: #198754 !important;
-            color: white;
-        }
-
-        .materia-prima-row:hover {
-            background-color: rgba(25, 135, 84, 0.1);
-        }
-
-        /* Estilos para el modal */
-        .modal-header {
-            border-bottom: none;
-        }
-
-        .modal-footer {
-            border-top: none;
-            padding-top: 0;
-        }
-
-        .btn-close-white {
-            filter: invert(1) grayscale(100%) brightness(200%);
-        }
-
-        /* Badges específicos */
-        .badge.bg-success {
-            background-color: #198754 !important;
-        }
-
-        .badge.bg-info {
-            background-color: #0dcaf0 !important;
-            color: #000;
-        }
-
-        .badge.bg-warning {
-            background-color: #ffc107 !important;
-            color: #000;
-        }
-
-        .badge.bg-primary {
-            background-color: #0d6efd !important;
-        }
-
-        .badge.bg-secondary {
-            background-color: #6c757d !important;
-        }
-
-        /* Input de número mejorado */
-        input[type="number"] {
-            text-align: right;
-        }
-
-        input[type="number"]:focus {
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
-
-        /* Estilos para el campo NCM */
-        #ncm {
-            font-family: 'Courier New', monospace;
-            letter-spacing: 1px;
-        }
-
-        /* Estilos para los campos select */
-        #tipo,
-        #unidad {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-            background-position: right 0.5rem center;
-            background-repeat: no-repeat;
-            background-size: 1.5em 1.5em;
-            padding-right: 2.5rem;
-        }
-
-        /* Animaciones suaves para el modal */
-        .modal.fade .modal-dialog {
-            transform: translate(0, -50px);
-        }
-
-        .modal.show .modal-dialog {
-            transform: none;
-        }
-
-        /* Hacer la tabla más responsive */
-        .table-responsive {
-            overflow-x: auto;
-        }
-
-        @media (max-width: 768px) {
-
-            .table th,
-            .table td {
-                padding: 0.3rem;
-                font-size: 0.85rem;
-            }
-
-            .badge {
-                font-size: 0.7em;
-                padding: 0.3em 0.6em;
-            }
-        }
-    </style>
 </body>
 
 </html>

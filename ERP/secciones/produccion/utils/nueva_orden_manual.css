@@ -1,6 +1,6 @@
 /**
  * CSS LIMPIO - Solo estilos utilizados en nueva_orden_manual.php
- * Eliminadas todas las clases no utilizadas
+ * Eliminadas todas las clases no utilizadas y navbar
  */
 
 /* Variables CSS - Colores Corporativos America TNT */
@@ -52,84 +52,10 @@ body {
   font-size: 14px;
 }
 
-/* Navbar */
-.navbar {
-  background: linear-gradient(
-    135deg,
-    var(--america-navy-dark) 0%,
-    var(--america-navy) 100%
-  );
-  box-shadow: var(--shadow-lg);
-  border-bottom: 2px solid var(--america-red);
-  padding: 0.5rem 0;
-  backdrop-filter: blur(10px);
-}
-
-.navbar-brand {
-  font-weight: 700;
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--text-white) !important;
-  transition: transform 0.3s ease;
-}
-
-.navbar-dark .navbar-nav .nav-link {
-  color: rgba(255, 255, 255, 0.9) !important;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  letter-spacing: 0.3px;
-  padding: 0.5rem 0.8rem !important;
-  border-radius: var(--border-radius-md);
-  margin: 0 0.1rem;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.navbar-dark .navbar-nav .nav-link::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.1),
-    transparent
-  );
-  transition: left 0.5s;
-}
-
-.navbar-dark .navbar-nav .nav-link:hover::before {
-  left: 100%;
-}
-
-.navbar-dark .navbar-nav .nav-link:hover {
-  background-color: rgba(220, 38, 38, 0.2);
-  color: var(--text-white) !important;
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
-}
-
-.navbar-dark .navbar-nav .nav-link.active {
-  background: linear-gradient(
-    135deg,
-    var(--america-red) 0%,
-    var(--america-orange) 100%
-  );
-  color: var(--text-white) !important;
-  box-shadow: var(--shadow-md);
-}
-
 /* Contenedor principal */
 .main-container {
   padding: 2rem 0;
   position: relative;
-  padding-top: 80px;
   min-height: 100vh;
 }
 
@@ -547,13 +473,6 @@ body {
   transform: translateX(0);
 }
 
-.order-item:hover {
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
-  transform: translateY(-1px);
-  border-color: #007bff;
-  transform: translateX(1px);
-}
-
 .order-item.new-item {
   animation: slideInRight 0.4s ease;
 }
@@ -722,10 +641,6 @@ html {
 }
 
 @media (max-width: 576px) {
-  .main-container {
-    padding-top: 60px;
-  }
-
   .card-body {
     padding: 12px;
   }

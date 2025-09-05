@@ -57,21 +57,9 @@ try {
 $configuracion = $historialController->obtenerConfiguracion();
 $breadcrumb_items = ['Historial'];
 $item_urls = [];
+$additional_css = [$url_base . 'secciones/expedicion/utils/historial.css'];
+include $path_base . "components/head.php";
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Historial de Expedición - Sistema v<?php echo $configuracion['version_historial'] ?? '1.0'; ?></title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="icon" href="<?php echo $url_base; ?>utils/icon.ico" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="<?php echo $url_base; ?>secciones/expedicion/utils/historial.css">
-</head>
 
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
@@ -80,10 +68,10 @@ $item_urls = [];
             <div class="header-section">
                 <div class="row align-items-center">
                     <div class="col-lg-8">
-                        <h1 class="header-title">
+                        <h3 class="header-title">
                             <i class="fas fa-history"></i>
                             Historial de Expedición
-                        </h1>
+                        </h3>
                         <p class="header-description">
                             Registro completo de todas las asignaciones a rejillas
                             <?php if (count($filtrosAplicados) > 0): ?>
@@ -610,5 +598,3 @@ $item_urls = [];
         });
     </script>
 </body>
-
-</html>
