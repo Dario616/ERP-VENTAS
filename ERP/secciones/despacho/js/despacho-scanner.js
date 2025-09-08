@@ -8,8 +8,6 @@ function abrirScanner(numeroExpedicion) {
   logDebug("Abriendo scanner para expedición", numeroExpedicion);
 
   expedicionActiva = numeroExpedicion;
-  document.getElementById("expedicionActiva").textContent = numeroExpedicion;
-
   modalScanner.show();
 
   setTimeout(() => {
@@ -290,13 +288,12 @@ function renderizarListaItemsEscaneados(items) {
             <th width="40">
               <input type="checkbox" id="selectAllItems" onchange="toggleSeleccionTodos()">
             </th>
-            <th>Etiqueta <i class="fas fa-search text-muted ms-1" title="Buscar por este campo"></i></th>
+            <th>Etiqueta</th>
             <th>Producto</th>
             <th>Bobinas</th>
             <th>Metragem</th>
             <th>Cliente</th>
             <th>Peso</th>
-            <th>Estado</th>
             <th width="80">Acciones</th>
           </tr>
         </thead>
@@ -361,17 +358,6 @@ function renderizarListaItemsEscaneados(items) {
         
         <td>
           <strong>${item.peso_formateado}</strong>
-        </td>
-        <td>
-          <span class="badge ${
-            item.es_desconocido
-              ? fueraDeRejilla
-                ? "bg-info"
-                : "bg-warning text-dark"
-              : "bg-success"
-          }">
-            ${textoEstado}
-          </span>
         </td>
         <td>
           <button type="button" class="btn btn-outline-danger btn-sm" 

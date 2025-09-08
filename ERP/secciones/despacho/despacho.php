@@ -13,6 +13,7 @@ $item_urls = [];
 $additional_css = [$url_base . 'secciones/despacho/utils/despacho.css'];
 include $path_base . "components/head.php";
 ?>
+
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
     <div class="container-fluid">
@@ -338,35 +339,22 @@ include $path_base . "components/head.php";
                     <div class="row">
                         <div class="col-md-6">
                             <div class="text-center">
-                                <div class="mb-3">
-                                    <span class="badge bg-warning fs-6 px-3 py-2 text-dark" id="expedicionActiva">-</span>
-                                </div>
-                                <div class="mb-4">
-                                    <input type="text"
-                                        class="form-control scanner-input"
-                                        id="barcodeInput"
-                                        placeholder="Escanee item (automático)..."
-                                        autocomplete="off"
-                                        autofocus>
-                                </div>
-
                                 <div class="alert alert-warning alert-desconocidos" id="alertaDesconocidos" style="display: none;">
                                 </div>
-
                                 <div class="row mt-4">
                                     <div class="col-6">
                                         <div class="card bg-success text-white">
-                                            <div class="card-body text-center py-2">
-                                                <div class="h4 mb-1" id="totalItemsEscaneados">0</div>
+                                            <div class="card-body text-center py-1">
+                                                <div class="h5 mb-1" id="totalItemsEscaneados">0</div>
                                                 <small>Items Validados</small>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="card bg-primary text-white">
-                                            <div class="card-body text-center py-2">
-                                                <div class="h4 mb-1" id="pesoTotalEscaneado">0</div>
-                                                <small>Peso Total (kg)</small>
+                                            <div class="card-body text-center py-1">
+                                                <div class="h5 mb-1" id="pesoTotalEscaneado">0</div>
+                                                <small>Peso Bruto Total (kg)</small>
                                             </div>
                                         </div>
                                     </div>
