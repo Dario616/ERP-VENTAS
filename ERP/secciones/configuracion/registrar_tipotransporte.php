@@ -2,125 +2,22 @@
 include "../../config/conexionBD.php";
 include "../../auth/verificar_sesion.php";
 requerirLogin();
-
-$mensaje = "";
-$tipo_mensaje = "";
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $accion = $_POST['accion'] ?? 'crear';
-
-    if ($accion === 'crear') {
-        $nombre = trim($_POST['nombre']);
-
-        // Validaciones
-        if (empty($nombre)) {
-            $mensaje = "El nombre del tipo de transporte es obligatorio.";
-            $tipo_mensaje = "error";
-        } elseif (strlen($nombre) < 3) {
-            $mensaje = "El nombre debe tener al menos 3 caracteres.";
-            $tipo_mensaje = "error";
-        } else {
-            try {
-                // Verificar si el tipo de transporte ya existe
-                $stmt_check = $conexion->prepare("SELECT COUNT(*) FROM sist_prod_tipo_transporte WHERE LOWER(nombre) = LOWER(?)");
-                $stmt_check->execute([$nombre]);
-                $tipo_existe = $stmt_check->fetchColumn();
-                if ($tipo_existe > 0) {
-                    $mensaje = "El tipo de transporte ya existe. Por favor, ingrese otro nombre.";
-                    $tipo_mensaje = "error";
-                } else {
-                    // Insertar nuevo tipo de transporte
-                    $stmt = $conexion->prepare("INSERT INTO sist_prod_tipo_transporte (nombre) VALUES (?)");
-                    $resultado = $stmt->execute([$nombre]);
-
-                    if ($resultado) {
-                        $mensaje = "Tipo de transporte registrado exitosamente.";
-                        $tipo_mensaje = "success";
-                        // Limpiar el formulario
-                        $nombre = "";
-                    } else {
-                        $mensaje = "Error al registrar el tipo de transporte. Intente nuevamente.";
-                        $tipo_mensaje = "error";
-                    }
-                }
-            } catch (PDOException $e) {
-                $mensaje = "Error de base de datos: " . $e->getMessage();
-                $tipo_mensaje = "error";
-            }
-        }
-    } elseif ($accion === 'editar') {
-        $id = $_POST['id'];
-        $nombre = trim($_POST['nombre']);
-
-        // Validaciones
-        if (empty($nombre)) {
-            $mensaje = "El nombre del tipo de transporte es obligatorio.";
-            $tipo_mensaje = "error";
-        } elseif (strlen($nombre) < 3) {
-            $mensaje = "El nombre debe tener al menos 3 caracteres.";
-            $tipo_mensaje = "error";
-        } else {
-            try {
-                // Verificar si el tipo de transporte ya existe (excluyendo el actual)
-                $stmt_check = $conexion->prepare("SELECT COUNT(*) FROM sist_prod_tipo_transporte WHERE LOWER(nombre) = LOWER(?) AND id != ?");
-                $stmt_check->execute([$nombre, $id]);
-                $tipo_existe = $stmt_check->fetchColumn();
-
-                if ($tipo_existe > 0) {
-                    $mensaje = "El tipo de transporte ya existe. Por favor, ingrese otro nombre.";
-                    $tipo_mensaje = "error";
-                } else {
-                    // Actualizar tipo de transporte
-                    $stmt = $conexion->prepare("UPDATE sist_prod_tipo_transporte SET nombre = ? WHERE id = ?");
-                    $resultado = $stmt->execute([$nombre, $id]);
-
-                    if ($resultado) {
-                        $mensaje = "Tipo de transporte actualizado exitosamente.";
-                        $tipo_mensaje = "success";
-                    } else {
-                        $mensaje = "Error al actualizar el tipo de transporte. Intente nuevamente.";
-                        $tipo_mensaje = "error";
-                    }
-                }
-            } catch (PDOException $e) {
-                $mensaje = "Error de base de datos: " . $e->getMessage();
-                $tipo_mensaje = "error";
-            }
-        }
-    } elseif ($accion === 'eliminar') {
-        $id = $_POST['id'];
-
-        try {
-            // Verificar si el tipo de transporte está siendo utilizado (aquí puedes agregar validaciones adicionales)
-            // Por ejemplo, verificar si tiene envíos asociados
-
-            $stmt = $conexion->prepare("DELETE FROM sist_prod_tipo_transporte WHERE id = ?");
-            $resultado = $stmt->execute([$id]);
-
-            if ($resultado) {
-                $mensaje = "Tipo de transporte eliminado exitosamente.";
-                $tipo_mensaje = "success";
-            } else {
-                $mensaje = "Error al eliminar el tipo de transporte.";
-                $tipo_mensaje = "error";
-            }
-        } catch (PDOException $e) {
-            if ($e->getCode() == '23503') { // Foreign key violation
-                $mensaje = "No se puede eliminar el tipo de transporte porque tiene registros asociados.";
-            } else {
-                $mensaje = "Error de base de datos: " . $e->getMessage();
-            }
-            $tipo_mensaje = "error";
-        }
-    }
+require_once 'controllers/TipoTransporteController.php';
+$tipoTransporteController = new TipoTransporteController($conexion);
+$resultado = $tipoTransporteController->procesarRequest();
+$mensaje = $resultado['mensaje'] ?? '';
+$tipo_mensaje = $resultado['tipo_mensaje'] ?? '';
+$tipos_existentes = $resultado['tipos_existentes'] ?? [];
+function obtenerIconoTransporte($nombre)
+{
+    global $tipoTransporteController;
+    return $tipoTransporteController->obtenerIconoTransporte($nombre);
 }
 
-// Obtener lista de tipos de transporte existentes
-try {
-    $stmt_tipos = $conexion->query("SELECT id, nombre FROM sist_prod_tipo_transporte ORDER BY nombre");
-    $tipos_existentes = $stmt_tipos->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    $tipos_existentes = [];
+function obtenerClaseIcono($nombre)
+{
+    global $tipoTransporteController;
+    return $tipoTransporteController->obtenerClaseIcono($nombre);
 }
 $breadcrumb_items = ['CONFIGURACION', 'TIPOS DE TRANSPORTE'];
 $item_urls = [
@@ -132,11 +29,8 @@ include $path_base . "components/head.php";
 
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
-    <!-- Main Content -->
     <div class="main-container">
         <div class="container-fluid">
-
-            <!-- Mostrar mensajes -->
             <?php if (!empty($mensaje)): ?>
                 <div class="row mb-4">
                     <div class="col-12">
@@ -148,8 +42,6 @@ include $path_base . "components/head.php";
                     </div>
                 </div>
             <?php endif; ?>
-
-            <!-- Header con botón para crear tipo de transporte -->
             <div class="row mb-4">
                 <div class="col-12">
                     <div class="dashboard-card">
@@ -169,9 +61,6 @@ include $path_base . "components/head.php";
                                     <p>No hay tipos de transporte registrados en el sistema</p>
                                 </div>
                             <?php else: ?>
-
-
-                                <!-- Tabla alternativa para pantallas grandes -->
                                 <div class="table-responsive mt-4">
                                     <table class="table table-hover d-none d-lg-table">
                                         <thead>
@@ -187,21 +76,8 @@ include $path_base . "components/head.php";
                                                     <td><?php echo htmlspecialchars($tipo['id']); ?></td>
                                                     <td>
                                                         <div class="d-flex align-items-center">
-                                                            <div class="transport-icon me-2 <?php
-                                                                                            $nombre_lower = strtolower($tipo['nombre']);
-                                                                                            if (strpos($nombre_lower, 'terrestre') !== false) echo 'icon-terrestre';
-                                                                                            elseif (strpos($nombre_lower, 'aereo') !== false) echo 'icon-aereo';
-                                                                                            elseif (strpos($nombre_lower, 'maritimo') !== false) echo 'icon-maritimo';
-                                                                                            elseif (strpos($nombre_lower, 'ferroviario') !== false) echo 'icon-ferroviario';
-                                                                                            else echo 'icon-default';
-                                                                                            ?>" style="width: 30px; height: 30px;">
-                                                                <i class="fas fa-<?php
-                                                                                    if (strpos($nombre_lower, 'terrestre') !== false) echo 'truck';
-                                                                                    elseif (strpos($nombre_lower, 'aereo') !== false) echo 'plane';
-                                                                                    elseif (strpos($nombre_lower, 'maritimo') !== false) echo 'ship';
-                                                                                    elseif (strpos($nombre_lower, 'ferroviario') !== false) echo 'train';
-                                                                                    else echo 'route';
-                                                                                    ?> text-white"></i>
+                                                            <div class="transport-icon me-2 <?php echo obtenerClaseIcono($tipo['nombre']); ?>" style="width: 30px; height: 30px;">
+                                                                <i class="fas fa-<?php echo obtenerIconoTransporte($tipo['nombre']); ?> text-white"></i>
                                                             </div>
                                                             <?php echo htmlspecialchars($tipo['nombre']); ?>
                                                         </div>
@@ -230,8 +106,6 @@ include $path_base . "components/head.php";
             </div>
         </div>
     </div>
-
-    <!-- Modal de Registro de Tipo de Transporte -->
     <div class="modal fade" id="modalRegistroTipo" tabindex="-1" aria-labelledby="modalRegistroTipoLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -267,8 +141,6 @@ include $path_base . "components/head.php";
             </div>
         </div>
     </div>
-
-    <!-- Modal de Editar Tipo de Transporte -->
     <div class="modal fade" id="modalEditarTipo" tabindex="-1" aria-labelledby="modalEditarTipoLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -303,8 +175,6 @@ include $path_base . "components/head.php";
             </div>
         </div>
     </div>
-
-    <!-- Modal de Confirmación de Eliminación -->
     <div class="modal fade" id="modalEliminarTipo" tabindex="-1" aria-labelledby="modalEliminarTipoLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -340,8 +210,6 @@ include $path_base . "components/head.php";
             </div>
         </div>
     </div>
-
-    <!-- Footer -->
     <footer class="footer">
         <div class="container-fluid">
             <div class="row">
@@ -354,133 +222,14 @@ include $path_base . "components/head.php";
             </div>
         </div>
     </footer>
-
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Scripts personalizados -->
+    <script src="js/tipos-transporte.js"></script>
     <script>
-        // Actualizar reloj
-        function updateTime() {
-            const now = new Date();
-            const options = {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            };
-            const timeString = now.toLocaleDateString('es-ES', options);
-            const timeElement = document.querySelector('.hero-timestamp');
-            if (timeElement) {
-                timeElement.innerHTML = '<i class="fas fa-clock me-2"></i>' + timeString;
-            }
-        }
-        setInterval(updateTime, 1000);
-
-        // Validación del formulario de crear tipo
-        document.getElementById('formTipo').addEventListener('submit', function(e) {
-            const nombre = document.getElementById('nombre').value.trim();
-
-            if (nombre.length < 3) {
-                e.preventDefault();
-                alert('El nombre debe tener al menos 3 caracteres');
-                return false;
-            }
-
-            // Deshabilitar botón para evitar doble envío
-            document.getElementById('btnRegistrar').disabled = true;
-            document.getElementById('btnRegistrar').innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Registrando...';
-        });
-
-        // Validación en tiempo real
-        document.getElementById('nombre').addEventListener('input', function() {
-            const nombre = this.value.trim();
-            const btnRegistrar = document.getElementById('btnRegistrar');
-
-            if (nombre.length >= 3) {
-                this.classList.remove('is-invalid');
-                this.classList.add('is-valid');
-                btnRegistrar.disabled = false;
-            } else {
-                this.classList.remove('is-valid');
-                if (nombre.length > 0) {
-                    this.classList.add('is-invalid');
-                }
-                btnRegistrar.disabled = nombre.length === 0 ? false : true;
-            }
-        });
-
-        // Función para editar tipo
-        function editarTipo(id, nombre) {
-            document.getElementById('editId').value = id;
-            document.getElementById('editNombre').value = nombre;
-
-            const modal = new bootstrap.Modal(document.getElementById('modalEditarTipo'));
-            modal.show();
-        }
-
-        // Función para confirmar eliminación
-        function confirmarEliminar(id, nombre) {
-            document.getElementById('eliminarId').value = id;
-            document.getElementById('eliminarNombreTipo').textContent = nombre;
-
-            const modal = new bootstrap.Modal(document.getElementById('modalEliminarTipo'));
-            modal.show();
-        }
-
-        // Animaciones de entrada
         document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.dashboard-card, .tipo-card');
-            cards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-
-                setTimeout(() => {
-                    card.style.transition = 'all 0.6s ease';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 100);
-            });
+            const mensaje = '<?php echo addslashes($mensaje ?? ''); ?>';
+            const tipoMensaje = '<?php echo addslashes($tipo_mensaje ?? ''); ?>';
+            handleMessageBehavior(mensaje, tipoMensaje);
         });
-
-        // Limpiar formulario cuando se cierre el modal de crear
-        document.getElementById('modalRegistroTipo').addEventListener('hidden.bs.modal', function() {
-            document.getElementById('formTipo').reset();
-            document.getElementById('btnRegistrar').disabled = false;
-            document.getElementById('btnRegistrar').innerHTML = '<i class="fas fa-save me-1"></i>Registrar Tipo';
-
-            // Limpiar validaciones visuales
-            const inputs = document.querySelectorAll('#formTipo input');
-            inputs.forEach(input => {
-                input.classList.remove('is-valid', 'is-invalid');
-            });
-        });
-
-        // Auto-abrir modal si hay errores después del envío
-        <?php if (!empty($mensaje) && $tipo_mensaje === 'error'): ?>
-            document.addEventListener('DOMContentLoaded', function() {
-                const modal = new bootstrap.Modal(document.getElementById('modalRegistroTipo'));
-                modal.show();
-            });
-        <?php endif; ?>
-
-        // Auto-cerrar alert si registro fue exitoso
-        <?php if (!empty($mensaje) && $tipo_mensaje === 'success'): ?>
-            document.addEventListener('DOMContentLoaded', function() {
-                setTimeout(function() {
-                    const alert = document.querySelector('.alert');
-                    if (alert) {
-                        alert.style.transition = 'all 0.5s ease';
-                        alert.style.opacity = '0';
-                        alert.style.transform = 'translateY(-20px)';
-                        setTimeout(() => alert.remove(), 500);
-                    }
-                }, 5000);
-            });
-        <?php endif; ?>
     </script>
 
 </body>

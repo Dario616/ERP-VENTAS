@@ -9,7 +9,6 @@ include $path_base . "components/head.php";
 
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
-    <!-- Hero Section -->
     <div class="hero-section">
         <div class="container-fluid">
             <div class="row align-items-center">
@@ -34,14 +33,10 @@ include $path_base . "components/head.php";
             </div>
         </div>
     </div>
-
-    <!-- Main Content -->
     <div class="main-container">
         <div class="container-fluid">
-            <!-- Sección de Configuración -->
             <div class="row mb-4">
                 <div class="col-12">
-                    <!-- Opciones de Configuración -->
                     <div class="dashboard-card">
                         <div class="card-header">
                             <h5><i class="fas fa-sliders-h"></i>Opciones de Configuración</h5>
@@ -53,7 +48,6 @@ include $path_base . "components/head.php";
                                 <?php
                                 if (tieneRol(['1'])) {
                                 ?>
-                                    <!-- Botón Crear Usuarios -->
                                     <a href="<?php echo $url_base; ?>secciones/configuracion/crear_usuario.php" class="quick-action-btn btn-primary">
                                         <i class="fas fa-user-plus"></i>
                                         <span>Registrar Usuario</span>
@@ -62,7 +56,6 @@ include $path_base . "components/head.php";
                                 <?php
                                 }
                                 ?>
-                                <!-- Botón Registrar Transportadora -->
                                 <a href="<?php echo $url_base; ?>secciones/configuracion/registrar_transportadora.php" class="quick-action-btn btn-warning">
                                     <i class="fas fa-truck-loading"></i>
                                     <span>Registrar Transportadora</span>
@@ -90,8 +83,6 @@ include $path_base . "components/head.php";
             </div>
         </div>
     </div>
-
-    <!-- Footer -->
     <footer class="footer">
         <div class="container-fluid">
             <div class="row">
@@ -104,11 +95,7 @@ include $path_base . "components/head.php";
             </div>
         </div>
     </footer>
-
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Script para actualizar la hora -->
     <script>
         function updateTime() {
             const now = new Date();
@@ -127,11 +114,7 @@ include $path_base . "components/head.php";
                 timeElement.innerHTML = '<i class="fas fa-clock me-2"></i>' + timeString;
             }
         }
-
-        // Actualizar cada segundo
         setInterval(updateTime, 1000);
-
-        // Efectos de hover para las tarjetas
         document.querySelectorAll('.tipo-summary').forEach(card => {
             card.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-3px) scale(1.02)';
@@ -141,8 +124,6 @@ include $path_base . "components/head.php";
                 this.style.transform = 'translateY(0) scale(1)';
             });
         });
-
-        // Efectos para botones de configuración
         document.querySelectorAll('.quick-action-btn').forEach(btn => {
             btn.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-3px) scale(1.02)';
@@ -152,8 +133,6 @@ include $path_base . "components/head.php";
                 this.style.transform = 'translateY(0) scale(1)';
             });
         });
-
-        // Animación de entrada para las tarjetas
         document.addEventListener('DOMContentLoaded', function() {
             const cards = document.querySelectorAll('.dashboard-card');
             cards.forEach((card, index) => {

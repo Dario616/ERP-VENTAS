@@ -2,156 +2,21 @@
 include "../../config/conexionBD.php";
 include "../../auth/verificar_sesion.php";
 requerirLogin();
-
-$mensaje = "";
-$tipo_mensaje = "";
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $accion = $_POST['accion'] ?? 'crear';
-
-    if ($accion === 'crear') {
-        $nombre = trim($_POST['nombre']);
-        $usuario = trim($_POST['usuario']);
-        $contrasenia = $_POST['contrasenia'];
-        $confirmar_contrasenia = $_POST['confirmar_contrasenia'];
-        $rol = $_POST['rol'];
-
-        if (empty($nombre) || empty($usuario) || empty($contrasenia) || empty($rol)) {
-            $mensaje = "Todos los campos son obligatorios.";
-            $tipo_mensaje = "error";
-        } elseif ($contrasenia !== $confirmar_contrasenia) {
-            $mensaje = "Las contraseñas no coinciden.";
-            $tipo_mensaje = "error";
-        } elseif (strlen($contrasenia) < 6) {
-            $mensaje = "La contraseña debe tener al menos 6 caracteres.";
-            $tipo_mensaje = "error";
-        } else {
-            try {
-                $stmt_check = $conexion->prepare("SELECT COUNT(*) FROM sist_prod_usuario WHERE usuario = ?");
-                $stmt_check->execute([$usuario]);
-                $usuario_existe = $stmt_check->fetchColumn();
-
-                if ($usuario_existe > 0) {
-                    $mensaje = "El nombre de usuario ya existe. Por favor, elija otro.";
-                    $tipo_mensaje = "error";
-                } else {
-                    $stmt = $conexion->prepare("INSERT INTO sist_prod_usuario (nombre, usuario, contrasenia, rol) VALUES (?, ?, ?, ?)");
-                    $resultado = $stmt->execute([$nombre, $usuario, $contrasenia, $rol]);
-
-                    if ($resultado) {
-                        $mensaje = "Usuario registrado exitosamente.";
-                        $tipo_mensaje = "success";
-                        $nombre = $usuario = $contrasenia = $confirmar_contrasenia = $rol = "";
-                    } else {
-                        $mensaje = "Error al registrar el usuario. Intente nuevamente.";
-                        $tipo_mensaje = "error";
-                    }
-                }
-            } catch (PDOException $e) {
-                $mensaje = "Error de base de datos: " . $e->getMessage();
-                $tipo_mensaje = "error";
-            }
-        }
-    } elseif ($accion === 'editar') {
-        $id = $_POST['id'];
-        $nombre = trim($_POST['nombre']);
-        $usuario = trim($_POST['usuario']);
-        $rol = $_POST['rol'];
-        $nueva_contrasenia = $_POST['nueva_contrasenia'] ?? '';
-
-        if (empty($nombre) || empty($usuario) || empty($rol)) {
-            $mensaje = "Todos los campos son obligatorios.";
-            $tipo_mensaje = "error";
-        } else {
-            try {
-                $stmt_check = $conexion->prepare("SELECT COUNT(*) FROM sist_prod_usuario WHERE usuario = ? AND id != ?");
-                $stmt_check->execute([$usuario, $id]);
-                $usuario_existe = $stmt_check->fetchColumn();
-
-                if ($usuario_existe > 0) {
-                    $mensaje = "El nombre de usuario ya existe. Por favor, elija otro.";
-                    $tipo_mensaje = "error";
-                } else {
-                    if (!empty($nueva_contrasenia)) {
-                        if (strlen($nueva_contrasenia) < 6) {
-                            $mensaje = "La nueva contraseña debe tener al menos 6 caracteres.";
-                            $tipo_mensaje = "error";
-                        } else {
-                            $stmt = $conexion->prepare("UPDATE sist_prod_usuario SET nombre = ?, usuario = ?, contrasenia = ?, rol = ? WHERE id = ?");
-                            $resultado = $stmt->execute([$nombre, $usuario, $nueva_contrasenia, $rol, $id]);
-                        }
-                    } else {
-                        $stmt = $conexion->prepare("UPDATE sist_prod_usuario SET nombre = ?, usuario = ?, rol = ? WHERE id = ?");
-                        $resultado = $stmt->execute([$nombre, $usuario, $rol, $id]);
-                    }
-
-                    if (isset($resultado) && $resultado) {
-                        $mensaje = "Usuario actualizado exitosamente.";
-                        $tipo_mensaje = "success";
-                    } else {
-                        $mensaje = "Error al actualizar el usuario. Intente nuevamente.";
-                        $tipo_mensaje = "error";
-                    }
-                }
-            } catch (PDOException $e) {
-                $mensaje = "Error de base de datos: " . $e->getMessage();
-                $tipo_mensaje = "error";
-            }
-        }
-    } elseif ($accion === 'eliminar') {
-        $id = $_POST['id'];
-
-        try {
-            $stmt = $conexion->prepare("DELETE FROM sist_prod_usuario WHERE id = ?");
-            $resultado = $stmt->execute([$id]);
-
-            if ($resultado) {
-                $mensaje = "Usuario eliminado exitosamente.";
-                $tipo_mensaje = "success";
-            } else {
-                $mensaje = "Error al eliminar el usuario.";
-                $tipo_mensaje = "error";
-            }
-        } catch (PDOException $e) {
-            $mensaje = "Error de base de datos: " . $e->getMessage();
-            $tipo_mensaje = "error";
-        }
-    }
-}
-
-try {
-    $stmt_usuarios = $conexion->query("SELECT id, nombre, usuario, rol FROM sist_prod_usuario ORDER BY nombre");
-    $usuarios_existentes = $stmt_usuarios->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    $usuarios_existentes = [];
-}
-
+require_once 'controllers/UsuarioController.php';
+$usuarioController = new UsuarioController($conexion);
+$resultado = $usuarioController->procesarRequest();
+$mensaje = $resultado['mensaje'] ?? '';
+$tipo_mensaje = $resultado['tipo_mensaje'] ?? '';
+$usuarios_existentes = $resultado['usuarios_existentes'] ?? [];
 function obtenerNombreRol($rol)
 {
-    switch ($rol) {
-        case '1':
-            return 'Administrador';
-        case '2':
-            return 'Producción';
-        case '3':
-            return 'Expedición';
-        default:
-            return 'Desconocido';
-    }
+    global $usuarioController;
+    return $usuarioController->obtenerNombreRol($rol);
 }
-
 function obtenerClaseRol($rol)
 {
-    switch ($rol) {
-        case '1':
-            return 'danger';
-        case '2':
-            return 'primary';
-        case '3':
-            return 'warning';
-        default:
-            return 'secondary';
-    }
+    global $usuarioController;
+    return $usuarioController->obtenerClaseRol($rol);
 }
 $breadcrumb_items = ['CONFIGURACION', 'GESTION DE USUARIOS'];
 $item_urls = [
@@ -161,14 +26,10 @@ $additional_css = [$url_base . 'secciones/configuracion/utils/styles.css'];
 include $path_base . "components/head.php";
 ?>
 
-
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
-    <!-- Main Content -->
     <div class="main-container">
         <div class="container-fluid">
-
-            <!-- Mostrar mensajes -->
             <?php if (!empty($mensaje)): ?>
                 <div class="row mb-4">
                     <div class="col-12">
@@ -180,8 +41,6 @@ include $path_base . "components/head.php";
                     </div>
                 </div>
             <?php endif; ?>
-
-            <!-- Header con botón para crear usuario -->
             <div class="row mb-4">
                 <div class="col-12">
                     <div class="dashboard-card">
@@ -250,8 +109,6 @@ include $path_base . "components/head.php";
             </div>
         </div>
     </div>
-
-    <!-- Modal de Registro de Usuario -->
     <div class="modal fade" id="modalRegistroUsuario" tabindex="-1" aria-labelledby="modalRegistroUsuarioLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -313,7 +170,6 @@ include $path_base . "components/head.php";
                                 <div id="passwordMatch" class="mt-1"></div>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="rol" class="form-label">
@@ -352,8 +208,6 @@ include $path_base . "components/head.php";
             </div>
         </div>
     </div>
-
-    <!-- Modal de Editar Usuario -->
     <div class="modal fade" id="modalEditarUsuario" tabindex="-1" aria-labelledby="modalEditarUsuarioLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -416,8 +270,6 @@ include $path_base . "components/head.php";
             </div>
         </div>
     </div>
-
-    <!-- Modal de Confirmación de Eliminación -->
     <div class="modal fade" id="modalEliminarUsuario" tabindex="-1" aria-labelledby="modalEliminarUsuarioLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -453,8 +305,6 @@ include $path_base . "components/head.php";
             </div>
         </div>
     </div>
-
-    <!-- Footer -->
     <footer class="footer">
         <div class="container-fluid">
             <div class="row">
@@ -467,226 +317,15 @@ include $path_base . "components/head.php";
             </div>
         </div>
     </footer>
-
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Scripts personalizados -->
+    <script src="js/usuarios.js"></script>
     <script>
-        // Actualizar reloj
-        function updateTime() {
-            const now = new Date();
-            const options = {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            };
-            const timeString = now.toLocaleDateString('es-ES', options);
-            const timeElement = document.querySelector('.hero-timestamp');
-            if (timeElement) {
-                timeElement.innerHTML = '<i class="fas fa-clock me-2"></i>' + timeString;
-            }
-        }
-        setInterval(updateTime, 1000);
-
-        // Descriptions for roles
-        const roleDescriptions = {
-            '1': '<small class="text-danger"><i class="fas fa-crown me-1"></i>Acceso completo al sistema, gestión de usuarios y configuración</small>',
-            '2': '<small class="text-primary"><i class="fas fa-industry me-1"></i>Gestión de procesos de producción y control de líneas</small>',
-            '3': '<small class="text-warning"><i class="fas fa-truck me-1"></i>Gestión de expedición, envíos y distribución</small>'
-        };
-
-        // Update role description
-        document.getElementById('rol').addEventListener('change', function() {
-            const description = roleDescriptions[this.value] || '<small class="text-muted">Seleccione un rol para ver su descripción</small>';
-            document.getElementById('rolDescription').innerHTML = description;
-        });
-
-        // Password strength indicator
-        document.getElementById('contrasenia').addEventListener('input', function() {
-            const password = this.value;
-            const strengthBar = document.getElementById('passwordStrength');
-
-            if (password.length === 0) {
-                strengthBar.className = 'password-strength';
-                return;
-            }
-
-            let strength = 0;
-            if (password.length >= 6) strength++;
-            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
-            if (password.match(/[0-9]/)) strength++;
-            if (password.match(/[^a-zA-Z0-9]/)) strength++;
-
-            strengthBar.className = 'password-strength ';
-            if (strength <= 2) {
-                strengthBar.className += 'password-weak';
-            } else if (strength === 3) {
-                strengthBar.className += 'password-medium';
-            } else {
-                strengthBar.className += 'password-strong';
-            }
-        });
-
-        // Mostrar/ocultar contraseñas
-        document.getElementById('togglePassword1').addEventListener('click', function() {
-            const password = document.getElementById('contrasenia');
-            const icon = this.querySelector('i');
-
-            if (password.type === 'password') {
-                password.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                password.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        });
-
-        document.getElementById('togglePassword2').addEventListener('click', function() {
-            const password = document.getElementById('confirmar_contrasenia');
-            const icon = this.querySelector('i');
-
-            if (password.type === 'password') {
-                password.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                password.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        });
-
-        // Validación de contraseñas en tiempo real
-        document.getElementById('confirmar_contrasenia').addEventListener('input', function() {
-            const password1 = document.getElementById('contrasenia').value;
-            const password2 = this.value;
-            const matchDiv = document.getElementById('passwordMatch');
-
-            if (password2.length === 0) {
-                matchDiv.innerHTML = '';
-                this.classList.remove('is-valid', 'is-invalid');
-                return;
-            }
-
-            if (password1 === password2) {
-                matchDiv.innerHTML = '<small class="text-success"><i class="fas fa-check me-1"></i>Las contraseñas coinciden</small>';
-                this.classList.remove('is-invalid');
-                this.classList.add('is-valid');
-                this.setCustomValidity('');
-            } else {
-                matchDiv.innerHTML = '<small class="text-danger"><i class="fas fa-times me-1"></i>Las contraseñas no coinciden</small>';
-                this.classList.remove('is-valid');
-                this.classList.add('is-invalid');
-                this.setCustomValidity('Las contraseñas no coinciden');
-            }
-        });
-
-        // Validación del formulario de crear usuario
-        document.getElementById('formUsuario').addEventListener('submit', function(e) {
-            const password1 = document.getElementById('contrasenia').value;
-            const password2 = document.getElementById('confirmar_contrasenia').value;
-
-            if (password1 !== password2) {
-                e.preventDefault();
-                alert('Las contraseñas no coinciden');
-                return false;
-            }
-
-            if (password1.length < 6) {
-                e.preventDefault();
-                alert('La contraseña debe tener al menos 6 caracteres');
-                return false;
-            }
-
-            // Deshabilitar botón para evitar doble envío
-            document.getElementById('btnRegistrar').disabled = true;
-            document.getElementById('btnRegistrar').innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Registrando...';
-        });
-
-        // Función para editar usuario
-        function editarUsuario(id, nombre, usuario, rol) {
-            document.getElementById('editId').value = id;
-            document.getElementById('editNombre').value = nombre;
-            document.getElementById('editUsuario').value = usuario;
-            document.getElementById('editRol').value = rol;
-            document.getElementById('nuevaContrasenia').value = '';
-
-            const modal = new bootstrap.Modal(document.getElementById('modalEditarUsuario'));
-            modal.show();
-        }
-
-        // Función para confirmar eliminación
-        function confirmarEliminar(id, nombre) {
-            document.getElementById('eliminarId').value = id;
-            document.getElementById('eliminarNombreUsuario').textContent = nombre;
-
-            const modal = new bootstrap.Modal(document.getElementById('modalEliminarUsuario'));
-            modal.show();
-        }
-
-        // Animaciones de entrada
         document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.dashboard-card');
-            cards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-
-                setTimeout(() => {
-                    card.style.transition = 'all 0.6s ease';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 200);
-            });
+            const mensaje = '<?php echo addslashes($mensaje ?? ''); ?>';
+            const tipoMensaje = '<?php echo addslashes($tipo_mensaje ?? ''); ?>';
+            handleMessageBehavior(mensaje, tipoMensaje);
         });
-
-        // Limpiar formulario cuando se cierre el modal de crear
-        document.getElementById('modalRegistroUsuario').addEventListener('hidden.bs.modal', function() {
-            document.getElementById('formUsuario').reset();
-            document.getElementById('passwordStrength').className = 'password-strength';
-            document.getElementById('passwordMatch').innerHTML = '';
-            document.getElementById('rolDescription').innerHTML = '<small class="text-muted">Seleccione un rol para ver su descripción</small>';
-            document.getElementById('btnRegistrar').disabled = false;
-            document.getElementById('btnRegistrar').innerHTML = '<i class="fas fa-save me-1"></i>Registrar Usuario';
-
-            // Limpiar validaciones visuales
-            const inputs = document.querySelectorAll('#formUsuario input, #formUsuario select');
-            inputs.forEach(input => {
-                input.classList.remove('is-valid', 'is-invalid');
-            });
-        });
-
-        // Auto-abrir modal si hay errores después del envío
-        <?php if (!empty($mensaje) && $tipo_mensaje === 'error'): ?>
-            document.addEventListener('DOMContentLoaded', function() {
-                const modal = new bootstrap.Modal(document.getElementById('modalRegistroUsuario'));
-                modal.show();
-            });
-        <?php endif; ?>
-
-        // Auto-cerrar modal si registro fue exitoso
-        <?php if (!empty($mensaje) && $tipo_mensaje === 'success'): ?>
-            document.addEventListener('DOMContentLoaded', function() {
-                // El modal se mantendrá cerrado para mostrar el mensaje de éxito
-                setTimeout(function() {
-                    const alert = document.querySelector('.alert');
-                    if (alert) {
-                        alert.style.transition = 'all 0.5s ease';
-                        alert.style.opacity = '0';
-                        alert.style.transform = 'translateY(-20px)';
-                        setTimeout(() => alert.remove(), 500);
-                    }
-                }, 5000);
-            });
-        <?php endif; ?>
     </script>
-
 </body>
 
 </html>

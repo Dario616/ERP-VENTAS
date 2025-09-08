@@ -556,12 +556,10 @@ include $path_base . "components/head.php";
                                                             data-orden="<?php echo $ordenEncontrada['id']; ?>"
                                                             data-tipo="<?php echo htmlspecialchars($registro['tipo_producto']); ?>"
                                                             data-numero="<?php echo $registro['numero_item']; ?>">
-
                                                             <td>
                                                                 <strong class="text-primary">#<?php echo $registro['numero_item']; ?></strong>
                                                                 <br><small class="text-warning"><i class="fas fa-unlink"></i></small>
                                                             </td>
-
                                                             <?php if (!$esProductoSimplificado): ?>
                                                                 <td class="text-center">
                                                                     <div class="clasificacion-badge clasificacion-<?php echo $registro['clasificacion']['clase']; ?>"

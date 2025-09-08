@@ -26,7 +26,9 @@ include $path_base . "components/head.php";
 date_default_timezone_set('America/Asuncion');
 
 // CONFIGURACIÓN DE CORREOS
-$configuracion_correos = [];
+$configuracion_correos = [
+   
+];
 
 $idVenta = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
@@ -457,6 +459,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
     <div class="container-fluid my-4">

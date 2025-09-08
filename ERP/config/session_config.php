@@ -4,16 +4,10 @@ function iniciarSesionAislada()
 {
     if (session_status() == PHP_SESSION_NONE) {
         session_name('AMERICA_TNT_SESSION');
-
-        // 🔒 Seguridad y duración
         ini_set('session.cookie_httponly', 1);
         ini_set('session.use_only_cookies', 1);
-        ini_set('session.cookie_secure', 0); // true si usás HTTPS
-
-        // ⏳ Mantener la sesión en el servidor durante 7 días
+        ini_set('session.cookie_secure', 0); 
         ini_set('session.gc_maxlifetime', 604800);
-
-        // 🍪 La cookie vive mientras el navegador esté abierto
         session_set_cookie_params([
             'lifetime' => 0,
             'path' => '/',

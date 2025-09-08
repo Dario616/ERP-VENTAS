@@ -1,6 +1,6 @@
 <?php
 
-$modo_desarrollo = true;
+$modo_desarrollo = TRUE;
 
 if ($modo_desarrollo) {
     $url_base = "http://localhost:8001/";
@@ -12,7 +12,7 @@ if ($modo_desarrollo) {
     $contrasenia = "6770";
 } else {
     $url_base = "http://192.168.1.127/ERP/";
-    $path_base = $_SERVER['DOCUMENT_ROOT'] . '/';
+    $path_base = $_SERVER['DOCUMENT_ROOT'] . '/ERP/';
     $servidor = "192.168.1.127";
     $puerto = "5432";
     $basededatos = "ERP-VENTAS";

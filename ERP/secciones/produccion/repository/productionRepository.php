@@ -596,9 +596,9 @@ class ProductionRepositoryUniversal
      */
     private function obtenerSiguienteNumeroItem($numeroOrden)
     {
-        $sql = "SELECT COALESCE(MAX(numero_item), 0) + 1 as siguiente 
-                FROM public.sist_prod_stock 
-                WHERE id_orden_produccion = :numero_orden";
+        $sql = "SELECT COUNT(*) + 1 as siguiente 
+            FROM public.sist_prod_stock 
+            WHERE id_orden_produccion = :numero_orden";
 
         $stmt = $this->conexion->prepare($sql);
         $stmt->bindParam(':numero_orden', $numeroOrden, PDO::PARAM_INT);

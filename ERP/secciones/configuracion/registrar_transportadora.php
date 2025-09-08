@@ -2,127 +2,21 @@
 include "../../config/conexionBD.php";
 include "../../auth/verificar_sesion.php";
 requerirLogin();
-
-$mensaje = "";
-$tipo_mensaje = "";
-
-// Procesar el formulario cuando se envía
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $accion = $_POST['accion'] ?? 'crear';
-
-    if ($accion === 'crear') {
-        $descripcion = trim($_POST['descripcion']);
-
-        // Validaciones
-        if (empty($descripcion)) {
-            $mensaje = "La descripción de la transportadora es obligatoria.";
-            $tipo_mensaje = "error";
-        } elseif (strlen($descripcion) < 3) {
-            $mensaje = "La descripción debe tener al menos 3 caracteres.";
-            $tipo_mensaje = "error";
-        } else {
-            try {
-                // Verificar si la transportadora ya existe
-                $stmt_check = $conexion->prepare("SELECT COUNT(*) FROM sist_prod_transportadora WHERE LOWER(descripcion) = LOWER(?)");
-                $stmt_check->execute([$descripcion]);
-                $transportadora_existe = $stmt_check->fetchColumn();
-
-                if ($transportadora_existe > 0) {
-                    $mensaje = "La transportadora ya existe. Por favor, ingrese otra descripción.";
-                    $tipo_mensaje = "error";
-                } else {
-                    // Insertar nueva transportadora
-                    $stmt = $conexion->prepare("INSERT INTO sist_prod_transportadora (descripcion) VALUES (?)");
-                    $resultado = $stmt->execute([$descripcion]);
-
-                    if ($resultado) {
-                        $mensaje = "Transportadora registrada exitosamente.";
-                        $tipo_mensaje = "success";
-                        // Limpiar el formulario
-                        $descripcion = "";
-                    } else {
-                        $mensaje = "Error al registrar la transportadora. Intente nuevamente.";
-                        $tipo_mensaje = "error";
-                    }
-                }
-            } catch (PDOException $e) {
-                $mensaje = "Error de base de datos: " . $e->getMessage();
-                $tipo_mensaje = "error";
-            }
-        }
-    } elseif ($accion === 'editar') {
-        $id = $_POST['id'];
-        $descripcion = trim($_POST['descripcion']);
-
-        // Validaciones
-        if (empty($descripcion)) {
-            $mensaje = "La descripción de la transportadora es obligatoria.";
-            $tipo_mensaje = "error";
-        } elseif (strlen($descripcion) < 3) {
-            $mensaje = "La descripción debe tener al menos 3 caracteres.";
-            $tipo_mensaje = "error";
-        } else {
-            try {
-                // Verificar si la transportadora ya existe (excluyendo la actual)
-                $stmt_check = $conexion->prepare("SELECT COUNT(*) FROM sist_prod_transportadora WHERE LOWER(descripcion) = LOWER(?) AND id != ?");
-                $stmt_check->execute([$descripcion, $id]);
-                $transportadora_existe = $stmt_check->fetchColumn();
-
-                if ($transportadora_existe > 0) {
-                    $mensaje = "La transportadora ya existe. Por favor, ingrese otra descripción.";
-                    $tipo_mensaje = "error";
-                } else {
-                    // Actualizar transportadora
-                    $stmt = $conexion->prepare("UPDATE sist_prod_transportadora SET descripcion = ? WHERE id = ?");
-                    $resultado = $stmt->execute([$descripcion, $id]);
-
-                    if ($resultado) {
-                        $mensaje = "Transportadora actualizada exitosamente.";
-                        $tipo_mensaje = "success";
-                    } else {
-                        $mensaje = "Error al actualizar la transportadora. Intente nuevamente.";
-                        $tipo_mensaje = "error";
-                    }
-                }
-            } catch (PDOException $e) {
-                $mensaje = "Error de base de datos: " . $e->getMessage();
-                $tipo_mensaje = "error";
-            }
-        }
-    } elseif ($accion === 'eliminar') {
-        $id = $_POST['id'];
-
-        try {
-            // Verificar si la transportadora está siendo utilizada (aquí puedes agregar validaciones adicionales)
-            // Por ejemplo, verificar si tiene envíos asociados
-
-            $stmt = $conexion->prepare("DELETE FROM sist_prod_transportadora WHERE id = ?");
-            $resultado = $stmt->execute([$id]);
-
-            if ($resultado) {
-                $mensaje = "Transportadora eliminada exitosamente.";
-                $tipo_mensaje = "success";
-            } else {
-                $mensaje = "Error al eliminar la transportadora.";
-                $tipo_mensaje = "error";
-            }
-        } catch (PDOException $e) {
-            if ($e->getCode() == '23503') { // Foreign key violation
-                $mensaje = "No se puede eliminar la transportadora porque tiene registros asociados.";
-            } else {
-                $mensaje = "Error de base de datos: " . $e->getMessage();
-            }
-            $tipo_mensaje = "error";
-        }
-    }
+require_once 'controllers/TransportadoraController.php';
+$transportadoraController = new TransportadoraController($conexion);
+$resultado = $transportadoraController->procesarRequest();
+$mensaje = $resultado['mensaje'] ?? '';
+$tipo_mensaje = $resultado['tipo_mensaje'] ?? '';
+$transportadoras_existentes = $resultado['transportadoras_existentes'] ?? [];
+function buscarTransportadoras($termino)
+{
+    global $transportadoraController;
+    return $transportadoraController->buscarTransportadoras($termino);
 }
-
-// Obtener lista de transportadoras existentes
-try {
-    $stmt_transportadoras = $conexion->query("SELECT id, descripcion FROM sist_prod_transportadora ORDER BY descripcion");
-    $transportadoras_existentes = $stmt_transportadoras->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    $transportadoras_existentes = [];
+function obtenerEstadisticasTransportadoras()
+{
+    global $transportadoraController;
+    return $transportadoraController->obtenerEstadisticas();
 }
 $breadcrumb_items = ['CONFIGURACION', 'TRANSPORTADORAS'];
 $item_urls = [
@@ -134,11 +28,8 @@ include $path_base . "components/head.php";
 
 <body>
     <?php include $path_base . "components/navbar.php"; ?>
-    <!-- Main Content -->
     <div class="main-container">
         <div class="container-fluid">
-
-            <!-- Mostrar mensajes -->
             <?php if (!empty($mensaje)): ?>
                 <div class="row mb-4">
                     <div class="col-12">
@@ -150,8 +41,6 @@ include $path_base . "components/head.php";
                     </div>
                 </div>
             <?php endif; ?>
-
-            <!-- Header con botón para crear transportadora -->
             <div class="row mb-4">
                 <div class="col-12">
                     <div class="dashboard-card">
@@ -171,7 +60,6 @@ include $path_base . "components/head.php";
                                     <p>No hay transportadoras registradas en el sistema</p>
                                 </div>
                             <?php else: ?>
-                                <!-- Tabla alternativa para pantallas grandes -->
                                 <div class="table-responsive mt-4">
                                     <table class="table table-hover d-none d-lg-table">
                                         <thead>
@@ -213,8 +101,6 @@ include $path_base . "components/head.php";
             </div>
         </div>
     </div>
-
-    <!-- Modal de Registro de Transportadora -->
     <div class="modal fade" id="modalRegistroTransportadora" tabindex="-1" aria-labelledby="modalRegistroTransportadoraLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -257,8 +143,6 @@ include $path_base . "components/head.php";
             </div>
         </div>
     </div>
-
-    <!-- Modal de Editar Transportadora -->
     <div class="modal fade" id="modalEditarTransportadora" tabindex="-1" aria-labelledby="modalEditarTransportadoraLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -293,8 +177,6 @@ include $path_base . "components/head.php";
             </div>
         </div>
     </div>
-
-    <!-- Modal de Confirmación de Eliminación -->
     <div class="modal fade" id="modalEliminarTransportadora" tabindex="-1" aria-labelledby="modalEliminarTransportadoraLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -330,8 +212,6 @@ include $path_base . "components/head.php";
             </div>
         </div>
     </div>
-
-    <!-- Footer -->
     <footer class="footer">
         <div class="container-fluid">
             <div class="row">
@@ -344,149 +224,14 @@ include $path_base . "components/head.php";
             </div>
         </div>
     </footer>
-
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Scripts personalizados -->
+    <script src="js/transportadoras.js"></script>
     <script>
-        // Actualizar reloj
-        function updateTime() {
-            const now = new Date();
-            const options = {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            };
-            const timeString = now.toLocaleDateString('es-ES', options);
-            const timeElement = document.querySelector('.hero-timestamp');
-            if (timeElement) {
-                timeElement.innerHTML = '<i class="fas fa-clock me-2"></i>' + timeString;
-            }
-        }
-        setInterval(updateTime, 1000);
-
-        // Validación del formulario de crear transportadora
-        document.getElementById('formTransportadora').addEventListener('submit', function(e) {
-            const descripcion = document.getElementById('descripcion').value.trim();
-
-            if (descripcion.length < 3) {
-                e.preventDefault();
-                alert('La descripción debe tener al menos 3 caracteres');
-                return false;
-            }
-
-            // Deshabilitar botón para evitar doble envío
-            document.getElementById('btnRegistrar').disabled = true;
-            document.getElementById('btnRegistrar').innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Registrando...';
-        });
-
-        // Validación en tiempo real
-        document.getElementById('descripcion').addEventListener('input', function() {
-            const descripcion = this.value.trim();
-            const btnRegistrar = document.getElementById('btnRegistrar');
-
-            if (descripcion.length >= 3) {
-                this.classList.remove('is-invalid');
-                this.classList.add('is-valid');
-                btnRegistrar.disabled = false;
-            } else {
-                this.classList.remove('is-valid');
-                if (descripcion.length > 0) {
-                    this.classList.add('is-invalid');
-                }
-                btnRegistrar.disabled = descripcion.length === 0 ? false : true;
-            }
-        });
-
-        // Función para editar transportadora
-        function editarTransportadora(id, descripcion) {
-            document.getElementById('editId').value = id;
-            document.getElementById('editDescripcion').value = descripcion;
-
-            const modal = new bootstrap.Modal(document.getElementById('modalEditarTransportadora'));
-            modal.show();
-        }
-
-        // Función para confirmar eliminación
-        function confirmarEliminar(id, descripcion) {
-            document.getElementById('eliminarId').value = id;
-            document.getElementById('eliminarNombreTransportadora').textContent = descripcion;
-
-            const modal = new bootstrap.Modal(document.getElementById('modalEliminarTransportadora'));
-            modal.show();
-        }
-
-        // Animaciones de entrada
         document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.dashboard-card, .transportadora-card');
-            cards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-
-                setTimeout(() => {
-                    card.style.transition = 'all 0.6s ease';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 100);
-            });
+            const mensaje = '<?php echo addslashes($mensaje ?? ''); ?>';
+            const tipoMensaje = '<?php echo addslashes($tipo_mensaje ?? ''); ?>';
+            handleMessageBehavior(mensaje, tipoMensaje);
         });
-
-        // Limpiar formulario cuando se cierre el modal de crear
-        document.getElementById('modalRegistroTransportadora').addEventListener('hidden.bs.modal', function() {
-            document.getElementById('formTransportadora').reset();
-            document.getElementById('btnRegistrar').disabled = false;
-            document.getElementById('btnRegistrar').innerHTML = '<i class="fas fa-save me-1"></i>Registrar Transportadora';
-
-            // Limpiar validaciones visuales
-            const inputs = document.querySelectorAll('#formTransportadora input');
-            inputs.forEach(input => {
-                input.classList.remove('is-valid', 'is-invalid');
-            });
-        });
-
-        // Auto-abrir modal si hay errores después del envío
-        <?php if (!empty($mensaje) && $tipo_mensaje === 'error'): ?>
-            document.addEventListener('DOMContentLoaded', function() {
-                const modal = new bootstrap.Modal(document.getElementById('modalRegistroTransportadora'));
-                modal.show();
-            });
-        <?php endif; ?>
-
-        // Auto-cerrar alert si registro fue exitoso
-        <?php if (!empty($mensaje) && $tipo_mensaje === 'success'): ?>
-            document.addEventListener('DOMContentLoaded', function() {
-                setTimeout(function() {
-                    const alert = document.querySelector('.alert');
-                    if (alert) {
-                        alert.style.transition = 'all 0.5s ease';
-                        alert.style.opacity = '0';
-                        alert.style.transform = 'translateY(-20px)';
-                        setTimeout(() => alert.remove(), 500);
-                    }
-                }, 5000);
-            });
-        <?php endif; ?>
-
-        // Función de búsqueda rápida (opcional)
-        function filtrarTransportadoras(termino) {
-            const cards = document.querySelectorAll('.transportadora-card');
-            const rows = document.querySelectorAll('tbody tr');
-
-            cards.forEach(card => {
-                const texto = card.textContent.toLowerCase();
-                card.style.display = texto.includes(termino.toLowerCase()) ? 'block' : 'none';
-            });
-
-            rows.forEach(row => {
-                const texto = row.textContent.toLowerCase();
-                row.style.display = texto.includes(termino.toLowerCase()) ? 'table-row' : 'none';
-            });
-        }
     </script>
 
 </body>

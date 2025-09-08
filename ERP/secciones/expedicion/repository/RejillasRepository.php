@@ -85,58 +85,57 @@ ORDER BY r.id ASC";
 
                 error_log("DEBUG: Procesando rejilla " . $rejilla['numero_rejilla'] . " (ID: " . $rejilla['id'] . ")");
 
-                $sqlVentas = "SELECT DISTINCT ra.id_venta, ra.cliente 
-                         FROM sist_rejillas_asignaciones ra 
-                         WHERE ra.id_rejilla = ? AND ra.estado_asignacion = 'activa'";
+                // CAMBIO CLAVE: Obtener TODAS las órdenes de producción relacionadas con esta rejilla
+                // En lugar de buscar por venta y luego orden, vamos directo a las órdenes
+                $sqlOrdenes = "SELECT DISTINCT svop.id as id_orden, svop.estado, svop.id_venta, svop.cliente
+                   FROM sist_rejillas_asignaciones ra
+                   INNER JOIN sist_ventas_orden_produccion svop ON ra.id_venta = svop.id_venta 
+                       AND ra.cliente = svop.cliente
+                   WHERE ra.id_rejilla = ? 
+                       AND ra.estado_asignacion = 'activa'";
 
-                $stmtVentas = $this->conexion->prepare($sqlVentas);
-                $stmtVentas->execute([$rejilla['id']]);
-                $ventas = $stmtVentas->fetchAll(PDO::FETCH_ASSOC);
+                $stmtOrdenes = $this->conexion->prepare($sqlOrdenes);
+                $stmtOrdenes->execute([$rejilla['id']]);
+                $ordenes = $stmtOrdenes->fetchAll(PDO::FETCH_ASSOC);
 
-                error_log("DEBUG: Rejilla " . $rejilla['numero_rejilla'] . " tiene " . count($ventas) . " ventas asignadas");
+                error_log("DEBUG: Rejilla " . $rejilla['numero_rejilla'] . " tiene " . count($ordenes) . " órdenes de producción");
 
                 $pesoTotalProducido = 0;
                 $bobinasTotal = 0;
 
-                foreach ($ventas as $venta) {
-                    $sqlOrden = "SELECT id, estado FROM sist_ventas_orden_produccion 
-                           WHERE id_venta = ? AND cliente = ?";
-                    $stmtOrden = $this->conexion->prepare($sqlOrden);
-                    $stmtOrden->execute([$venta['id_venta'], $venta['cliente']]);
-                    $orden = $stmtOrden->fetch(PDO::FETCH_ASSOC);
+                foreach ($ordenes as $orden) {
+                    error_log("DEBUG: Procesando orden ID: " . $orden['id_orden'] . " Estado: " . $orden['estado']);
 
-                    if ($orden) {
-                        error_log("DEBUG: Venta " . $venta['id_venta'] . " tiene orden de producción ID: " . $orden['id'] . " Estado: " . $orden['estado']);
+                    // Sumar TODA la producción de esta orden específica
+                    $sqlProd = "SELECT 
+                   COUNT(*) as items,
+                   SUM(COALESCE(peso_liquido, peso_bruto, 0)) as peso_total,
+                   SUM(COALESCE(bobinas_pacote, 1)) as bobinas_total
+               FROM sist_prod_stock 
+               WHERE id_orden_produccion = ?
+               AND COALESCE(peso_liquido, peso_bruto, 0) > 0";
 
-                        $sqlProd = "SELECT 
-                                   COUNT(*) as items,
-                                   SUM(COALESCE(peso_liquido, peso_bruto, 0)) as peso_total,
-                                   SUM(COALESCE(bobinas_pacote, 1)) as bobinas_total
-                               FROM sist_prod_stock 
-                               WHERE id_orden_produccion = ?
-                               AND COALESCE(peso_liquido, peso_bruto, 0) > 0";
+                    $stmtProd = $this->conexion->prepare($sqlProd);
+                    $stmtProd->execute([$orden['id_orden']]);
+                    $produccion = $stmtProd->fetch(PDO::FETCH_ASSOC);
 
-                        $stmtProd = $this->conexion->prepare($sqlProd);
-                        $stmtProd->execute([$orden['id']]);
-                        $produccion = $stmtProd->fetch(PDO::FETCH_ASSOC);
+                    if ($produccion && $produccion['items'] > 0) {
+                        $pesoOrden = floatval($produccion['peso_total']);
+                        $bobinasOrden = intval($produccion['bobinas_total']);
 
-                        if ($produccion && $produccion['items'] > 0) {
-                            $pesoTotalProducido += floatval($produccion['peso_total']);
-                            $bobinasTotal += intval($produccion['bobinas_total']);
+                        $pesoTotalProducido += $pesoOrden;
+                        $bobinasTotal += $bobinasOrden;
 
-                            error_log("DEBUG: Orden " . $orden['id'] . " tiene " . $produccion['items'] . " items producidos, peso: " . $produccion['peso_total'] . "kg, bobinas: " . $produccion['bobinas_total']);
-                        } else {
-                            error_log("DEBUG: Orden " . $orden['id'] . " NO tiene items de producción con peso");
-                        }
+                        error_log("DEBUG: Orden " . $orden['id_orden'] . " tiene " . $produccion['items'] . " items producidos, peso: " . $pesoOrden . "kg, bobinas: " . $bobinasOrden);
                     } else {
-                        error_log("DEBUG: Venta " . $venta['id_venta'] . " NO tiene orden de producción");
+                        error_log("DEBUG: Orden " . $orden['id_orden'] . " NO tiene items de producción con peso");
                     }
                 }
 
                 $rejilla['peso_total_producido'] = $pesoTotalProducido;
                 $rejilla['cantidad_total_producida_historica'] = $bobinasTotal;
 
-                error_log("DEBUG: Rejilla " . $rejilla['numero_rejilla'] . " TOTAL: peso=" . $pesoTotalProducido . "kg, bobinas=" . $bobinasTotal);
+                error_log("DEBUG: Rejilla " . $rejilla['numero_rejilla'] . " TOTAL FINAL: peso=" . $pesoTotalProducido . "kg, bobinas=" . $bobinasTotal);
             }
 
             return $rejillas;
